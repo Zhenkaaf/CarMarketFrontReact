@@ -1,0 +1,20 @@
+@media (max-width: 640px) {
+  .container {
+    padding: 0;
+    background-color: inherit;
+  }
+  .card {
+    flex-direction: column;
+    height: fit-content;
+    padding-bottom: 0;
+  }
+  .cardMedia {
+    height: 250px;
+    margin-bottom: 10px;
+  }
+  .cardContent {
+    padding: 0;
+  }
+  .box {
+  }
+}

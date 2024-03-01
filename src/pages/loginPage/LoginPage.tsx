@@ -15,24 +15,20 @@ import {
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
-  const [phoneNumber, setPhoneNumber] = useState<string>("+380");
+
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
-    watch,
     setValue,
   } = useForm({
     mode: "onBlur",
   });
 
-  const watchPassword = watch("password", "");
-
   const onSubmit = (data: FieldValues) => {
     console.log(JSON.stringify(data));
     reset();
-    setPhoneNumber("+380");
   };
 
   const excludeSpaces = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -46,21 +42,6 @@ const LoginPage = () => {
     } else if (field === "confirmPassword") {
       setShowConfirmPass(!showConfirmPass);
     }
-  };
-
-  const phoneNumberValidation = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    let inputValue = event.target.value;
-    inputValue = inputValue.replace(/[^0-9+]|(?<=\+.*?)[^0-9]/g, "");
-
-    if (inputValue.length < 4) {
-      inputValue = "+380";
-    }
-    if (inputValue.length > 13) {
-      inputValue = inputValue.slice(0, 13);
-    }
-    setPhoneNumber(inputValue);
   };
 
   return (
