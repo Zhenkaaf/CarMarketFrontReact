@@ -1,13 +1,22 @@
 import { Outlet } from "react-router-dom";
+import Header from "./components/header/Header";
+import { Container } from "@mui/material";
 
 const Layout = () => {
   return (
-    <div>
-      <h1 style={{ backgroundColor: "red" }}>CarMarket</h1>
+    <Container
+      maxWidth={false}
+      sx={{
+        backgroundColor: "gray",
+        padding: "0px!important",
+      }}
+    >
+      <Header />
+
       <div>
         <Outlet />
       </div>
-    </div>
+    </Container>
   );
 };
 export default Layout;

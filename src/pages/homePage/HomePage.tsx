@@ -1,45 +1,35 @@
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  Typography,
-  Container,
-  Box,
-} from "@mui/material";
-import s from "./homePage.module.css";
+import { Card, CardMedia, CardContent, Typography, Box } from "@mui/material";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import { theme } from "../../theme";
 
 const HomePage = () => {
   const catTitle = "Dacia Logan";
 
   return (
     <div>
-      <Container
-        maxWidth={false}
+      <Box
         sx={{
-          backgroundColor: "gray",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          flexDirection: "column",
-          padding: "20px",
+          maxWidth: "768px",
+          margin: "auto",
         }}
-        className={s.container}
       >
         <Card
           sx={{
-            maxWidth: "768px",
             height: "200px",
             display: "flex",
-            justifyContent: "spaceBetween",
+            backgroundColor: "yellow",
             padding: "20px",
             marginBottom: "20px",
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              height: "auto",
+              padding: "0px",
+            },
           }}
-          className={s.card}
         >
           <Box
             sx={{
@@ -48,16 +38,29 @@ const HomePage = () => {
           >
             <CardMedia
               component="img"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                [theme.breakpoints.down("sm")]: {
+                  height: "250px",
+                  marginBottom: "10px",
+                },
+              }}
               image="https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
               title="Dacia Logan 2008"
-              className={s.cardMedia}
             />
           </Box>
 
           <CardContent
-            sx={{ flex: 2, padding: "0px 0px 0px 20px" }}
-            className={s.cardContent}
+            sx={{
+              flex: 2,
+              padding: "0px 0px 0px 20px",
+
+              [theme.breakpoints.down("sm")]: {
+                padding: "0px 20px",
+              },
+            }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box>
@@ -168,14 +171,17 @@ const HomePage = () => {
         </Card>
         <Card
           sx={{
-            maxWidth: "768px",
             height: "200px",
             display: "flex",
-            justifyContent: "spaceBetween",
+            backgroundColor: "yellow",
             padding: "20px",
             marginBottom: "20px",
+            [theme.breakpoints.down("sm")]: {
+              flexDirection: "column",
+              height: "auto",
+              padding: "0px",
+            },
           }}
-          className={s.card}
         >
           <Box
             sx={{
@@ -184,16 +190,29 @@ const HomePage = () => {
           >
             <CardMedia
               component="img"
-              sx={{ width: "100%", height: "100%", objectFit: "cover" }}
+              sx={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                [theme.breakpoints.down("sm")]: {
+                  height: "250px",
+                  marginBottom: "10px",
+                },
+              }}
               image="https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
               title="Dacia Logan 2008"
-              className={s.cardMedia}
             />
           </Box>
 
           <CardContent
-            sx={{ flex: 2, padding: "0px 0px 0px 20px" }}
-            className={s.cardContent}
+            sx={{
+              flex: 2,
+              padding: "0px 0px 0px 20px",
+
+              [theme.breakpoints.down("sm")]: {
+                padding: "0px 20px",
+              },
+            }}
           >
             <Box sx={{ display: "flex", justifyContent: "space-between" }}>
               <Box>
@@ -302,7 +321,7 @@ const HomePage = () => {
             </Box>
           </CardContent>
         </Card>
-      </Container>
+      </Box>
     </div>
   );
 };
