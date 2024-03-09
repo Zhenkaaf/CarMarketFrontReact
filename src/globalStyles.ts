@@ -1,6 +1,10 @@
-import { orange } from "./colors";
+import { theme } from "./theme";
 
 export const linkStyle = {
   textDecoration: "none",
-  color: orange,
+  color: theme.palette.secondary.main,
+};
+
+export const container = {
+  backgroundColor: "green",
 };

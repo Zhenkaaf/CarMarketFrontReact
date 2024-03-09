@@ -22,7 +22,7 @@ import {
 const HomePage = () => {
   const catTitle = "Dacia Logan";
   const { data = [], isLoading } = useGetCarsQuery({});
-  console.log(data);
+
   const [addCar] = useAddCarMutation();
   const [deleteCar, { isError }] = useDeleteCarMutation();
   const [updateCar] = useUpdateCarMutation();

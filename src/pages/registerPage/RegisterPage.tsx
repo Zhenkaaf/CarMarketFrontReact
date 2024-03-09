@@ -1,18 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { Link } from "react-router-dom";
-import { linkStyle } from "../../globalStyles";
+import { Link, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   TextField,
-  Container,
   Typography,
   InputAdornment,
   IconButton,
+  Box,
+  CircularProgress,
+  Backdrop,
 } from "@mui/material";
+import { linkStyle } from "../../globalStyles";
+import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
+import { registrationAct } from "../../redux/user/userSlice";
+import { IRegisterUserData } from "../../types";
+import { toast } from "react-toastify";
+import Spinner from "../../components/Spinner";
 
 const RegistrationPage = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
+  const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
+  const registerError = useAppSelector((state) => state.userRed.registerError);
+  const isUserLoading = useAppSelector((state) => state.userRed.isUserLoading);
+  console.error("ERROR", registerError);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>("+380");
@@ -29,11 +42,46 @@ const RegistrationPage = () => {
 
   const watchPassword = watch("password", "");
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(JSON.stringify(data));
+  /*   useEffect(() => {
+    console.log("useEffect");
+    if (isUserAuth) {
+      navigate("/");
+    }
+  }, [isUserAuth]); */
+
+  const onSubmit = async (userData: IRegisterUserData) => {
+    console.log("dispatch*START");
+    await dispatch(registrationAct(userData));
+    console.log("dispatch*END");
+    console.log("success*START");
+    toast.success("Account has been created");
+    console.log("success*END");
+    console.log("resetData*START");
     reset();
     setPhoneNumber("+380");
+    console.log("resetData*END");
+    console.log("navigate*START");
+    navigate("/");
+    console.log("navigate*END");
   };
+  /*   const onSubmit = async (userData: IRegisterUserData) => {
+    try {
+      const response = await dispatch(registerAct(userData));
+      console.log(response);
+      if (response.payload && response.payload.status === 201) {
+        // Assuming 201 is the success status code
+        toast.success("Account has been created");
+        console.log("onSubmitAfterDispatch*2");
+        reset();
+        setPhoneNumber("+380");
+        console.log("reset and setPhoneNumber");
+      } else {
+        toast.error("Failed to create account. Please try again later."); // Show error message if status code is not 201
+      }
+    } catch (err) {
+      toast.error("An error occurred while processing your request."); // Show error message if an exception occurs
+    }
+  }; */
 
   const excludeSpaces = (event: React.ChangeEvent<HTMLInputElement>) => {
     const inputValue = event.target.value.replace(/\s/g, "");
@@ -64,23 +112,22 @@ const RegistrationPage = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      style={{
+    <Box
+      sx={{
         boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
         borderRadius: "8px",
-        paddingBottom: "20px",
-        paddingTop: "20px",
-        marginTop: "20px",
+        padding: "20px",
+        width: "400px",
+        backgroundColor: "white",
       }}
     >
-      <div>
+      <Box>
+        <Spinner open={isUserLoading} />
         <Typography
           component="h1"
           variant="h5"
           align="center"
-          style={{
+          sx={{
             paddingBottom: "20px",
           }}
         >
@@ -104,7 +151,7 @@ const RegistrationPage = () => {
                   "Only letters, numbers, hyphens, and underscores are allowed",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             fullWidth
             required
             label="Name"
@@ -122,7 +169,7 @@ const RegistrationPage = () => {
                 message: "Invalid email address",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             required
             fullWidth
             label="Email"
@@ -150,7 +197,7 @@ const RegistrationPage = () => {
                 message: "Spaces are not allowed",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             required
             fullWidth
             label="Password"
@@ -184,7 +231,7 @@ const RegistrationPage = () => {
               validate: (value) =>
                 value === watchPassword || "Passwords do not match",
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             required
             fullWidth
             label="Confirm Password"
@@ -218,7 +265,7 @@ const RegistrationPage = () => {
                 message: "Must be 13 characters",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             fullWidth
             label="Phone Number"
             name="phoneNumber"
@@ -233,7 +280,7 @@ const RegistrationPage = () => {
             onInput={phoneNumberValidation}
           />
           <Button
-            style={{ marginTop: "10px", marginBottom: "20px" }}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
             type="submit"
             disabled={!isValid}
             fullWidth
@@ -253,8 +300,8 @@ const RegistrationPage = () => {
             </Link>
           </Typography>
         </form>
-      </div>
-    </Container>
+      </Box>
+    </Box>
   );
 };
 

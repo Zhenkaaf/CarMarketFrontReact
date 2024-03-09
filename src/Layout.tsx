@@ -4,19 +4,21 @@ import { Container } from "@mui/material";
 
 const Layout = () => {
   return (
-    <Container
-      maxWidth={false}
-      sx={{
-        backgroundColor: "gray",
-        padding: "0px!important",
-      }}
-    >
+    <div>
       <Header />
-
-      <div>
+      <Container
+        maxWidth={false}
+        disableGutters={true} //уберет внутренние отступы по краям контейнера.
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Outlet />
-      </div>
-    </Container>
+        {/*  Outlet: Это компонент, используемый для отображения содержимого текущего маршрута.  */}
+      </Container>
+    </div>
   );
 };
 export default Layout;

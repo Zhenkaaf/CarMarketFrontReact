@@ -6,10 +6,10 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
   TextField,
-  Container,
   Typography,
   InputAdornment,
   IconButton,
+  Box,
 } from "@mui/material";
 
 const LoginPage = () => {
@@ -45,15 +45,13 @@ const LoginPage = () => {
   };
 
   return (
-    <Container
-      component="main"
-      maxWidth="xs"
-      style={{
+    <Box
+      sx={{
         boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
         borderRadius: "8px",
-        paddingBottom: "20px",
-        paddingTop: "20px",
-        marginTop: "20px",
+        padding: "20px",
+        width: "400px",
+        backgroundColor: "white",
       }}
     >
       <div>
@@ -61,7 +59,7 @@ const LoginPage = () => {
           component="h1"
           variant="h5"
           align="center"
-          style={{
+          sx={{
             paddingBottom: "20px",
           }}
         >
@@ -76,7 +74,7 @@ const LoginPage = () => {
                 message: "Invalid email address",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             required
             fullWidth
             label="Email"
@@ -104,7 +102,7 @@ const LoginPage = () => {
                 message: "Spaces are not allowed",
               },
             })}
-            style={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px" }}
             required
             fullWidth
             label="Password"
@@ -130,7 +128,7 @@ const LoginPage = () => {
           />
 
           <Button
-            style={{ marginTop: "10px", marginBottom: "20px" }}
+            sx={{ marginTop: "10px", marginBottom: "20px" }}
             type="submit"
             disabled={!isValid}
             fullWidth
@@ -151,7 +149,7 @@ const LoginPage = () => {
           </Typography>
         </form>
       </div>
-    </Container>
+    </Box>
   );
 };
 
