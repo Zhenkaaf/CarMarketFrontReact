@@ -5,8 +5,11 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useAppSelector } from "../../redux/redux-hooks";
 
 const Header = () => {
+  const user = useAppSelector((state) => state.userRed.user);
+
   return (
     <Box sx={{ flexGrow: 1, marginBottom: "20px" }}>
       <AppBar position="static">
@@ -27,6 +30,7 @@ const Header = () => {
           >
             CarMarket
           </Typography>
+          {user && <span>{user.name}</span>}
           <Button color="inherit">Login</Button>
         </Toolbar>
       </AppBar>

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { IRegisterUserData } from "../../types";
+import { IRegisterUserData, IUser } from "../../types";
 
 interface IMyErrorPayload {
   response: {
@@ -11,7 +11,7 @@ interface IMyErrorPayload {
 }
 
 interface IUserState {
-  user: null;
+  user: null | IUser;
   isUserAuth: boolean;
   isUserLoading: boolean;
   loginError: boolean;
@@ -22,12 +22,10 @@ export const registrationAct = createAsyncThunk(
   "user/registrationAct",
   async (userData: IRegisterUserData, { rejectWithValue }) => {
     try {
-      console.log("createAsyncThunk*START");
       const response = await axios.post(
         "https://excited-pantyhose-fox.cyclic.app/api/registration",
         userData
       );
-      console.log("createAsyncThunk*END");
       return response.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -91,7 +89,7 @@ const userSlice = createSlice({
         state.registerError = null;
       })
       .addCase(registrationAct.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.isUserLoading = false;
         state.isUserAuth = true;
       })
