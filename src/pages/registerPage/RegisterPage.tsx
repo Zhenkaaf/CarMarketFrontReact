@@ -12,7 +12,10 @@ import {
 } from "@mui/material";
 import { linkStyle } from "../../globalStyles";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
-import { registrationAct } from "../../redux/user/userSlice";
+import {
+  registrationAct,
+  resetRegisterError,
+} from "../../redux/user/userSlice";
 import { IRegisterUserData } from "../../types";
 import { toast } from "react-toastify";
 import Spinner from "../../components/Spinner";
@@ -52,7 +55,7 @@ const RegistrationPage = () => {
     }
   }, [isUserAuth, navigate, reset, registerError]);
 
-  const onSubmit = async (registerData: FieldValues) => {
+  const onSubmit = (registerData: FieldValues) => {
     const userData: IRegisterUserData = {
       name: registerData.name,
       email: registerData.email,
@@ -60,7 +63,7 @@ const RegistrationPage = () => {
       confirmPassword: registerData.confirmPassword,
       phoneNumber: registerData.phoneNumber,
     };
-    await dispatch(registrationAct(userData));
+    dispatch(registrationAct(userData));
   };
 
   const excludeSpaces = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -276,6 +279,7 @@ const RegistrationPage = () => {
             <Link
               to="/login"
               style={linkStyle}
+              onClick={() => dispatch(resetRegisterError())}
             >
               {" "}
               Log In

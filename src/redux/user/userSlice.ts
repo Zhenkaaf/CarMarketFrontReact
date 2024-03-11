@@ -91,6 +91,9 @@ const userSlice = createSlice({
       state.user = null;
       state.isUserAuth = false;
     },
+    resetRegisterError: (state) => {
+      state.registerError = null;
+    },
     /*  setUserLoadingAct: (state, action) => {
       state.isUserLoading = action.payload;
     }, */
@@ -155,6 +158,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { logOutAct /* , setUserLoadingAct */ } = userSlice.actions;
+export const { logOutAct, resetRegisterError } = userSlice.actions;
 
 export default userSlice.reducer;
