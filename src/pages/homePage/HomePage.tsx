@@ -18,11 +18,13 @@ import {
   useUpdateCarMutation,
   useDeleteCarMutation,
 } from "../../redux/carsApi";
+import { useAppDispatch } from "../../redux/redux-hooks";
+import { getProfileAct } from "../../redux/user/userSlice";
 
 const HomePage = () => {
   const catTitle = "Dacia Logan";
   const { data = [], isLoading } = useGetCarsQuery({});
-
+  const dispatch = useAppDispatch();
   const [addCar] = useAddCarMutation();
   const [deleteCar, { isError }] = useDeleteCarMutation();
   const [updateCar] = useUpdateCarMutation();
@@ -99,6 +101,14 @@ const HomePage = () => {
           margin: "auto",
         }}
       >
+        <Button
+          onClick={() => {
+            dispatch(getProfileAct());
+          }}
+          sx={{ backgroundColor: "orange" }}
+        >
+          GETPROFILE
+        </Button>
         <Button
           onClick={handleAddCar}
           sx={{ backgroundColor: "green" }}
@@ -186,6 +196,7 @@ const HomePage = () => {
                 <QueryBuilderIcon
                   fontSize="small"
                   color="warning"
+                  sx={{ marginTop: "-3px" }}
                 />
                 <Typography
                   sx={{ marginLeft: "5px" }}
@@ -338,6 +349,7 @@ const HomePage = () => {
                 <QueryBuilderIcon
                   fontSize="small"
                   color="warning"
+                  sx={{ marginTop: "-3px" }}
                 />
                 <Typography
                   sx={{ marginLeft: "5px" }}

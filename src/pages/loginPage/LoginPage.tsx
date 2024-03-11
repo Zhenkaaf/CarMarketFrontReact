@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { linkStyle } from "../../globalStyles";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
@@ -11,10 +11,11 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
-import { loginAct } from "../../redux/user/userSlice";
+import { loginAct, resetLoginError } from "../../redux/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { ILoginUserData } from "../../types";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const dispatch = useAppDispatch();
@@ -23,7 +24,7 @@ const LoginPage = () => {
   const isUserLoading = useAppSelector((state) => state.userRed.isUserLoading);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
-
+  const navigate = useNavigate();
   const {
     register,
     formState: { errors, isValid },
@@ -34,14 +35,23 @@ const LoginPage = () => {
     mode: "onBlur",
   });
 
+  useEffect(() => {
+    if (isUserAuth) {
+      toast.success("Welcome to CarMarket");
+      reset();
+      navigate("/");
+    }
+    if (loginError) {
+      toast.error(loginError);
+    }
+  }, [isUserAuth, loginError, navigate, reset]);
+
   const onSubmit = (loginData: FieldValues) => {
-    /*  console.log(JSON.stringify(data)); */
     const userData: ILoginUserData = {
       email: loginData.email,
       password: loginData.password,
     };
     dispatch(loginAct(userData));
-    reset();
   };
 
   const excludeSpaces = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -168,6 +178,9 @@ const LoginPage = () => {
             <Link
               to="/registration"
               style={linkStyle}
+              onClick={() => {
+                dispatch(resetLoginError());
+              }}
             >
               {" "}
               Registration

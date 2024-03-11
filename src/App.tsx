@@ -9,23 +9,13 @@ import { getProfileAct } from "./redux/user/userSlice";
 function App() {
   const dispatch = useAppDispatch();
 
-  /*   useEffect(() => {
+  useEffect(() => {
     const token = getTokenFromLocalStorage();
     if (token) {
       dispatch(getProfileAct());
     }
-  }, []); */
+  }, [dispatch]);
 
-  /*   const checkAuth = async () => {
-    const token = getTokenFromLocalStorage();
-    try {
-      if (token) {
-        const data = await getProfileAct()
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }; */
   return <RouterProvider router={router} />;
 }
 

@@ -4,22 +4,6 @@ import { ILoginUserData, IRegisterUserData, IUser } from "../../types";
 import { instance } from "../../apiUser/axios.apiUser";
 import { setTokenToLocalStorage } from "../../helpers/localStorage.helper";
 
-interface IMyErrorPayload {
-  response: {
-    data: {
-      message: string;
-    };
-  };
-}
-
-interface IUserState {
-  user: null | IUser;
-  isUserAuth: boolean;
-  isUserLoading: boolean;
-  loginError: string | null;
-  registerError: string | null;
-}
-
 export const registrationAct = createAsyncThunk<IUser, IRegisterUserData>(
   "user/registrationAct",
   async (userData: IRegisterUserData, { rejectWithValue }) => {
@@ -68,12 +52,23 @@ export const getProfileAct = createAsyncThunk<IUser>(
     console.log("getProfileAct*****");
     try {
       const response = await instance.get("auth/profile");
+      console.log(response.data);
       return response.data;
     } catch (error) {
+      console.log(error);
       return rejectWithValue(error);
     }
   }
 );
+
+interface IUserState {
+  user: null | IUser;
+  isUserAuth: boolean;
+  isUserLoading: boolean;
+  loginError: string | null;
+  registerError: string | null;
+  getProfileError: string | null;
+}
 
 const initialState: IUserState = {
   user: null,
@@ -81,6 +76,7 @@ const initialState: IUserState = {
   isUserLoading: false,
   loginError: null,
   registerError: null,
+  getProfileError: null,
 };
 
 const userSlice = createSlice({
@@ -93,6 +89,9 @@ const userSlice = createSlice({
     },
     resetRegisterError: (state) => {
       state.registerError = null;
+    },
+    resetLoginError: (state) => {
+      state.loginError = null;
     },
     /*  setUserLoadingAct: (state, action) => {
       state.isUserLoading = action.payload;
@@ -108,6 +107,7 @@ const userSlice = createSlice({
         state.user = action.payload;
         state.isUserLoading = false;
         state.isUserAuth = true;
+        setTokenToLocalStorage("tokenCarApp", state.user.token);
       })
       .addCase(loginAct.rejected, (state, action) => {
         state.loginError = action.payload as string;
@@ -134,7 +134,7 @@ const userSlice = createSlice({
       //GetProfile
       .addCase(getProfileAct.pending, (state) => {
         state.isUserLoading = true;
-        /*   state.registerError = null; */
+        state.getProfileError = null;
       })
       .addCase(getProfileAct.fulfilled, (state, action) => {
         state.user = action.payload;
@@ -142,22 +142,13 @@ const userSlice = createSlice({
         state.isUserAuth = true;
       })
       .addCase(getProfileAct.rejected, (state, action) => {
-        /*  const payload = action.payload as IMyErrorPayload;
-        if (
-          payload &&
-          payload.response &&
-          payload.response.data &&
-          payload.response.data.message
-        ) {
-          state.registerError = payload.response.data.message;
-        } else {
-          state.registerError = "Unknown error occurred";
-        } */
+        state.getProfileError = action.payload as string;
         state.isUserLoading = false;
       });
   },
 });
 
-export const { logOutAct, resetRegisterError } = userSlice.actions;
+export const { logOutAct, resetRegisterError, resetLoginError } =
+  userSlice.actions;
 
 export default userSlice.reducer;
