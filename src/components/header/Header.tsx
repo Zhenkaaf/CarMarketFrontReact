@@ -9,6 +9,7 @@ import { useAppSelector } from "../../redux/redux-hooks";
 
 const Header = () => {
   const user = useAppSelector((state) => state.userRed.user);
+  console.log(user);
 
   return (
     <Box sx={{ flexGrow: 1, marginBottom: "20px" }}>

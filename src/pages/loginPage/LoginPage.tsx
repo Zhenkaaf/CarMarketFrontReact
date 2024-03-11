@@ -11,8 +11,16 @@ import {
   IconButton,
   Box,
 } from "@mui/material";
+import { loginAct } from "../../redux/user/userSlice";
+import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
+import { ILoginUserData } from "../../types";
+import Spinner from "../../components/Spinner";
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
+  const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
+  const loginError = useAppSelector((state) => state.userRed.loginError);
+  const isUserLoading = useAppSelector((state) => state.userRed.isUserLoading);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
 
@@ -26,8 +34,13 @@ const LoginPage = () => {
     mode: "onBlur",
   });
 
-  const onSubmit = (data: FieldValues) => {
-    console.log(JSON.stringify(data));
+  const onSubmit = (loginData: FieldValues) => {
+    /*  console.log(JSON.stringify(data)); */
+    const userData: ILoginUserData = {
+      email: loginData.email,
+      password: loginData.password,
+    };
+    dispatch(loginAct(userData));
     reset();
   };
 
@@ -54,6 +67,7 @@ const LoginPage = () => {
         backgroundColor: "white",
       }}
     >
+      <Spinner open={isUserLoading} />
       <div>
         <Typography
           component="h1"
@@ -137,6 +151,18 @@ const LoginPage = () => {
           >
             Login
           </Button>
+          <Box>
+            {loginError && (
+              <Typography
+                align="center"
+                color="error"
+                sx={{ marginBottom: "10px" }}
+                component="div"
+              >
+                {loginError}
+              </Typography>
+            )}
+          </Box>
           <Typography align="center">
             Do not have an account?
             <Link

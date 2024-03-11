@@ -13,3 +13,8 @@ export function setTokenToLocalStorage(key: string, token: string): void {
 export function removeTokenFromLocalStorage(key: string): void {
   localStorage.removeItem(key);
 }
+
+/* export function getTokenFromLocalStorage(): string | null {
+  const token = localStorage.getItem("tokenCarApp");
+  return token;
+} */

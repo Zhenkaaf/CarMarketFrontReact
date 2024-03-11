@@ -6,10 +6,16 @@ export interface IRegisterUserData {
   phoneNumber: string;
 }
 
+export interface ILoginUserData {
+  email: string;
+  password: string;
+}
+
 export interface IUser {
+  name: string;
   email: string;
   id: number;
-  name: string;
   phoneNumber: string;
   token: string;
+  createdAt: string;
 }
