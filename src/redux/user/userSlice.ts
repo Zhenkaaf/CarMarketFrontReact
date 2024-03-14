@@ -1,8 +1,11 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 import { ILoginUserData, IRegisterUserData, IUser } from "../../types";
-import { instance } from "../../apiUser/axios.apiUser";
-import { setTokenToLocalStorage } from "../../helpers/localStorage.helper";
+import {
+  removeTokenFromLocalStorage,
+  setTokenToLocalStorage,
+} from "../../helpers/localStorage.helper";
+import { instance } from "../../api/userApi";
 
 export const registrationAct = createAsyncThunk<IUser, IRegisterUserData>(
   "user/registrationAct",
@@ -68,6 +71,7 @@ interface IUserState {
   loginError: string | null;
   registerError: string | null;
   getProfileError: string | null;
+  waitingForProfile: boolean;
 }
 
 const initialState: IUserState = {
@@ -77,6 +81,7 @@ const initialState: IUserState = {
   loginError: null,
   registerError: null,
   getProfileError: null,
+  waitingForProfile: true,
 };
 
 const userSlice = createSlice({
@@ -84,6 +89,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logOutAct: (state) => {
+      removeTokenFromLocalStorage("tokenCarApp");
       state.user = null;
       state.isUserAuth = false;
     },
@@ -108,10 +114,12 @@ const userSlice = createSlice({
         state.isUserLoading = false;
         state.isUserAuth = true;
         setTokenToLocalStorage("tokenCarApp", state.user.token);
+        state.waitingForProfile = false;
       })
       .addCase(loginAct.rejected, (state, action) => {
         state.loginError = action.payload as string;
         state.isUserLoading = false;
+        state.waitingForProfile = false;
       })
       //RegistrationAct
       .addCase(registrationAct.pending, (state) => {
@@ -125,11 +133,13 @@ const userSlice = createSlice({
           state.isUserLoading = false;
           state.isUserAuth = true;
           setTokenToLocalStorage("tokenCarApp", state.user.token);
+          state.waitingForProfile = false;
         }
       )
       .addCase(registrationAct.rejected, (state, action) => {
         state.registerError = action.payload as string;
         state.isUserLoading = false;
+        state.waitingForProfile = false;
       })
       //GetProfile
       .addCase(getProfileAct.pending, (state) => {
@@ -140,10 +150,12 @@ const userSlice = createSlice({
         state.user = action.payload;
         state.isUserLoading = false;
         state.isUserAuth = true;
+        state.waitingForProfile = false;
       })
       .addCase(getProfileAct.rejected, (state, action) => {
         state.getProfileError = action.payload as string;
         state.isUserLoading = false;
+        state.waitingForProfile = false;
       });
   },
 });

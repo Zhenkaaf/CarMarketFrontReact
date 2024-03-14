@@ -3,6 +3,10 @@ import Layout from "../Layout";
 import RegistrationPage from "../pages/registerPage/RegisterPage";
 import HomePage from "../pages/homePage/HomePage";
 import LoginPage from "../pages/loginPage/LoginPage";
+import { ProtectedRoute } from "../components/ProtectedRoute";
+import PostAdvertPage from "../pages/postAdvertPage/PostAdvertPage";
+import CabinetPage from "../pages/cabinetPage/CabinetPage";
+import SingleAdvertPage from "../pages/singleAdvertPage/singleAdvertPage";
 
 export const router = createBrowserRouter([
   {
@@ -14,7 +18,10 @@ export const router = createBrowserRouter([
         index: true,
         element: <HomePage />,
       },
-
+      {
+        path: "single-car/:carId",
+        element: <SingleAdvertPage />,
+      },
       {
         path: "registration",
         element: <RegistrationPage />,
@@ -22,6 +29,22 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <LoginPage />,
+      },
+      {
+        path: "post-advert",
+        element: (
+          <ProtectedRoute>
+            <PostAdvertPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "cabinet",
+        element: (
+          <ProtectedRoute>
+            <CabinetPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

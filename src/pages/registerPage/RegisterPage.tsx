@@ -260,7 +260,7 @@ const RegistrationPage = () => {
             variant="contained"
             color="primary"
           >
-            Register
+            Registration
           </Button>
           <Box>
             {registerError && (

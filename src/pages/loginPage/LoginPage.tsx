@@ -39,7 +39,7 @@ const LoginPage = () => {
     if (isUserAuth) {
       toast.success("Welcome to CarMarket");
       reset();
-      navigate("/");
+      navigate("/cabinet");
     }
     if (loginError) {
       toast.error(loginError);

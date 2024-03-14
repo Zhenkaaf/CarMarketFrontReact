@@ -12,6 +12,7 @@ function App() {
   useEffect(() => {
     const token = getTokenFromLocalStorage();
     if (token) {
+      console.log("updateApp");
       dispatch(getProfileAct());
     }
   }, [dispatch]);

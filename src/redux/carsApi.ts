@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { getTokenFromLocalStorage } from "../helpers/localStorage.helper";
+import { ICar, ISingleCar } from "../types";
 
-// Define our single API slice object
 export const carsApi = createApi({
   reducerPath: "carsApi",
   tagTypes: ["Cars"],
@@ -8,21 +9,22 @@ export const carsApi = createApi({
     baseUrl: "https://excited-pantyhose-fox.cyclic.app/api/",
     /*  baseUrl: "http://localhost:3000/api/", */
     prepareHeaders: (headers, { getState }) => {
-      //const token = (getState() as RootState).auth.token
-      const token =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MTcsImVtYWlsIjoiYm9iQGdtYWlsLmNvbSIsImlhdCI6MTcwOTU1MjIxNCwiZXhwIjoxNzA5NjM4NjE0fQ.8ItaPFIvfZKjvAiEvrVdVwZd034J1ZN3qxEaQsZFSXk";
-      // If we have a token set in state, let's assume that we should be passing it.
+      const token = getTokenFromLocalStorage();
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
       }
-
       return headers;
     },
   }),
 
   endpoints: (builder) => ({
-    getCars: builder.query({
+    getCars: builder.query<ICar[], void>({
       query: () => "car/list",
+      providesTags: ["Cars"],
+    }),
+
+    getCar: builder.query<ISingleCar, string>({
+      query: (id) => `car/${id}`,
       providesTags: ["Cars"],
     }),
 
@@ -56,6 +58,7 @@ export const carsApi = createApi({
 
 export const {
   useGetCarsQuery,
+  useGetCarQuery,
   useAddCarMutation,
   useUpdateCarMutation,
   useDeleteCarMutation,
