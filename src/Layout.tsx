@@ -5,7 +5,6 @@ import { Container } from "@mui/material";
 const Layout = () => {
   return (
     <div>
-      <Header />
       <Container
         maxWidth={false}
         disableGutters={true} //уберет внутренние отступы по краям контейнера.
@@ -15,6 +14,7 @@ const Layout = () => {
           alignItems: "center",
         }}
       >
+        <Header />
         <Outlet />
         {/*  Outlet: Это компонент, используемый для отображения содержимого текущего маршрута.  */}
       </Container>

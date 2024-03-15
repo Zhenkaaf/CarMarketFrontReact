@@ -15,7 +15,7 @@ const Header = () => {
   const user = useAppSelector((state) => state.userRed.user);
 
   return (
-    <Box sx={{ flexGrow: 1, marginBottom: "20px" }}>
+    <Box sx={{ marginBottom: "20px", width: "100%" }}>
       <AppBar position="static">
         <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
           {/*  <IconButton
