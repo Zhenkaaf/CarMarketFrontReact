@@ -59,7 +59,12 @@ export const getProfileAct = createAsyncThunk<IUser>(
       return response.data;
     } catch (error) {
       console.log(error);
-      return rejectWithValue(error);
+      if (axios.isAxiosError(error)) {
+        const errorMessage = error.response?.data?.message;
+        return rejectWithValue(errorMessage);
+      } else {
+        return rejectWithValue("Unknown error occurred");
+      }
     }
   }
 );

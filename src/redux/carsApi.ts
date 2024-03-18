@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getTokenFromLocalStorage } from "../helpers/localStorage.helper";
-import { ICar, ISingleCar } from "../types";
+import { ICar } from "../types";
 
 export const carsApi = createApi({
   reducerPath: "carsApi",
@@ -23,7 +23,7 @@ export const carsApi = createApi({
       providesTags: ["Cars"],
     }),
 
-    getCar: builder.query<ISingleCar, string>({
+    getCar: builder.query<ICar, string>({
       query: (id) => `car/${id}`,
       providesTags: ["Cars"],
     }),

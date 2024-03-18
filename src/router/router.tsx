@@ -6,7 +6,7 @@ import LoginPage from "../pages/loginPage/LoginPage";
 import { ProtectedRoute } from "../components/ProtectedRoute";
 import PostAdvertPage from "../pages/postAdvertPage/PostAdvertPage";
 import CabinetPage from "../pages/cabinetPage/CabinetPage";
-import SingleAdvertPage from "../pages/singleAdvertPage/singleAdvertPage";
+import SingleAdvertPage from "../pages/singleAdvertPage/SingleAdvertPage";
 
 export const router = createBrowserRouter([
   {

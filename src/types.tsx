@@ -33,9 +33,14 @@ export interface ICar {
   price: number;
   updatedAt: string;
   year: string;
+  user?: {
+    email: string;
+    name: string;
+    phoneNumber: string;
+  };
 }
 
-export interface ISingleCar {
+/* export interface ISingleCar {
   carId: number;
   bodyType: string;
   carMake: string;
@@ -53,4 +58,4 @@ export interface ISingleCar {
     name: string;
     phoneNumber: string;
   };
-}
+} */
