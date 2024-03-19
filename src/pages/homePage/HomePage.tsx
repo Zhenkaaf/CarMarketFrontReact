@@ -1,4 +1,4 @@
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Container, Skeleton } from "@mui/material";
 import {
   useGetCarsQuery,
   useAddCarMutation,
@@ -23,13 +23,14 @@ const HomePage = () => {
   const handleAddCar = async () => {
     const newCar = {
       bodyType: "Van",
-      carMake: "ВАЗ",
-      year: "1991",
-      price: 1400,
-      mileage: 650000,
+      carMake: "AUDI",
+      model: "Q7",
+      year: "2009",
+      price: 13000,
+      mileage: 98,
       fuelType: "Petrol",
-      city: "Komarovka",
-      desc: "it is just vazzz",
+      city: "Merefa",
+      desc: "The Audi Q7 stands as a pinnacle of luxury and performance in the SUV segment, combining elegance, power, and advanced technology in one exceptional package. Exterior-wise, the Q7 showcases Audi signature design language with sleek lines, a bold grille, and striking LED headlights that exude sophistication and presence on the road. Its commanding presence is matched only by its dynamic performance. Underneath the hood, the Audi Q7 offers a range of potent engine options, delivering robust power and effortless acceleration. Whether cruising on the highway or navigating urban streets, the Q7 provides a smooth and exhilarating driving experience, aided by Audi renowned quattro all-wheel-drive system. Inside the cabin, the Q7 envelops passengers in opulent comfort and cutting-edge technology. Premium materials, exquisite craftsmanship, and ergonomic design elements create a luxurious ambiance, while advanced features such as Audi Virtual Cockpit display and MMI infotainment system keep you connected and entertained on every journey.",
     };
     await addCar(newCar).unwrap();
   };
@@ -82,7 +83,7 @@ const HomePage = () => {
     }
   };
 
-  if (isLoading) return <h1>Loading...</h1>;
+  /*   if (isLoading) return <h1>Loading...</h1>; */
 
   return (
     <Box
@@ -110,15 +111,33 @@ const HomePage = () => {
       >
         UpdateCar
       </Button>
-      {allCars &&
+      {allCars ? (
         allCars.map((car) => (
           <Link
             to={`single-car/${car.carId}`}
             style={{ textDecoration: "none" }}
+            key={car.carId}
           >
             <CarItem car={car} />
           </Link>
-        ))}
+        ))
+      ) : (
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+          {" "}
+          <Skeleton
+            animation="wave"
+            variant="rectangular"
+            width="100%"
+            height={200}
+          />
+          <Skeleton
+            animation="wave"
+            variant="rectangular"
+            width="100%"
+            height={200}
+          />
+        </Box>
+      )}
     </Box>
   );
 };

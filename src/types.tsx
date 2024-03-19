@@ -24,6 +24,7 @@ export interface ICar {
   bodyType: string;
   carId: number;
   carMake: string;
+  model: string;
   city: string;
   createdAt: string;
   desc: string;

@@ -9,15 +9,22 @@ import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { Link } from "react-router-dom";
 import { PermIdentity, AddCircle } from "@mui/icons-material";
 import { logOutAct } from "../../redux/user/userSlice";
+import { HEADER_HEIGHT } from "../../constants/constans";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userRed.user);
 
   return (
-    <Box sx={{ marginBottom: "20px", width: "100%" }}>
+    <Box sx={{ /* marginBottom: "20px", */ width: "100%" }}>
       <AppBar position="static">
-        <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            height: `${HEADER_HEIGHT}px`,
+          }}
+        >
           {/*  <IconButton
             size="large"
             edge="start"

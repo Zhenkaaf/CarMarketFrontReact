@@ -132,7 +132,7 @@ const CarItem = ({ car }: { car: ICar }) => {
               color="warning"
             />
             <Typography sx={{ marginLeft: "5px" }}>
-              {car.mileage} {/* thds. */} km.
+              {car.mileage} thds.km.
             </Typography>
           </Box>
         </Box>
@@ -169,8 +169,7 @@ const CarItem = ({ car }: { car: ICar }) => {
           }}
         >
           <Typography sx={{ lineHeight: 1.3 }}>
-            {car.desc}
-            {/*  {desc.length > 250 ? desc.slice(0, 250) + "..." : desc} */}
+            {car.desc.length > 120 ? car.desc.slice(0, 120) + "..." : car.desc}
           </Typography>
         </Box>
       </CardContent>
