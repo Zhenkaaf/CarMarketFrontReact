@@ -1,11 +1,12 @@
 import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
 import { theme } from "../theme";
-import { formattedDate } from "../helpers/formatDate.helper";
+import { timePassed } from "../helpers/formatDate.helper";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
+import TodayIcon from "@mui/icons-material/Today";
 import { ICar } from "./../types";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
@@ -14,11 +15,12 @@ const CarItem = ({ car }: { car: ICar }) => {
     <Card
       key={car.carId}
       sx={{
-        height: "200px",
+        height: "250px",
+        boxSizing: "border-box",
         display: "flex",
-        backgroundColor: "yellow",
+        backgroundColor: "#afeeee",
         padding: "20px",
-        marginBottom: "20px",
+        marginBottom: "15px",
         transition: "transform 0.3s ease",
         "&:hover": {
           transform: "scale(1.05)",
@@ -54,123 +56,171 @@ const CarItem = ({ car }: { car: ICar }) => {
       <CardContent
         sx={{
           flex: 2,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
           padding: "0px 0px 0px 20px",
-
+          "&:last-child": {
+            paddingBottom: "0px",
+          },
           [theme.breakpoints.down("sm")]: {
-            padding: "0px 20px",
+            paddingRight: "20px",
+            "&:last-child": {
+              paddingBottom: "20px",
+            },
           },
         }}
       >
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            [theme.breakpoints.down("sm")]: {
+              marginBottom: "10px",
+            },
+          }}
+        >
+          <Typography
+            variant="h5"
+            fontWeight={700}
+            sx={{
+              paddingRight: "20px",
+              [theme.breakpoints.down("sm")]: {
+                fontSize: "22px",
+              },
+            }}
+          >
+            {car.carMake}{" "}
+            {car.model.length > 15 ? car.model.slice(0, 15) + ".." : car.model}{" "}
+          </Typography>
           <Box>
             <Typography
-              variant="h6"
-              fontWeight={600}
-              marginTop="-5px"
+              variant="h5"
+              color="green"
+              fontWeight={700}
             >
-              {car.carMake.length > 15
-                ? car.carMake.slice(0, 15) + "..."
-                : car.carMake}{" "}
-              {car.year}
+              {car.price} $
             </Typography>
           </Box>
+        </Box>
+
+        <Box>
           <Box
             sx={{
               display: "flex",
               alignItems: "center",
-              marginTop: "-5px",
+              flexWrap: "wrap",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <TimeToLeaveIcon
+                fontSize="small"
+                color="warning"
+              />
+              <Typography sx={{ marginLeft: "5px" }}>{car.bodyType}</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <LocalGasStationIcon
+                fontSize="small"
+                color="warning"
+              />
+              <Typography sx={{ marginLeft: "5px" }}>{car.fuelType}</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <TodayIcon
+                fontSize="small"
+                color="warning"
+              />
+              <Typography sx={{ marginLeft: "5px" }}>{car.year}</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <SpeedIcon
+                fontSize="small"
+                color="warning"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  whiteSpace: "nowrap",
+                }}
+              >
+                {car.mileage} thds.km.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}
+          >
+            <PlaceIcon
+              fontSize="small"
+              color="warning"
+            />
+            <Typography
+              sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
+            >
+              {car.city}
+            </Typography>
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
             }}
           >
             <QueryBuilderIcon
               fontSize="small"
               color="warning"
-              sx={{ marginTop: "-3px" }}
             />
             <Typography
-              sx={{ marginLeft: "5px" }}
-              color="grey"
-              fontSize="14px"
+              sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
             >
-              {formattedDate(car.createdAt)}
+              Posted {timePassed(car.createdAt)} ago
             </Typography>
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            marginBottom: "5px",
-          }}
-        >
-          <Typography
-            variant="h5"
-            color="green"
-            fontWeight={700}
-          >
-            {car.price} $
-          </Typography>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        <Box>
           <Box
             sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "110px",
+              maxHeight: "62px",
+              overflow: "hidden",
+              [theme.breakpoints.down("sm")]: {
+                marginTop: "10px",
+              },
             }}
           >
-            <TimeToLeaveIcon
-              fontSize="small"
-              color="warning"
-            />
-            <Typography sx={{ marginLeft: "5px" }}>{car.bodyType}</Typography>
+            <Typography sx={{ lineHeight: 1.3 }}>{car.desc}</Typography>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <SpeedIcon
-              fontSize="small"
-              color="warning"
-            />
-            <Typography sx={{ marginLeft: "5px" }}>
-              {car.mileage} thds.km.
-            </Typography>
-          </Box>
-        </Box>
-
-        <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              width: "110px",
-            }}
-          >
-            <LocalGasStationIcon
-              fontSize="small"
-              color="warning"
-            />
-            <Typography sx={{ marginLeft: "5px" }}>{car.fuelType}</Typography>
-          </Box>
-
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <PlaceIcon
-              fontSize="small"
-              color="warning"
-            />
-            <Typography sx={{ marginLeft: "5px" }}>{car.city}</Typography>
-          </Box>
-        </Box>
-
-        <Box
-          sx={{
-            marginTop: "5px",
-            maxHeight: "82px",
-            overflow: "hidden",
-          }}
-        >
-          <Typography sx={{ lineHeight: 1.3 }}>
-            {car.desc.length > 120 ? car.desc.slice(0, 120) + "..." : car.desc}
-          </Typography>
         </Box>
       </CardContent>
     </Card>

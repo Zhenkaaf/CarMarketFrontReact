@@ -22,15 +22,15 @@ const HomePage = () => {
 
   const handleAddCar = async () => {
     const newCar = {
-      bodyType: "Van",
-      carMake: "AUDI",
-      model: "Q7",
+      bodyType: "Hatchback",
+      carMake: "INTERNATIONAL",
+      model: "TTtestetstdjsdlkjsddbfdffbfbfnghmjhmhjm",
       year: "2009",
-      price: 13000,
-      mileage: 98,
-      fuelType: "Petrol",
-      city: "Merefa",
-      desc: "The Audi Q7 stands as a pinnacle of luxury and performance in the SUV segment, combining elegance, power, and advanced technology in one exceptional package. Exterior-wise, the Q7 showcases Audi signature design language with sleek lines, a bold grille, and striking LED headlights that exude sophistication and presence on the road. Its commanding presence is matched only by its dynamic performance. Underneath the hood, the Audi Q7 offers a range of potent engine options, delivering robust power and effortless acceleration. Whether cruising on the highway or navigating urban streets, the Q7 provides a smooth and exhilarating driving experience, aided by Audi renowned quattro all-wheel-drive system. Inside the cabin, the Q7 envelops passengers in opulent comfort and cutting-edge technology. Premium materials, exquisite craftsmanship, and ergonomic design elements create a luxurious ambiance, while advanced features such as Audi Virtual Cockpit display and MMI infotainment system keep you connected and entertained on every journey.",
+      price: 598000,
+      mileage: 956,
+      fuelType: "LPG/Petrol",
+      city: "KharkKharkovKharkovKharkovov",
+      desc: "The Audi ",
     };
     await addCar(newCar).unwrap();
   };
@@ -88,7 +88,7 @@ const HomePage = () => {
   return (
     <Box
       sx={{
-        maxWidth: "768px",
+        maxWidth: "1140px",
         width: "100%",
         margin: "auto",
       }}
