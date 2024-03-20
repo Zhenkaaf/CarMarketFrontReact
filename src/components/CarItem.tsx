@@ -16,9 +16,8 @@ const CarItem = ({ car }: { car: ICar }) => {
       key={car.carId}
       sx={{
         height: "250px",
-        boxSizing: "border-box",
         display: "flex",
-        backgroundColor: "#afeeee",
+        backgroundColor: "#d6f5f1",
         padding: "20px",
         marginBottom: "15px",
         transition: "transform 0.3s ease",

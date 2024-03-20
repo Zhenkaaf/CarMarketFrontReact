@@ -2,20 +2,20 @@ import { useParams } from "react-router-dom";
 import { useGetCarQuery } from "../../redux/carsApi";
 import { Box, CardContent, CardMedia, Typography } from "@mui/material";
 import Spinner from "../../components/Spinner";
-import CarItem from "../../components/CarItem";
-import { theme } from "../../theme";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
 import LocalGasStationIcon from "@mui/icons-material/LocalGasStation";
 import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import PhoneInTalkIcon from "@mui/icons-material/PhoneInTalk";
+import TodayIcon from "@mui/icons-material/Today";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { formattedDate } from "../../helpers/formatDate.helper";
 import { ImageSlider } from "../../components/slider/ImageSlider";
 import { HEADER_HEIGHT } from "../../constants/constans";
+import { theme } from "../../theme";
 
 const SingleAdvertPage = () => {
-  const model = "Oktavia";
   const IMAGES = [
     {
       url: "https://cdn.riastatic.com/photosnew/auto/photo/samsung_sm6__457907116f.webp",
@@ -61,14 +61,26 @@ const SingleAdvertPage = () => {
           sx={{
             display: "flex",
             width: "100%",
-            height: `calc(100vh - ${HEADER_HEIGHT}px)`,
+            [theme.breakpoints.down("md")]: {
+              flexDirection: "column-reverse",
+            },
+            /*  height: "100%", */
+            /*  height: `calc(100vh - ${HEADER_HEIGHT}px)`, */
+            /*  backgroundColor: "grey", */
           }}
         >
           <Box sx={{ flex: 1 }}>
-            <CardContent>
+            <CardContent
+              sx={{
+                "&:last-child": {
+                  paddingBottom: "0px",
+                },
+              }}
+            >
               <Box
                 sx={{
                   display: "flex",
+                  minWidth: "300px",
                   justifyContent: "space-between",
                 }}
               >
@@ -106,10 +118,10 @@ const SingleAdvertPage = () => {
                 }}
               >
                 <Typography variant="h5">
-                  {singleCar.model.length > 15
-                    ? singleCar.model.slice(0, 15) + "..."
-                    : singleCar.model}{" "}
-                  {singleCar.year}
+                  {/*   {singleCar.model} */}
+                  {singleCar.model.length > 24
+                    ? singleCar.model.slice(0, 24)
+                    : singleCar.model}
                 </Typography>
               </Box>
 
@@ -124,7 +136,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#d6f5f1",
                   }}
                 >
                   {" "}
@@ -149,7 +161,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#d6f5f1",
                   }}
                 >
                   <TimeToLeaveIcon
@@ -165,32 +177,12 @@ const SingleAdvertPage = () => {
                     {singleCar.bodyType}
                   </Typography>
                 </Box>
+
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
-                  }}
-                >
-                  <SpeedIcon
-                    fontSize="large"
-                    color="warning"
-                  />
-                  <Typography
-                    sx={{
-                      marginLeft: "5px",
-                      fontSize: "22px",
-                      backgroundColor: "#f5f5f5",
-                    }}
-                  >
-                    {singleCar.mileage} {/* thds. */} km.
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#d6f5f1",
                   }}
                 >
                   <LocalGasStationIcon
@@ -201,19 +193,20 @@ const SingleAdvertPage = () => {
                     {singleCar.fuelType}
                   </Typography>
                 </Box>
+
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#d6f5f1",
                   }}
                 >
-                  <PlaceIcon
+                  <TodayIcon
                     fontSize="large"
                     color="warning"
                   />
                   <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
-                    {singleCar.city}
+                    {singleCar.year}
                   </Typography>
                 </Box>
 
@@ -221,7 +214,47 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#f5f5f5",
+                    backgroundColor: "#d6f5f1",
+                  }}
+                >
+                  <SpeedIcon
+                    fontSize="large"
+                    color="warning"
+                  />
+                  <Typography
+                    sx={{
+                      marginLeft: "5px",
+                      fontSize: "22px",
+                      backgroundColor: "#d6f5f1",
+                    }}
+                  >
+                    {singleCar.mileage} thds.km.
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "#d6f5f1",
+                  }}
+                >
+                  <PlaceIcon
+                    fontSize="large"
+                    color="warning"
+                  />
+                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                    {singleCar.city.length > 20
+                      ? singleCar.city.slice(0, 20)
+                      : singleCar.city}
+                  </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "#d6f5f1",
                   }}
                 >
                   <PhoneInTalkIcon
@@ -231,7 +264,20 @@ const SingleAdvertPage = () => {
                   <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
                     {singleCar.user?.phoneNumber}
                   </Typography>
-                  <Typography sx={{ marginLeft: "15px", fontSize: "22px" }}>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    backgroundColor: "#d6f5f1",
+                  }}
+                >
+                  <AccountCircleIcon
+                    fontSize="large"
+                    color="warning"
+                  />
+                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
                     {singleCar.user?.name}
                   </Typography>
                 </Box>
@@ -242,7 +288,7 @@ const SingleAdvertPage = () => {
                   marginTop: "5px",
                   height: "215px",
                   overflow: "hidden",
-                  backgroundColor: "#f5f5f5",
+                  backgroundColor: "#d6f5f1",
                   overflowY: "auto",
                   padding: "5px",
                 }}
@@ -253,12 +299,12 @@ const SingleAdvertPage = () => {
               </Box>
             </CardContent>
           </Box>
-          <Box sx={{ flex: 2 }}>
+          <Box sx={{ flex: 2, overflow: "hidden", backgroundColor: "#d6f5f1" }}>
             <div
               style={{
-                /*  maxWidth: "600px", */
-                width: "100%",
-                height: "100%",
+                maxWidth: "900px",
+                /*    maxWidth: "100%",
+                maxHeight: "100%", */
                 aspectRatio: "10 / 6",
                 margin: "0 auto",
               }}

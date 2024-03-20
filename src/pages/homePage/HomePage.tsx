@@ -128,13 +128,19 @@ const HomePage = () => {
             animation="wave"
             variant="rectangular"
             width="100%"
-            height={200}
+            height={250}
           />
           <Skeleton
             animation="wave"
             variant="rectangular"
             width="100%"
-            height={200}
+            height={250}
+          />
+          <Skeleton
+            animation="wave"
+            variant="rectangular"
+            width="100%"
+            height={250}
           />
         </Box>
       )}
