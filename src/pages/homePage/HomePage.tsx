@@ -1,23 +1,18 @@
-import { Box, Button, Container, Skeleton } from "@mui/material";
+import { Box, Button, Skeleton } from "@mui/material";
 import {
   useGetCarsQuery,
   useAddCarMutation,
   useUpdateCarMutation,
   useDeleteCarMutation,
 } from "../../redux/carsApi";
-import { useAppDispatch } from "../../redux/redux-hooks";
-import { getProfileAct, logOutAct } from "../../redux/user/userSlice";
-
 import { Link } from "react-router-dom";
-import { linkStyle } from "../../globalStyles";
 import CarItem from "../../components/CarItem";
 
 const HomePage = () => {
-  const { data: allCars, isLoading } = useGetCarsQuery({});
+  const { data: allCars } = useGetCarsQuery();
   console.log(allCars);
-  const dispatch = useAppDispatch();
   const [addCar] = useAddCarMutation();
-  const [deleteCar, { isError }] = useDeleteCarMutation();
+  const [deleteCar] = useDeleteCarMutation();
   const [updateCar] = useUpdateCarMutation();
 
   const handleAddCar = async () => {
@@ -35,7 +30,7 @@ const HomePage = () => {
     await addCar(newCar).unwrap();
   };
 
-  const handleUpdateCar = async (carId) => {
+  const handleUpdateCar = async (carId: number) => {
     const updatedCar = {
       year: "1999",
       price: 3333,
@@ -62,7 +57,7 @@ const HomePage = () => {
     return message;
   }; */
 
-  const handleDeleteCar = async (carId) => {
+  const handleDeleteCar = async (carId: number) => {
     try {
       await deleteCar(carId).unwrap();
       console.log(`Car with id ${carId} has been successfully deleted`);

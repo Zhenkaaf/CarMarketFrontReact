@@ -8,7 +8,7 @@ export const carsApi = createApi({
   baseQuery: fetchBaseQuery({
     baseUrl: "https://excited-pantyhose-fox.cyclic.app/api/",
     /*  baseUrl: "http://localhost:3000/api/", */
-    prepareHeaders: (headers, { getState }) => {
+    prepareHeaders: (headers) => {
       const token = getTokenFromLocalStorage();
       if (token) {
         headers.set("authorization", `Bearer ${token}`);
