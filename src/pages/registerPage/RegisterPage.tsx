@@ -91,7 +91,7 @@ const RegistrationPage = () => {
         borderRadius: "8px",
         padding: "20px",
         width: "400px",
-        backgroundColor: "white",
+        marginTop: "20px",
       }}
     >
       <Box>
