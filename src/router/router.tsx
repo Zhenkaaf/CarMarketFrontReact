@@ -10,28 +10,28 @@ import SingleAdvertPage from "../pages/singleAdvertPage/SingleAdvertPage";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: "/CarMarketFrontReact/",
     element: <Layout />,
 
     children: [
       {
-        path: "/",
+        path: "/CarMarketFrontReact/",
         element: <HomePage />,
       },
       {
-        path: "single-car/:carId",
+        path: "/CarMarketFrontReact/single-car/:carId",
         element: <SingleAdvertPage />,
       },
       {
-        path: "registration",
+        path: "/CarMarketFrontReact/registration",
         element: <RegistrationPage />,
       },
       {
-        path: "login",
+        path: "/CarMarketFrontReact/login",
         element: <LoginPage />,
       },
       {
-        path: "post-advert",
+        path: "/CarMarketFrontReact/post-advert",
         element: (
           <ProtectedRoute>
             <PostAdvertPage />
@@ -39,7 +39,7 @@ export const router = createBrowserRouter([
         ),
       },
       {
-        path: "cabinet",
+        path: "/CarMarketFrontReact/cabinet",
         element: (
           <ProtectedRoute>
             <CabinetPage />
