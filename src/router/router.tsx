@@ -8,44 +8,49 @@ import PostAdvertPage from "../pages/postAdvertPage/PostAdvertPage";
 import CabinetPage from "../pages/cabinetPage/CabinetPage";
 import SingleAdvertPage from "../pages/singleAdvertPage/SingleAdvertPage";
 
-export const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Layout />,
+export const router = createBrowserRouter(
+  [
+    {
+      path: "/",
+      element: <Layout />,
 
-    children: [
-      {
-        path: "/",
-        element: <HomePage />,
-      },
-      {
-        path: "single-car/:carId",
-        element: <SingleAdvertPage />,
-      },
-      {
-        path: "registration",
-        element: <RegistrationPage />,
-      },
-      {
-        path: "login",
-        element: <LoginPage />,
-      },
-      {
-        path: "post-advert",
-        element: (
-          <ProtectedRoute>
-            <PostAdvertPage />
-          </ProtectedRoute>
-        ),
-      },
-      {
-        path: "cabinet",
-        element: (
-          <ProtectedRoute>
-            <CabinetPage />
-          </ProtectedRoute>
-        ),
-      },
-    ],
-  },
-]);
+      children: [
+        {
+          path: "/",
+          element: <HomePage />,
+        },
+        {
+          path: "single-car/:carId",
+          element: <SingleAdvertPage />,
+        },
+        {
+          path: "registration",
+          element: <RegistrationPage />,
+        },
+        {
+          path: "login",
+          element: <LoginPage />,
+        },
+        {
+          path: "post-advert",
+          element: (
+            <ProtectedRoute>
+              <PostAdvertPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "cabinet",
+          element: (
+            <ProtectedRoute>
+              <CabinetPage />
+            </ProtectedRoute>
+          ),
+        },
+      ],
+    },
+  ],
+  {
+    basename: "/CarMarketFrontReact",
+  }
+);
