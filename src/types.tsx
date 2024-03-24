@@ -41,6 +41,18 @@ export interface ICar {
   };
 }
 
+export interface ICarData {
+  city: string;
+  desc: string;
+  mileage: number;
+  model: string;
+  price: number;
+  bodyType: string;
+  carMake: string;
+  year: string;
+  fuelType: string;
+}
+
 /* export interface ISingleCar {
   carId: number;
   bodyType: string;

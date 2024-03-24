@@ -24,6 +24,11 @@ const CarItem = ({ car }: { car: ICar }) => {
         "&:hover": {
           transform: "scale(1.05)",
         },
+        [theme.breakpoints.down("lg")]: {
+          "&:hover": {
+            transform: "none",
+          },
+        },
         [theme.breakpoints.down("sm")]: {
           flexDirection: "column",
           height: "auto",
@@ -90,14 +95,19 @@ const CarItem = ({ car }: { car: ICar }) => {
               },
             }}
           >
-            {car.carMake}{" "}
-            {car.model.length > 15 ? car.model.slice(0, 15) + ".." : car.model}{" "}
+            {car.carMake} {car.model}
+            {/* {car.model.length > 16 ? car.model.slice(0, 16) + ".." : car.model}{" "} */}
           </Typography>
           <Box>
             <Typography
               variant="h5"
               color="green"
               fontWeight={700}
+              sx={{
+                [theme.breakpoints.down("sm")]: {
+                  fontSize: "22px",
+                },
+              }}
             >
               {car.price} $
             </Typography>
@@ -218,7 +228,9 @@ const CarItem = ({ car }: { car: ICar }) => {
               },
             }}
           >
-            <Typography sx={{ lineHeight: 1.3 }}>{car.desc}</Typography>
+            <Typography sx={{ lineHeight: 1.3 }}>
+              {car.desc ? car.desc : "No description"}
+            </Typography>
           </Box>
         </Box>
       </CardContent>

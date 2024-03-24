@@ -1,7 +1,6 @@
 import { Box, Button, Skeleton } from "@mui/material";
 import {
   useGetCarsQuery,
-  useAddCarMutation,
   useUpdateCarMutation,
   useDeleteCarMutation,
 } from "../../redux/carsApi";
@@ -11,24 +10,9 @@ import CarItem from "../../components/CarItem";
 const HomePage = () => {
   const { data: allCars } = useGetCarsQuery();
   console.log(allCars);
-  const [addCar] = useAddCarMutation();
+
   const [deleteCar] = useDeleteCarMutation();
   const [updateCar] = useUpdateCarMutation();
-
-  const handleAddCar = async () => {
-    const newCar = {
-      bodyType: "Hatchback",
-      carMake: "INTERNATIONAL",
-      model: "TTtestetstdjsdlkjsddbfdffbfbfnghmjhmhjm",
-      year: "2009",
-      price: 598000,
-      mileage: 956,
-      fuelType: "LPG/Petrol",
-      city: "KharkKharkovKharkovKharkovov",
-      desc: "The Audi ",
-    };
-    await addCar(newCar).unwrap();
-  };
 
   const handleUpdateCar = async (carId: number) => {
     const updatedCar = {
@@ -88,12 +72,6 @@ const HomePage = () => {
         margin: "auto",
       }}
     >
-      <Button
-        onClick={handleAddCar}
-        sx={{ backgroundColor: "green" }}
-      >
-        AddCar
-      </Button>
       <Button
         onClick={() => handleDeleteCar(33)}
         sx={{ backgroundColor: "red" }}
