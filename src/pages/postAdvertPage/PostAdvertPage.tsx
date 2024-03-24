@@ -13,18 +13,13 @@ import {
 import Spinner from "../../components/Spinner";
 import { FieldValues, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { useState } from "react";
 import { ICarData } from "../../types";
 import { useAddCarMutation } from "../../redux/carsApi";
 
 const PostAdvertPage = () => {
-  const [addCar, { addCarMutationError, isLoading }] = useAddCarMutation();
+  const [addCar, { error: addCarError, isLoading }] = useAddCarMutation();
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
-  const registerError = useAppSelector((state) => state.userRed.registerError);
-  const isUserLoading = useAppSelector((state) => state.userRed.isUserLoading);
   const [bodyType, setBodyType] = useState("");
   const [carMake, setCarMake] = useState("");
   const [year, setYear] = useState("");
@@ -75,18 +70,27 @@ const PostAdvertPage = () => {
     };
     console.log(newCar);
     await addCar(newCar).unwrap();
+    reset();
+    navigate("/");
   };
 
-  const handleChange = (event: SelectChangeEvent, selectType: string) => {
+  const handleChangeSelects = (
+    event: SelectChangeEvent,
+    selectType: string
+  ) => {
     console.log(event.target.value);
     if (selectType === "bodyType") {
       setBodyType(event.target.value);
+      setBodyTypeError("");
     } else if (selectType === "carMake") {
       setCarMake(event.target.value);
+      setCarMakeError("");
     } else if (selectType === "year") {
       setYear(event.target.value);
+      setYearError("");
     } else if (selectType === "fuelType") {
       setFuelType(event.target.value);
+      setFuelTypeError("");
     }
   };
 
@@ -322,6 +326,19 @@ const PostAdvertPage = () => {
     "1985",
   ];
 
+  if (isLoading) {
+    return <Spinner open={isLoading} />;
+  }
+
+  if (addCarError) {
+    console.log(addCarError);
+    return (
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
+        Something went wrong, unable to post advert.
+      </Box>
+    );
+  }
+
   return (
     <Box sx={{ marginTop: "20px", marginBottom: "20px" }}>
       <Typography
@@ -342,8 +359,6 @@ const PostAdvertPage = () => {
         }}
       >
         <Box>
-          <Spinner open={isLoading} />
-
           <form
             onSubmit={handleSubmit(onSubmit)}
             style={{
@@ -354,9 +369,10 @@ const PostAdvertPage = () => {
           >
             <Select
               value={bodyType}
-              onChange={(event) => handleChange(event, "bodyType")}
+              onChange={(event) => handleChangeSelects(event, "bodyType")}
               displayEmpty
               fullWidth
+              error={Boolean(bodyTypeError)}
             >
               <MenuItem
                 value=""
@@ -373,7 +389,7 @@ const PostAdvertPage = () => {
             {bodyTypeError && (
               <FormHelperText
                 error
-                sx={{ marginLeft: "15px" }}
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
               >
                 {bodyTypeError}
               </FormHelperText>
@@ -381,9 +397,10 @@ const PostAdvertPage = () => {
 
             <Select
               value={carMake}
-              onChange={(event) => handleChange(event, "carMake")}
+              onChange={(event) => handleChangeSelects(event, "carMake")}
               displayEmpty
               fullWidth
+              error={Boolean(carMakeError)}
             >
               <MenuItem
                 value=""
@@ -403,7 +420,7 @@ const PostAdvertPage = () => {
             {carMakeError && (
               <FormHelperText
                 error
-                sx={{ marginLeft: "15px" }}
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
               >
                 {carMakeError}
               </FormHelperText>
@@ -437,9 +454,10 @@ const PostAdvertPage = () => {
 
             <Select
               value={year}
-              onChange={(event) => handleChange(event, "year")}
+              onChange={(event) => handleChangeSelects(event, "year")}
               displayEmpty
               fullWidth
+              error={Boolean(yearError)}
             >
               <MenuItem
                 value=""
@@ -459,7 +477,7 @@ const PostAdvertPage = () => {
             {yearError && (
               <FormHelperText
                 error
-                sx={{ marginLeft: "15px" }}
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
               >
                 {yearError}
               </FormHelperText>
@@ -509,15 +527,16 @@ const PostAdvertPage = () => {
 
             <Select
               value={fuelType}
-              onChange={(event) => handleChange(event, "fuelType")}
+              onChange={(event) => handleChangeSelects(event, "fuelType")}
               displayEmpty
               fullWidth
+              error={Boolean(fuelTypeError)}
             >
               <MenuItem
                 value=""
                 disabled
               >
-                Select car fuelType
+                Select car fuel type
               </MenuItem>
               <MenuItem value={"Petrol"}>Petrol</MenuItem>
               <MenuItem value={"Diesel"}>Diesel</MenuItem>
@@ -529,7 +548,7 @@ const PostAdvertPage = () => {
             {fuelTypeError && (
               <FormHelperText
                 error
-                sx={{ marginLeft: "15px" }}
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
               >
                 {fuelTypeError}
               </FormHelperText>
@@ -578,7 +597,7 @@ const PostAdvertPage = () => {
               variant="contained"
               color="primary"
             >
-              Create advert
+              Publish
             </Button>
           </form>
         </Box>
