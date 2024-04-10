@@ -16,6 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ICarData } from "../../types";
 import { useAddCarMutation } from "../../redux/carsApi";
+import axios from "axios";
 
 const PostAdvertPage = () => {
   const [addCar, { error: addCarError, isLoading }] = useAddCarMutation();
@@ -28,6 +29,8 @@ const PostAdvertPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [uploaded, setUploaded] = useState();
 
   const {
     register,
@@ -39,6 +42,12 @@ const PostAdvertPage = () => {
     mode: "onChange",
   });
 
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      setSelectedFiles(Array.from(files));
+    }
+  };
   const onSubmit = async (carData: FieldValues) => {
     if (!bodyType) {
       setBodyTypeError("Please select car body type.");
@@ -56,6 +65,15 @@ const PostAdvertPage = () => {
       setFuelTypeError("Please select car fuel type.");
       return;
     }
+    if (selectedFiles.length === 0) {
+      alert("please select a file");
+      return;
+    }
+
+    const formData = new FormData();
+    selectedFiles.forEach((file) => {
+      formData.append("images", file);
+    });
 
     const newCar: ICarData = {
       city: carData.city,
@@ -68,10 +86,56 @@ const PostAdvertPage = () => {
       year,
       fuelType,
     };
-    console.log(newCar);
-    await addCar(newCar).unwrap();
-    reset();
-    navigate("/");
+    const res = await addCar(newCar).unwrap();
+    console.log(res);
+    if (res.status === 201) {
+      console.log("if");
+      const carId = res.data.carId;
+      console.log(carId);
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/car/add-photos/${carId}`,
+          formData
+        );
+        console.log("Upload successful", response.data);
+      } catch (error) {
+        console.error("Error uploading images:", error);
+      }
+      reset();
+      navigate("/");
+    }
+
+    /*  const jsonNewCarData = JSON.stringify(newCar);
+    console.log(jsonNewCarData);
+    formData.append("jsonNewCarData", jsonNewCarData); */
+    /*  const mileage = +carData.mileage
+    console.log(mileage);
+    formData.append("city", carData.city);
+    formData.append("desc", carData.desc);
+    formData.append("mileage", mileage);
+    formData.append("model", carData.model);
+    formData.append("price", parseInt(carData.price));
+    formData.append("bodyType", bodyType);
+    formData.append("carMake", carMake);
+    formData.append("year", year);
+    formData.append("fuelType", fuelType);
+      console.log(newCar);
+
+    console.log("formData*****", formData);
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/car/create",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Upload successful", response.data);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    } */
   };
 
   const handleChangeSelects = (
@@ -326,6 +390,24 @@ const PostAdvertPage = () => {
     "1985",
   ];
 
+  /*  const handleUpload = async () => {
+    const formData = new FormData();
+
+    selectedFiles.forEach((file) => {
+      formData.append("images", file);
+    });
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/car/upload-images",
+        formData
+      );
+      console.log("Upload successful", response.data);
+    } catch (error) {
+      console.error("Error uploading images:", error);
+    }
+  }; */
+
   if (isLoading) {
     return <Spinner open={isLoading} />;
   }
@@ -359,6 +441,37 @@ const PostAdvertPage = () => {
         }}
       >
         <Box>
+          <div>
+            <div style={{ marginTop: "50px" }}>
+              <input
+                type="file"
+                onChange={handleChange}
+                accept="image/*,.png,.jpg"
+                multiple
+              />
+
+              {selectedFiles.length > 0 && (
+                <div>
+                  <h3>Selected Files:</h3>
+                  <ul>
+                    {selectedFiles.map((file, index) => (
+                      <li key={index}>
+                        <strong>Name:</strong> {file.name}
+                        <br />
+                        <strong>Type:</strong> {file.type}
+                        <br />
+                        <strong>Size:</strong> {file.size} bytes
+                        <br />
+                        <strong>Last Modified Date:</strong>{" "}
+                        {new Date(file.lastModified).toLocaleString()}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+          </div>
+
           <form
             onSubmit={handleSubmit(onSubmit)}
             style={{

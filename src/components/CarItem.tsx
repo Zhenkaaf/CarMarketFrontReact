@@ -52,7 +52,11 @@ const CarItem = ({ car }: { car: ICar }) => {
               marginBottom: "10px",
             },
           }}
-          image="https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
+          image={
+            car.imageUrls
+              ? car.imageUrls[0]
+              : "https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
+          }
           title="Dacia Logan 2008"
         />
       </Box>
