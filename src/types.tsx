@@ -29,7 +29,7 @@ export interface ICar {
   createdAt: string;
   desc: string;
   fuelType: string;
-  imageUrls: string[] | null;
+  photoUrls: string[] | null;
   mileage: number;
   price: number;
   updatedAt: string;

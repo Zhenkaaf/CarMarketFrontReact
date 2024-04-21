@@ -1,19 +1,35 @@
+import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
 import axios from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 const CabinetPage = () => {
+  const filePickerRef = useRef<HTMLInputElement>(null);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploaded, setUploaded] = useState();
+  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const openFileFolder = () => {
+    filePickerRef.current?.click();
+  };
+
+  const selectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+    console.log("handleChange");
     console.log(event.target.files);
     const files = event.target.files;
     if (files) {
-      setSelectedFiles(Array.from(files));
+      const allFiles = [...selectedFiles, ...files];
+      if (allFiles.length > 7) {
+        alert("You can select up to 7 files.");
+        return;
+      }
+      const urls = Array.from(allFiles).map((file) =>
+        URL.createObjectURL(file)
+      );
+      setUploadedPhotos(urls);
+      setSelectedFiles(Array.from(allFiles));
     }
   };
 
-  const handleUpload = async () => {
+  const uploadFilesToServer = async () => {
     if (selectedFiles.length < 0) {
       alert("please select a file");
       return;
@@ -39,35 +55,96 @@ const CabinetPage = () => {
     }
   };
 
+  const setFirstPhoto = (index: number) => {
+    const copyOfUploadedPhotos = [...uploadedPhotos];
+    const firstPhoto = copyOfUploadedPhotos.splice(index, 1)[0];
+    copyOfUploadedPhotos.unshift(firstPhoto);
+    setUploadedPhotos(copyOfUploadedPhotos);
+  };
+
   return (
     <div style={{ marginTop: "50px" }}>
+      <button onClick={openFileFolder}>Choose photos</button>
       <input
         type="file"
-        onChange={handleChange}
+        onChange={selectFiles}
         accept="image/*,.png,.jpg"
         multiple
+        ref={filePickerRef}
+        style={{
+          opacity: 0,
+          height: 0,
+          width: 0,
+          lineHeight: 0,
+          overflow: "hidden",
+          padding: 0,
+          margin: 0,
+        }}
       />
-      <button onClick={handleUpload}>Save to server</button>
+      <button onClick={uploadFilesToServer}>Save to server</button>
 
-      {selectedFiles.length > 0 && (
-        <div>
-          <h3>Selected Files:</h3>
-          <ul>
-            {selectedFiles.map((file, index) => (
-              <li key={index}>
-                <strong>Name:</strong> {file.name}
-                <br />
-                <strong>Type:</strong> {file.type}
-                <br />
-                <strong>Size:</strong> {file.size} bytes
-                <br />
-                <strong>Last Modified Date:</strong>{" "}
-                {new Date(file.lastModified).toLocaleString()}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+      <ImageList
+        sx={{ width: 500 /*  height: 450 */ }}
+        /* cols={2} */
+        rowHeight={164}
+        gap={8}
+      >
+        {uploadedPhotos.map((photoUrl, index) => (
+          <ImageListItem
+            key={index}
+            cols={index === 0 ? 2 : 1}
+            rows={index === 0 ? 2 : 1}
+          >
+            {index === 0 && [
+              <img
+                key={`photo-${index}`}
+                srcSet={photoUrl}
+                src={photoUrl}
+                alt={`Uploaded Photo ${index + 1}`}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  position: "absolute",
+                }}
+                onClick={() => setFirstPhoto(index)}
+              />,
+              <ImageListItemBar
+                key={`bar-${index}`}
+                title="Main photo"
+                sx={{
+                  "& .MuiImageListItemBar-title": {
+                    color: "#ff4f00",
+                  },
+                }}
+              />,
+            ]}
+            {index !== 0 && [
+              <img
+                key={`photo-${index}`}
+                srcSet={photoUrl}
+                src={photoUrl}
+                alt={`Uploaded Photo ${index + 1}`}
+                loading="lazy"
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  cursor: "pointer",
+                  position: "relative",
+                }}
+                onClick={() => setFirstPhoto(index)}
+              />,
+              <ImageListItemBar
+                key={`bar-${index}`}
+                subtitle="Click to set as main"
+              />,
+            ]}
+          </ImageListItem>
+        ))}
+      </ImageList>
     </div>
   );
 };

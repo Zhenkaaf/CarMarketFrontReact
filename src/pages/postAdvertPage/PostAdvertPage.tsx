@@ -72,7 +72,7 @@ const PostAdvertPage = () => {
 
     const formData = new FormData();
     selectedFiles.forEach((file) => {
-      formData.append("images", file);
+      formData.append("photos", file);
     });
 
     const newCar: ICarData = {
@@ -98,11 +98,11 @@ const PostAdvertPage = () => {
           formData
         );
         console.log("Upload successful", response.data);
+        reset();
+        navigate("/");
       } catch (error) {
-        console.error("Error uploading images:", error);
+        console.error("Error uploading photos:", error);
       }
-      reset();
-      navigate("/");
     }
 
     /*  const jsonNewCarData = JSON.stringify(newCar);
