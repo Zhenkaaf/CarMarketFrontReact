@@ -15,11 +15,20 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { ICarData } from "../../types";
-import { useAddCarMutation } from "../../redux/carsApi";
+import {
+  useAddCarMutation,
+  useAddPhotosToCarMutation,
+} from "../../redux/carsApi";
 import axios from "axios";
+import AttachFiles from "../../components/attachFiles/AttachFiles";
 
 const PostAdvertPage = () => {
-  const [addCar, { error: addCarError, isLoading }] = useAddCarMutation();
+  const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
+    useAddCarMutation();
+  const [
+    addPhotosToCar,
+    { error: addPhotosError, isLoading: isAddPhotosLoading },
+  ] = useAddPhotosToCarMutation();
   const navigate = useNavigate();
   const [bodyType, setBodyType] = useState("");
   const [carMake, setCarMake] = useState("");
@@ -30,7 +39,6 @@ const PostAdvertPage = () => {
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-  const [uploaded, setUploaded] = useState();
 
   const {
     register,
@@ -42,12 +50,6 @@ const PostAdvertPage = () => {
     mode: "onChange",
   });
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const files = event.target.files;
-    if (files) {
-      setSelectedFiles(Array.from(files));
-    }
-  };
   const onSubmit = async (carData: FieldValues) => {
     if (!bodyType) {
       setBodyTypeError("Please select car body type.");
@@ -65,7 +67,7 @@ const PostAdvertPage = () => {
       setFuelTypeError("Please select car fuel type.");
       return;
     }
-    if (selectedFiles.length === 0) {
+    if (selectedFiles.length < 0) {
       alert("please select a file");
       return;
     }
@@ -87,55 +89,24 @@ const PostAdvertPage = () => {
       fuelType,
     };
     const res = await addCar(newCar).unwrap();
-    console.log(res);
     if (res.status === 201) {
-      console.log("if");
+      console.log("carAdded");
       const carId = res.data.carId;
-      console.log(carId);
+      console.log(typeof carId);
       try {
-        const response = await axios.post(
+        const res = await addPhotosToCar({ carId, formData }).unwrap();
+        /* const response = await axios.post(
           `http://localhost:3000/api/car/add-photos/${carId}`,
           formData
-        );
-        console.log("Upload successful", response.data);
+        ); */
+        console.log("PhotosAdded");
+        console.log("Upload successful", res.data);
         reset();
         navigate("/");
       } catch (error) {
         console.error("Error uploading photos:", error);
       }
     }
-
-    /*  const jsonNewCarData = JSON.stringify(newCar);
-    console.log(jsonNewCarData);
-    formData.append("jsonNewCarData", jsonNewCarData); */
-    /*  const mileage = +carData.mileage
-    console.log(mileage);
-    formData.append("city", carData.city);
-    formData.append("desc", carData.desc);
-    formData.append("mileage", mileage);
-    formData.append("model", carData.model);
-    formData.append("price", parseInt(carData.price));
-    formData.append("bodyType", bodyType);
-    formData.append("carMake", carMake);
-    formData.append("year", year);
-    formData.append("fuelType", fuelType);
-      console.log(newCar);
-
-    console.log("formData*****", formData);
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/car/create",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("Upload successful", response.data);
-    } catch (error) {
-      console.error("Error uploading images:", error);
-    } */
   };
 
   const handleChangeSelects = (
@@ -390,26 +361,8 @@ const PostAdvertPage = () => {
     "1985",
   ];
 
-  /*  const handleUpload = async () => {
-    const formData = new FormData();
-
-    selectedFiles.forEach((file) => {
-      formData.append("images", file);
-    });
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/car/upload-images",
-        formData
-      );
-      console.log("Upload successful", response.data);
-    } catch (error) {
-      console.error("Error uploading images:", error);
-    }
-  }; */
-
-  if (isLoading) {
-    return <Spinner open={isLoading} />;
+  if (isAddCarLoading || isAddPhotosLoading) {
+    return <Spinner open={true} />;
   }
 
   if (addCarError) {
@@ -422,7 +375,12 @@ const PostAdvertPage = () => {
   }
 
   return (
-    <Box sx={{ marginTop: "20px", marginBottom: "20px" }}>
+    <Box
+      sx={{
+        marginTop: "20px",
+        marginBottom: "20px",
+      }}
+    >
       <Typography
         variant="h5"
         textTransform={"uppercase"}
@@ -436,42 +394,20 @@ const PostAdvertPage = () => {
           boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
           borderRadius: "8px",
           padding: "20px",
-          maxWidth: "400px",
+          maxWidth: "540px",
+          display: "flex",
+          width: "100%",
           marginTop: "20px",
+          /*  "@media (max-width: 360px)": {
+            padding: "5px",
+          }, */
         }}
       >
-        <Box>
-          <div>
-            <div style={{ marginTop: "50px" }}>
-              <input
-                type="file"
-                onChange={handleChange}
-                accept="image/*,.png,.jpg"
-                multiple
-              />
-
-              {selectedFiles.length > 0 && (
-                <div>
-                  <h3>Selected Files:</h3>
-                  <ul>
-                    {selectedFiles.map((file, index) => (
-                      <li key={index}>
-                        <strong>Name:</strong> {file.name}
-                        <br />
-                        <strong>Type:</strong> {file.type}
-                        <br />
-                        <strong>Size:</strong> {file.size} bytes
-                        <br />
-                        <strong>Last Modified Date:</strong>{" "}
-                        {new Date(file.lastModified).toLocaleString()}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-
+        <Box
+          sx={{
+            width: "100%",
+          }}
+        >
           <form
             onSubmit={handleSubmit(onSubmit)}
             style={{
@@ -702,10 +638,15 @@ const PostAdvertPage = () => {
               />
             </Box>
 
+            <AttachFiles
+              selectedFiles={selectedFiles}
+              setSelectedFiles={setSelectedFiles}
+            />
+
             <Button
               sx={{ marginTop: "10px" }}
               type="submit"
-              disabled={!isValid}
+              disabled={!isValid || selectedFiles.length === 0}
               fullWidth
               variant="contained"
               color="primary"

@@ -57,7 +57,7 @@ const CarItem = ({ car }: { car: ICar }) => {
               ? car.photoUrls[0]
               : "https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
           }
-          title="Dacia Logan 2008"
+          title={`Photo of ${car.carMake}`}
         />
       </Box>
 

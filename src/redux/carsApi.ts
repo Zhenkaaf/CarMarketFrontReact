@@ -37,6 +37,15 @@ export const carsApi = createApi({
       invalidatesTags: ["Cars"],
     }),
 
+    addPhotosToCar: builder.mutation({
+      query: ({ carId, formData }) => ({
+        url: `car/add-photos/${carId}`,
+        method: "POST",
+        body: formData,
+      }),
+      invalidatesTags: ["Cars"],
+    }),
+
     updateCar: builder.mutation({
       query: (data) => ({
         url: `car/update/${data.id}`,
@@ -60,6 +69,7 @@ export const {
   useGetCarsQuery,
   useGetCarQuery,
   useAddCarMutation,
+  useAddPhotosToCarMutation,
   useUpdateCarMutation,
   useDeleteCarMutation,
 } = carsApi;

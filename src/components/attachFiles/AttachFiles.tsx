@@ -1,13 +1,28 @@
-import { ImageList, ImageListItem, ImageListItemBar } from "@mui/material";
-import axios from "axios";
+import {
+  IconButton,
+  ImageList,
+  ImageListItem,
+  ImageListItemBar,
+} from "@mui/material";
 import { useRef, useState } from "react";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
-const CabinetPage = () => {
+interface AttachFilesProps {
+  selectedFiles: File[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+}
+
+const AttachFiles: React.FC<AttachFilesProps> = ({
+  selectedFiles,
+  setSelectedFiles,
+}) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
 
-  const openFileFolder = () => {
+  const openFileFolder = (
+    event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
+  ) => {
+    event.preventDefault();
     filePickerRef.current?.click();
   };
 
@@ -29,38 +44,32 @@ const CabinetPage = () => {
     }
   };
 
-  const uploadFilesToServer = async () => {
-    if (selectedFiles.length < 0) {
-      alert("please select a file");
-      return;
-    }
-    const formData = new FormData();
-
-    selectedFiles.forEach((file) => {
-      formData.append("photos", file);
-    });
-
-    try {
-      const response = await axios.post(
-        "http://localhost:3000/api/car/upload-images",
-        formData
-      );
-      console.log("Upload successful", response.data);
-    } catch (error) {
-      console.error("Error uploading photos:", error);
-    }
-  };
-
   const setFirstPhoto = (index: number) => {
+    console.log("setFirstPhoto", index);
     const copyOfUploadedPhotos = [...uploadedPhotos];
+    const copyOfSelectedFiles = [...selectedFiles];
     const firstPhoto = copyOfUploadedPhotos.splice(index, 1)[0];
     copyOfUploadedPhotos.unshift(firstPhoto);
+    const firstFile = copyOfSelectedFiles.splice(index, 1)[0];
+    copyOfSelectedFiles.unshift(firstFile);
     setUploadedPhotos(copyOfUploadedPhotos);
+    setSelectedFiles(copyOfSelectedFiles);
+  };
+
+  const removePhoto = (indexToRemove: number) => {
+    const updatedUploadedPhotos = uploadedPhotos.filter(
+      (_, index) => index !== indexToRemove
+    );
+    const updatedSelectedFiles = selectedFiles.filter(
+      (_, index) => index !== indexToRemove
+    );
+    setUploadedPhotos(updatedUploadedPhotos);
+    setSelectedFiles(updatedSelectedFiles);
   };
 
   return (
     <div style={{ marginTop: "50px" }}>
-      <button onClick={openFileFolder}>Choose photos</button>
+      <button onClick={(event) => openFileFolder(event)}>Add photos</button>
       <input
         type="file"
         onChange={selectFiles}
@@ -77,16 +86,15 @@ const CabinetPage = () => {
           margin: 0,
         }}
       />
-      <button onClick={uploadFilesToServer}>Save to server</button>
 
       <ImageList
         sx={{
-          width: 500,
+          width: "500px",
           "@media (max-width: 540px)": {
-            width: 400, // Без использования !important
+            width: "400px",
           },
           "@media (max-width: 440px)": {
-            width: 320, // Без использования !important
+            width: "320px",
           },
         }}
         rowHeight={164}
@@ -122,6 +130,11 @@ const CabinetPage = () => {
                     color: "#ff4f00",
                   },
                 }}
+                actionIcon={
+                  <IconButton sx={{ color: "red" }}>
+                    <DeleteForeverIcon onClick={() => removePhoto(index)} />
+                  </IconButton>
+                }
               />,
             ]}
             {index !== 0 && [
@@ -142,7 +155,27 @@ const CabinetPage = () => {
               />,
               <ImageListItemBar
                 key={`bar-${index}`}
-                subtitle="Click to set as main"
+                subtitle="Click to photo to set as main"
+                sx={{
+                  "@media (max-width: 540px)": {
+                    "& .MuiImageListItemBar-subtitle": {
+                      fontSize: "10px",
+                    },
+                  },
+                  "@media (max-width: 440px)": {
+                    "& .MuiImageListItemBar-subtitle": {
+                      fontSize: "7.5px",
+                    },
+                  },
+                }}
+                actionIcon={
+                  <IconButton sx={{ color: "red" }}>
+                    <DeleteForeverIcon
+                      fontSize="small"
+                      onClick={() => removePhoto(index)}
+                    />
+                  </IconButton>
+                }
               />,
             ]}
           </ImageListItem>
@@ -152,4 +185,4 @@ const CabinetPage = () => {
   );
 };
 
-export default CabinetPage;
+export default AttachFiles;
