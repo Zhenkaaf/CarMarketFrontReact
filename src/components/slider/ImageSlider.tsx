@@ -2,34 +2,41 @@ import { useState } from "react";
 import { ArrowBigLeft, ArrowBigRight, Circle, CircleDot } from "lucide-react";
 import s from "./imageSlider.module.css";
 
-type ImageSliderProps = {
+/* type ImageSliderProps = {
   images: {
     url: string;
     alt: string;
   }[];
+}; */
+type ImageSliderProps = {
+  images: string[] | null;
 };
 
 export function ImageSlider({ images }: ImageSliderProps) {
   const [imageIndex, setImageIndex] = useState(0);
 
   function showNextImage() {
-    setImageIndex((index) => {
-      if (index === images.length - 1) return 0;
-      return index + 1;
-    });
+    if (images) {
+      setImageIndex((index) => {
+        if (index === images.length - 1) return 0;
+        return index + 1;
+      });
+    }
   }
 
   function showPrevImage() {
-    setImageIndex((index) => {
-      if (index === 0) return images.length - 1;
-      return index - 1;
-    });
+    if (images) {
+      setImageIndex((index) => {
+        if (index === 0) return images.length - 1;
+        return index - 1;
+      });
+    }
   }
 
   return (
     <section
       aria-label="Image Slider"
-      style={{ width: "100%", height: "100%", position: "relative" }}
+      className={s.sectionContainer}
     >
       <a
         href="#after-image-slider-controls"
@@ -45,14 +52,17 @@ export function ImageSlider({ images }: ImageSliderProps) {
           overflow: "hidden",
         }}
       >
-        {images.map(({ url, alt }, index) => (
+        {images?.map((url, index) => (
           <img
             key={url}
             src={url}
-            alt={alt}
             aria-hidden={imageIndex !== index}
             className={s.imgSliderImg}
-            style={{ translate: `${-100 * imageIndex}%` }}
+            style={{
+              objectFit: "contain",
+
+              translate: `${-100 * imageIndex}%`,
+            }}
           />
         ))}
       </div>
@@ -82,7 +92,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
           gap: ".25rem",
         }}
       >
-        {images.map((_, index) => (
+        {images?.map((_, index) => (
           <button
             key={index}
             className={s.imgSliderDotBtn}

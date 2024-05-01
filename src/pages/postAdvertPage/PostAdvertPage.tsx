@@ -19,7 +19,6 @@ import {
   useAddCarMutation,
   useAddPhotosToCarMutation,
 } from "../../redux/carsApi";
-import axios from "axios";
 import AttachFiles from "../../components/attachFiles/AttachFiles";
 
 const PostAdvertPage = () => {
@@ -88,24 +87,12 @@ const PostAdvertPage = () => {
       year,
       fuelType,
     };
-    const res = await addCar(newCar).unwrap();
-    if (res.status === 201) {
-      console.log("carAdded");
-      const carId = res.data.carId;
-      console.log(typeof carId);
-      try {
-        const res = await addPhotosToCar({ carId, formData }).unwrap();
-        /* const response = await axios.post(
-          `http://localhost:3000/api/car/add-photos/${carId}`,
-          formData
-        ); */
-        console.log("PhotosAdded");
-        console.log("Upload successful", res.data);
-        reset();
-        navigate("/");
-      } catch (error) {
-        console.error("Error uploading photos:", error);
-      }
+    const addCarRes = await addCar(newCar).unwrap();
+    if (addCarRes.status === 201) {
+      const carId = addCarRes.data.carId;
+      await addPhotosToCar({ carId, formData }).unwrap();
+      reset();
+      navigate("/");
     }
   };
 
@@ -374,6 +361,15 @@ const PostAdvertPage = () => {
     );
   }
 
+  if (addPhotosError) {
+    console.log(addPhotosError);
+    return (
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
+        Something went wrong, unable to post advert.
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -633,8 +629,13 @@ const PostAdvertPage = () => {
             <Box>
               <TextareaAutosize
                 {...register("desc")}
-                style={{ width: "100%", minHeight: "80px", padding: "10px" }}
+                style={{
+                  width: "100%",
+                  minHeight: "80px",
+                  padding: "10px",
+                }}
                 name="desc"
+                placeholder="Description"
               />
             </Box>
 

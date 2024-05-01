@@ -15,29 +15,6 @@ import { ImageSlider } from "../../components/slider/ImageSlider";
 import { theme } from "../../theme";
 
 const SingleAdvertPage = () => {
-  const IMAGES = [
-    {
-      url: "https://cdn.riastatic.com/photosnew/auto/photo/samsung_sm6__457907116f.webp",
-      alt: "Car One",
-    },
-    {
-      url: "https://i0.rst.ua/oldcars/skoda/octavia/14512686-6.jpg",
-      alt: "Car Two",
-    },
-    {
-      url: "https://i0.rst.ua/oldcars/skoda/octavia/14512686-9.jpg",
-      alt: "Car Three",
-    },
-    {
-      url: "https://i0.rst.ua/oldcars/skoda/octavia/14512686-11.jpg",
-      alt: "Car Four",
-    },
-    {
-      url: "https://i0.rst.ua/oldcars/skoda/octavia/14512686-13.jpg",
-      alt: "Car Five",
-    },
-  ];
-
   const { carId } = useParams<{ carId: string }>();
   const { data: singleCar, isLoading, isError } = useGetCarQuery(carId || "");
   console.log(singleCar);
@@ -113,7 +90,7 @@ const SingleAdvertPage = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  marginBottom: "5px",
+                  marginBottom: "9px",
                 }}
               >
                 <Typography variant="h5">
@@ -140,7 +117,7 @@ const SingleAdvertPage = () => {
                 >
                   {" "}
                   <MonetizationOnIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
                   <Typography
@@ -148,9 +125,9 @@ const SingleAdvertPage = () => {
                     color="green"
                     fontWeight={700}
                     sx={{
-                      marginLeft: "5px",
                       marginTop: "3px",
-                      fontSize: "22px",
+                      fontSize: "20px",
+                      padding: "5px 5px",
                     }}
                   >
                     {singleCar.price}
@@ -164,13 +141,12 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <TimeToLeaveIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
                   <Typography
                     sx={{
-                      marginLeft: "5px",
-                      fontSize: "22px",
+                      padding: "5px 5px",
                     }}
                   >
                     {singleCar.bodyType}
@@ -185,10 +161,10 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <LocalGasStationIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
-                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                  <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.fuelType}
                   </Typography>
                 </Box>
@@ -201,10 +177,10 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <TodayIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
-                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                  <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.year}
                   </Typography>
                 </Box>
@@ -217,14 +193,12 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <SpeedIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
                   <Typography
                     sx={{
-                      marginLeft: "5px",
-                      fontSize: "22px",
-                      backgroundColor: "#d6f5f1",
+                      padding: "5px 5px",
                     }}
                   >
                     {singleCar.mileage} thds.km.
@@ -239,10 +213,10 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <PlaceIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
-                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                  <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.city.length > 20
                       ? singleCar.city.slice(0, 20)
                       : singleCar.city}
@@ -257,10 +231,10 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <PhoneInTalkIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
-                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                  <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.user?.phoneNumber}
                   </Typography>
                 </Box>
@@ -273,10 +247,10 @@ const SingleAdvertPage = () => {
                   }}
                 >
                   <AccountCircleIcon
-                    fontSize="large"
+                    sx={{ marginLeft: "5px" }}
                     color="warning"
                   />
-                  <Typography sx={{ marginLeft: "5px", fontSize: "22px" }}>
+                  <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.user?.name}
                   </Typography>
                 </Box>
@@ -301,14 +275,14 @@ const SingleAdvertPage = () => {
           <Box sx={{ flex: 2, overflow: "hidden", backgroundColor: "#d6f5f1" }}>
             <div
               style={{
-                maxWidth: "900px",
+                /*   maxWidth: "900px", */
                 /*    maxWidth: "100%",
                 maxHeight: "100%", */
-                aspectRatio: "10 / 6",
+                /*  aspectRatio: "10 / 6", */
                 margin: "0 auto",
               }}
             >
-              <ImageSlider images={IMAGES} />
+              <ImageSlider images={singleCar.photoUrls} />
             </div>
           </Box>
         </Box>

@@ -4,6 +4,13 @@
   box-sizing: border-box;
 }
 
+.sectionContainer {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  margin: 0 auto;
+}
+
 .imgSliderImg {
   /* object-fit: contain; */
   object-fit: cover;
@@ -109,5 +116,11 @@
 @media screen and (max-width: 480px) {
   .imgSliderDotBtn {
     display: none;
+  }
+}
+
+@media screen and (min-width: 1240px) {
+  .sectionContainer {
+    width: 827px;
   }
 }

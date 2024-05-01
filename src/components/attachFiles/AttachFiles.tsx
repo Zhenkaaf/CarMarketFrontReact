@@ -1,11 +1,15 @@
 import {
+  Box,
+  Button,
   IconButton,
   ImageList,
   ImageListItem,
   ImageListItemBar,
+  Typography,
 } from "@mui/material";
 import { useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 
 interface AttachFilesProps {
   selectedFiles: File[];
@@ -33,7 +37,7 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
     if (files) {
       const allFiles = [...selectedFiles, ...files];
       if (allFiles.length > 7) {
-        alert("You can select up to 7 files.");
+        alert("You can select up to 7 photos, jpg / png.");
         return;
       }
       const urls = Array.from(allFiles).map((file) =>
@@ -68,8 +72,20 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
   };
 
   return (
-    <div style={{ marginTop: "50px" }}>
-      <button onClick={(event) => openFileFolder(event)}>Add photos</button>
+    <Box>
+      <Button
+        sx={{ marginTop: "5px" }}
+        variant="contained"
+        onClick={(event) => openFileFolder(event)}
+        startIcon={<DriveFolderUploadIcon sx={{ marginTop: "-2px" }} />}
+        color="secondary"
+      >
+        Add photos
+      </Button>
+      <Typography sx={{ fontSize: "12px", color: "grey", marginTop: "3px" }}>
+        max 7 photos, jpg / png
+      </Typography>
+
       <input
         type="file"
         onChange={selectFiles}
@@ -181,7 +197,7 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
           </ImageListItem>
         ))}
       </ImageList>
-    </div>
+    </Box>
   );
 };
 

@@ -11,6 +11,7 @@ import { ICar } from "./../types";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
 const CarItem = ({ car }: { car: ICar }) => {
+  console.log(car);
   return (
     <Card
       key={car.carId}
@@ -55,7 +56,7 @@ const CarItem = ({ car }: { car: ICar }) => {
           image={
             car.photoUrls
               ? car.photoUrls[0]
-              : "https://cdn0.riastatic.com/photosnew/auto/photo/dacia_logan-mcv__535291690hd.webp"
+              : "https://gas-kvas.com/uploads/posts/2023-01/thumbs/1674658270_gas-kvas-com-p-konturnii-risunok-avto-27.jpg"
           }
           title={`Photo of ${car.carMake}`}
         />
@@ -191,7 +192,12 @@ const CarItem = ({ car }: { car: ICar }) => {
           </Box>
 
           <Box
-            sx={{ display: "flex", alignItems: "center", marginTop: "10px" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              marginTop: "7px",
+              marginBottom: "3px",
+            }}
           >
             <PlaceIcon
               fontSize="small"
