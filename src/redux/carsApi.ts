@@ -28,6 +28,11 @@ export const carsApi = createApi({
       providesTags: ["Cars"],
     }),
 
+    getMyCars: builder.query<ICar[], string>({
+      query: (userId) => `car/my-cars/${userId}`,
+      providesTags: ["Cars"],
+    }),
+
     addCar: builder.mutation({
       query: (body) => ({
         url: "car/create",
@@ -68,6 +73,7 @@ export const carsApi = createApi({
 export const {
   useGetCarsQuery,
   useGetCarQuery,
+  useGetMyCarsQuery,
   useAddCarMutation,
   useAddPhotosToCarMutation,
   useUpdateCarMutation,

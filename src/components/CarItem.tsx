@@ -11,7 +11,6 @@ import { ICar } from "./../types";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
 const CarItem = ({ car }: { car: ICar }) => {
-  console.log(car);
   return (
     <Card
       key={car.carId}

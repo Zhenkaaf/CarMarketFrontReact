@@ -136,7 +136,6 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
                   cursor: "pointer",
                   position: "absolute",
                 }}
-                onClick={() => setFirstPhoto(index)}
               />,
               <ImageListItemBar
                 key={`bar-${index}`}

@@ -365,7 +365,7 @@ const PostAdvertPage = () => {
     console.log(addPhotosError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to post advert.
+        Something went wrong, photos were not uploaded.
       </Box>
     );
   }

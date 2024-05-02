@@ -9,7 +9,7 @@ export const formattedDate = (dateString: string): string => {
 export const timePassed = (dateString: string): string => {
   const currentDate = new Date();
   const pastDate = new Date(dateString);
-  pastDate.setHours(pastDate.getHours() + 3);
+  pastDate.setHours(pastDate.getHours() /* + 3 */);
   const differenceMs = currentDate.getTime() - pastDate.getTime();
   const differenceHours = Math.floor(differenceMs / (1000 * 60 * 60));
 
