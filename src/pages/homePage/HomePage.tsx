@@ -1,31 +1,11 @@
-import { Box, Button, Skeleton } from "@mui/material";
-import {
-  useGetCarsQuery,
-  useUpdateCarMutation,
-  useDeleteCarMutation,
-} from "../../redux/carsApi";
+import { Box, Skeleton } from "@mui/material";
+import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link } from "react-router-dom";
 import CarItem from "../../components/CarItem";
 
 const HomePage = () => {
   const { data: allCars } = useGetCarsQuery();
   console.log(allCars);
-
-  const [deleteCar] = useDeleteCarMutation();
-  const [updateCar] = useUpdateCarMutation();
-
-  const handleUpdateCar = async (carId: number) => {
-    const updatedCar = {
-      year: "1999",
-      price: 3333,
-    };
-    try {
-      await updateCar({ id: carId, updatedCar }).unwrap();
-      console.log(`Car with id ${carId} has been successfully updated`);
-    } catch (error: unknown) {
-      console.error(error);
-    }
-  };
 
   /*   const getErrorMessage = (error: unknown): string => {
     let message: string;
@@ -41,27 +21,6 @@ const HomePage = () => {
     return message;
   }; */
 
-  const handleDeleteCar = async (carId: number) => {
-    try {
-      await deleteCar(carId).unwrap();
-      console.log(`Car with id ${carId} has been successfully deleted`);
-    } catch (error: unknown) {
-      console.error(error);
-      /*  if (typeof error === "object" && error !== null && "data" in error) {
-        const data = error as { data: unknown | null }; // Приведение типа для доступа к свойству data
-        if (
-          data.data !== null &&
-          typeof data.data === "object" &&
-          "message" in data.data
-        ) {
-          console.error(data.data.message);
-        } else {
-          console.error("Error occurred, but no message available");
-        }
-      } */
-    }
-  };
-
   /*   if (isLoading) return <h1>Loading...</h1>; */
 
   return (
@@ -70,20 +29,9 @@ const HomePage = () => {
         maxWidth: "1140px",
         width: "100%",
         margin: "auto",
+        marginTop: "20px",
       }}
     >
-      <Button
-        onClick={() => handleDeleteCar(33)}
-        sx={{ backgroundColor: "red" }}
-      >
-        DeleteCar
-      </Button>
-      <Button
-        onClick={() => handleUpdateCar(33)}
-        sx={{ backgroundColor: "blue" }}
-      >
-        UpdateCar
-      </Button>
       {allCars ? (
         allCars.map((car) => (
           <Link
@@ -91,7 +39,10 @@ const HomePage = () => {
             style={{ textDecoration: "none" }}
             key={car.carId}
           >
-            <CarItem car={car} />
+            <CarItem
+              car={car}
+              applyHoverStyles={true}
+            />
           </Link>
         ))
       ) : (

@@ -10,20 +10,24 @@ import TodayIcon from "@mui/icons-material/Today";
 import { ICar } from "./../types";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
-const CarItem = ({ car }: { car: ICar }) => {
+const CarItem = ({
+  car,
+  applyHoverStyles,
+}: {
+  car: ICar;
+  applyHoverStyles?: boolean;
+}) => {
   return (
     <Card
       key={car.carId}
       sx={{
         height: "250px",
         display: "flex",
-        backgroundColor: "#d6f5f1",
+        backgroundColor: "#e1bee7",
         padding: "20px",
         marginBottom: "15px",
-        transition: "transform 0.3s ease",
-        "&:hover": {
-          transform: "scale(1.05)",
-        },
+        transition: applyHoverStyles ? "transform 0.3s ease" : "none",
+        "&:hover": applyHoverStyles ? { transform: "scale(1.05)" } : {},
         [theme.breakpoints.down("lg")]: {
           "&:hover": {
             transform: "none",
@@ -135,7 +139,7 @@ const CarItem = ({ car }: { car: ICar }) => {
             >
               <TimeToLeaveIcon
                 fontSize="small"
-                color="warning"
+                color="secondary"
               />
               <Typography sx={{ marginLeft: "5px" }}>{car.bodyType}</Typography>
             </Box>
@@ -149,7 +153,7 @@ const CarItem = ({ car }: { car: ICar }) => {
             >
               <LocalGasStationIcon
                 fontSize="small"
-                color="warning"
+                color="secondary"
               />
               <Typography sx={{ marginLeft: "5px" }}>{car.fuelType}</Typography>
             </Box>
@@ -163,7 +167,7 @@ const CarItem = ({ car }: { car: ICar }) => {
             >
               <TodayIcon
                 fontSize="small"
-                color="warning"
+                color="secondary"
               />
               <Typography sx={{ marginLeft: "5px" }}>{car.year}</Typography>
             </Box>
@@ -177,7 +181,7 @@ const CarItem = ({ car }: { car: ICar }) => {
             >
               <SpeedIcon
                 fontSize="small"
-                color="warning"
+                color="secondary"
               />
               <Typography
                 sx={{
@@ -200,7 +204,7 @@ const CarItem = ({ car }: { car: ICar }) => {
           >
             <PlaceIcon
               fontSize="small"
-              color="warning"
+              color="secondary"
             />
             <Typography
               sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
@@ -217,7 +221,7 @@ const CarItem = ({ car }: { car: ICar }) => {
           >
             <QueryBuilderIcon
               fontSize="small"
-              color="warning"
+              color="secondary"
             />
             <Typography
               sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}

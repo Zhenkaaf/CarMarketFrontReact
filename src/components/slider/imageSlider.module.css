@@ -38,7 +38,7 @@
 }
 
 .imgSliderBtn > * {
-  stroke: white;
+  stroke: #ff4500;
   fill: black;
   width: 2rem;
   height: 2rem;
@@ -65,7 +65,7 @@
 }
 
 .imgSliderDotBtn > * {
-  stroke: white;
+  stroke: #ff4500;
   fill: black;
   height: 100%;
   width: 100%;

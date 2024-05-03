@@ -1,14 +1,15 @@
 import { createTheme } from "@mui/material/styles";
 
-import { orange, purple } from "@mui/material/colors";
+import { purple } from "@mui/material/colors";
 
 export const theme = createTheme({
   palette: {
     primary: {
-      main: purple[500],
+      main: purple[700],
     },
     secondary: {
-      main: orange[500],
+      main: "#ff4500",
+      /*   main: orange[900], */
     },
   },
   breakpoints: {

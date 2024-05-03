@@ -650,7 +650,7 @@ const PostAdvertPage = () => {
               disabled={!isValid || selectedFiles.length === 0}
               fullWidth
               variant="contained"
-              color="primary"
+              color="secondary"
             >
               Publish
             </Button>

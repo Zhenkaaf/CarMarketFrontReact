@@ -112,13 +112,13 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   {" "}
                   <MonetizationOnIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography
                     variant="h4"
@@ -137,12 +137,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <TimeToLeaveIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography
                     sx={{
@@ -157,12 +157,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <LocalGasStationIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.fuelType}
@@ -173,12 +173,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <TodayIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.year}
@@ -189,12 +189,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <SpeedIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography
                     sx={{
@@ -209,12 +209,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <PlaceIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.city.length > 20
@@ -227,12 +227,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <PhoneInTalkIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.user?.phoneNumber}
@@ -243,12 +243,12 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#d6f5f1",
+                    backgroundColor: "#e1bee7",
                   }}
                 >
                   <AccountCircleIcon
                     sx={{ marginLeft: "5px" }}
-                    color="warning"
+                    color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
                     {singleCar.user?.name}
@@ -259,31 +259,33 @@ const SingleAdvertPage = () => {
               <Box
                 sx={{
                   marginTop: "5px",
-                  height: "215px",
+                  height: "210px",
                   overflow: "hidden",
-                  backgroundColor: "#d6f5f1",
+                  backgroundColor: "#e1bee7",
                   overflowY: "auto",
                   padding: "5px",
+                  [theme.breakpoints.down("md")]: {
+                    /*  height: "200px", */
+                    marginBottom: "10px",
+                  },
                 }}
               >
-                <Typography sx={{ lineHeight: 1.3 }}>
+                <Typography sx={{ lineHeight: 1.26 }}>
                   {singleCar.desc ? singleCar.desc : "Description missing"}
                 </Typography>
               </Box>
             </CardContent>
           </Box>
-          <Box sx={{ flex: 2, overflow: "hidden", backgroundColor: "#d6f5f1" }}>
-            <div
-              style={{
-                /*   maxWidth: "900px", */
-                /*    maxWidth: "100%",
-                maxHeight: "100%", */
-                /*  aspectRatio: "10 / 6", */
+          <Box sx={{ flex: 2, overflow: "hidden", backgroundColor: "#e1bee7" }}>
+            <Box
+              sx={{
+                maxWidth: "1023px",
+                aspectRatio: "10 / 6",
                 margin: "0 auto",
               }}
             >
               <ImageSlider images={singleCar.photoUrls} />
-            </div>
+            </Box>
           </Box>
         </Box>
       )}

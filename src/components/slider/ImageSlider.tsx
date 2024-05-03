@@ -47,6 +47,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
       <div
         style={{
           width: "100%",
+          /*   height: "615px", */
           height: "100%",
           display: "flex",
           overflow: "hidden",
@@ -59,8 +60,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
             aria-hidden={imageIndex !== index}
             className={s.imgSliderImg}
             style={{
-              objectFit: "contain",
-
+              /*   objectFit: "contain", */
               translate: `${-100 * imageIndex}%`,
             }}
           />

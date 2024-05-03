@@ -40,6 +40,7 @@ const Header = () => {
               <Typography
                 variant="h5"
                 color="secondary"
+                fontWeight={700}
               >
                 CarMarket
               </Typography>
@@ -69,6 +70,9 @@ const Header = () => {
                   <Button
                     onClick={() => dispatch(logOutAct())}
                     color="secondary"
+                    sx={{
+                      fontWeight: "700",
+                    }}
                   >
                     Logout
                   </Button>

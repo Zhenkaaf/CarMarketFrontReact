@@ -48,7 +48,7 @@ const RegistrationPage = () => {
       toast.success("Account has been created");
       reset();
       setPhoneNumber("+380");
-      navigate("/");
+      navigate("/cabinet");
     }
     if (registerError) {
       toast.error(registerError);

@@ -1,2 +1,2 @@
 export const primaryColor = "#800080"; // сиреневый цвет
-export const orange = "#ff4f00";
+export const orange = "#ff4500";

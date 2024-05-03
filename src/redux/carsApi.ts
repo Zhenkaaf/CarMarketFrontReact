@@ -6,8 +6,8 @@ export const carsApi = createApi({
   reducerPath: "carsApi",
   tagTypes: ["Cars"],
   baseQuery: fetchBaseQuery({
-    baseUrl: "https://excited-pantyhose-fox.cyclic.app/api/",
-    /*  baseUrl: "http://localhost:3000/api/", */
+    /*  baseUrl: "https://excited-pantyhose-fox.cyclic.app/api/", */
+    baseUrl: "http://localhost:3000/api/",
     prepareHeaders: (headers) => {
       const token = getTokenFromLocalStorage();
       if (token) {
