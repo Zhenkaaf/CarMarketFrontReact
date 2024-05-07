@@ -10,6 +10,7 @@ import {
 import { useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
+import Spinner from "../Spinner";
 
 interface AttachFilesProps {
   selectedFiles: File[];
@@ -82,7 +83,14 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
       >
         Add photos
       </Button>
-      <Typography sx={{ fontSize: "12px", color: "grey", marginTop: "3px" }}>
+      <Typography
+        sx={{
+          fontSize: "12px",
+          color: "grey",
+          marginTop: "3px",
+          marginLeft: "5px",
+        }}
+      >
         max 7 photos, jpg / png
       </Typography>
 
@@ -142,7 +150,7 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
                 title="Main photo"
                 sx={{
                   "& .MuiImageListItemBar-title": {
-                    color: "#ff4f00",
+                    color: "#ff4500",
                   },
                 }}
                 actionIcon={

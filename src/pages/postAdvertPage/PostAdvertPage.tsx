@@ -394,6 +394,7 @@ const PostAdvertPage = () => {
           display: "flex",
           width: "100%",
           marginTop: "20px",
+          backgroundColor: "#e1bee7",
           /*  "@media (max-width: 360px)": {
             padding: "5px",
           }, */
@@ -418,6 +419,7 @@ const PostAdvertPage = () => {
               displayEmpty
               fullWidth
               error={Boolean(bodyTypeError)}
+              sx={{ background: "white" }}
             >
               <MenuItem
                 value=""
@@ -446,6 +448,7 @@ const PostAdvertPage = () => {
               displayEmpty
               fullWidth
               error={Boolean(carMakeError)}
+              sx={{ background: "white" }}
             >
               <MenuItem
                 value=""
@@ -492,6 +495,7 @@ const PostAdvertPage = () => {
               placeholder="Model"
               name="model"
               error={Boolean(errors?.model)}
+              sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={
                 errors?.model && <p>{errors?.model?.message as string}</p>
               }
@@ -503,6 +507,7 @@ const PostAdvertPage = () => {
               displayEmpty
               fullWidth
               error={Boolean(yearError)}
+              sx={{ background: "white" }}
             >
               <MenuItem
                 value=""
@@ -537,10 +542,37 @@ const PostAdvertPage = () => {
               name="price"
               type="number"
               onInput={excludeSpacesAndZero}
+              autoComplete="off"
+              sx={{
+                "& input": {
+                  background: "white",
+                  borderTopLeftRadius: "0px",
+                  borderBottomLeftRadius: "0px",
+                  borderTopRightRadius: "4px",
+                  borderBottomRightRadius: "4px",
+                },
+              }}
               placeholder="Price"
               InputProps={{
                 startAdornment: (
-                  <InputAdornment position="start">$</InputAdornment>
+                  <InputAdornment
+                    position="start"
+                    sx={{
+                      marginLeft: "-14px",
+                      marginRight: "0px",
+                      backgroundColor: "white",
+                      borderTop: "28px dashed white",
+                      borderBottom: "28px dashed white",
+                      borderLeft: "14px dashed white",
+                      borderRight: "12px dashed white",
+                      borderTopLeftRadius: "4px",
+                      borderBottomLeftRadius: "4px",
+                      borderTopRightRadius: "0px",
+                      borderBottomRightRadius: "0px",
+                    }}
+                  >
+                    $
+                  </InputAdornment>
                 ),
               }}
               error={Boolean(errors?.price)}
@@ -558,10 +590,36 @@ const PostAdvertPage = () => {
               name="mileage"
               type="number"
               onInput={excludeSpacesAndZero}
+              sx={{
+                "& input": {
+                  background: "white",
+                  borderTopLeftRadius: "4px",
+                  borderBottomLeftRadius: "4px",
+                  borderTopRightRadius: "0px",
+                  borderBottomRightRadius: "0px",
+                },
+              }}
               placeholder="Mileage"
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">Thds.km.</InputAdornment>
+                  <InputAdornment
+                    position="end"
+                    sx={{
+                      marginRight: "-14px",
+                      marginLeft: "0px",
+                      backgroundColor: "white",
+                      borderTop: "28px dashed white",
+                      borderBottom: "28px dashed white",
+                      borderLeft: "14px dashed white",
+                      borderRight: "12px dashed white",
+                      borderTopLeftRadius: "0px",
+                      borderBottomLeftRadius: "0px",
+                      borderTopRightRadius: "4px",
+                      borderBottomRightRadius: "4px",
+                    }}
+                  >
+                    Thds.km.
+                  </InputAdornment>
                 ),
               }}
               error={Boolean(errors?.mileage)}
@@ -576,6 +634,7 @@ const PostAdvertPage = () => {
               displayEmpty
               fullWidth
               error={Boolean(fuelTypeError)}
+              sx={{ background: "white" }}
             >
               <MenuItem
                 value=""
@@ -621,6 +680,7 @@ const PostAdvertPage = () => {
               placeholder="City"
               name="city"
               error={Boolean(errors?.city)}
+              sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={
                 errors?.city && <p>{errors?.city?.message as string}</p>
               }

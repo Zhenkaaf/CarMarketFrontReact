@@ -10,6 +10,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   /*  <React.StrictMode> */
+
   <ThemeProvider theme={theme}>
     <Provider store={store}>
       <App />
@@ -19,5 +20,6 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
       />
     </Provider>
   </ThemeProvider>
+
   /*  </React.StrictMode> */
 );

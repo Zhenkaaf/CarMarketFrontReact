@@ -5,9 +5,17 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { Link } from "react-router-dom";
-import { PermIdentity, AddCircle } from "@mui/icons-material";
+import {
+  PermIdentity,
+  AddCircle,
+  AccountCircle,
+  AccountBox,
+  AddBox,
+} from "@mui/icons-material";
 import { logOutAct } from "../../redux/user/userSlice";
 import { HEADER_HEIGHT } from "../../constants/constans";
+import AccountBoxIcon from "@mui/icons-material/AccountBox";
+import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -50,20 +58,6 @@ const Header = () => {
             {user ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <Link
-                  to="/cabinet"
-                  style={{ textDecoration: "none" }}
-                >
-                  {" "}
-                  <PermIdentity color="secondary" />
-                </Link>
-                <Link
-                  to="/post-advert"
-                  style={{ textDecoration: "none" }}
-                >
-                  {" "}
-                  <AddCircle color="secondary" />
-                </Link>
-                <Link
                   to="/"
                   style={{ textDecoration: "none" }}
                 >
@@ -76,6 +70,26 @@ const Header = () => {
                   >
                     Logout
                   </Button>
+                </Link>
+                <Link
+                  to="/post-advert"
+                  style={{ textDecoration: "none" }}
+                >
+                  {" "}
+                  <AddBox
+                    color="secondary"
+                    fontSize="large"
+                  />
+                </Link>
+                <Link
+                  to="/cabinet"
+                  style={{ textDecoration: "none" }}
+                >
+                  {" "}
+                  <AccountBox
+                    color="secondary"
+                    fontSize="large"
+                  />
                 </Link>
               </Box>
             ) : (

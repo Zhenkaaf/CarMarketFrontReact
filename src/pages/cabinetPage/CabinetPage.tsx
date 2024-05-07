@@ -8,25 +8,39 @@ import {
   useUpdateCarMutation,
 } from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
+import { toast } from "react-toastify";
 
 const CabinetPage = () => {
   const user = useAppSelector((state) => state.userRed.user);
   const userId = user?.id?.toString();
-  console.log(userId);
-  const { data: myCars, isLoading, isError } = useGetMyCarsQuery(userId || "");
-  const [deleteCar] = useDeleteCarMutation();
-  const [updateCar] = useUpdateCarMutation();
+  const {
+    data: myCars,
+    error: getMyCarsError,
+    refetch: refetchMyCars,
+    isLoading: isGetMyCarsLoading,
+    isFetching: isGetMyCarsFetching,
+  } = useGetMyCarsQuery(userId || "");
+  const [deleteCar, { error: deleteCarError, isLoading: isDeleting }] =
+    useDeleteCarMutation();
 
   const handleDeleteCar = async (carId: number) => {
     try {
       await deleteCar(carId).unwrap();
-      console.log(`Car with id ${carId} has been successfully deleted`);
+
+      const myUpdatedCars = await refetchMyCars();
+      console.log("updated");
+      console.log(myUpdatedCars);
+      if (myUpdatedCars.isSuccess) {
+        console.log("deleted");
+        toast.success(`Car with id ${carId} has been successfully deleted`);
+      }
     } catch (error: unknown) {
+      toast.error((error as Error).message || "An error occurred");
       console.error(error);
     }
   };
 
-  const handleUpdateCar = async (carId: number) => {
+  /*   const handleUpdateCar = async (carId: number) => {
     const updatedCar = {
       year: "1999",
       price: 3333,
@@ -37,19 +51,30 @@ const CabinetPage = () => {
     } catch (error: unknown) {
       console.error(error);
     }
-  };
+  }; */
 
-  if (isLoading) {
-    return <Spinner open={isLoading} />;
+  if (isGetMyCarsLoading || isGetMyCarsFetching || isDeleting) {
+    return <Spinner open={true} />;
   }
 
-  if (isError) {
+  if (getMyCarsError) {
+    console.log(getMyCarsError);
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold" }}>
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", matginTop: "50px" }}>
         Something went wrong, unable to fetch your cars.
       </Box>
     );
   }
+
+  if (deleteCarError) {
+    console.log(deleteCarError);
+    return (
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", matginTop: "50px" }}>
+        Something went wrong, unable to delete your car.
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -66,7 +91,7 @@ const CabinetPage = () => {
         {" "}
         My cars
       </Typography>
-      {myCars ? (
+      {myCars &&
         myCars.map((car) => (
           <Box key={car.carId}>
             <Link
@@ -94,22 +119,16 @@ const CabinetPage = () => {
               >
                 Delete Car
               </Button>
-              <Button
+              {/*  <Button
                 onClick={() => handleUpdateCar(33)}
                 variant="contained"
                 color="secondary"
               >
                 Update Car
-              </Button>
+              </Button> */}
             </Box>
           </Box>
-        ))
-      ) : (
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-          {" "}
-          Typography
-        </Box>
-      )}
+        ))}
     </Box>
   );
 };
