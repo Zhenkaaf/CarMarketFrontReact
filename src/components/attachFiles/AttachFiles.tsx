@@ -10,7 +10,6 @@ import {
 import { useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
-import Spinner from "../Spinner";
 
 interface AttachFilesProps {
   selectedFiles: File[];

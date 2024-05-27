@@ -20,14 +20,17 @@ import {
   useAddPhotosToCarMutation,
 } from "../../redux/carsApi";
 import AttachFiles from "../../components/attachFiles/AttachFiles";
+import { toast } from "react-toastify";
 
 const PostAdvertPage = () => {
   const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
     useAddCarMutation();
+  console.log("isAddCarLoading", isAddCarLoading);
   const [
     addPhotosToCar,
     { error: addPhotosError, isLoading: isAddPhotosLoading },
   ] = useAddPhotosToCarMutation();
+  console.log("isAddPhotosLoading", isAddPhotosLoading);
   const navigate = useNavigate();
   const [bodyType, setBodyType] = useState("");
   const [carMake, setCarMake] = useState("");
@@ -38,6 +41,7 @@ const PostAdvertPage = () => {
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [spinnerState, setSpinnerState] = useState<boolean>(false);
 
   const {
     register,
@@ -87,12 +91,25 @@ const PostAdvertPage = () => {
       year,
       fuelType,
     };
-    const addCarRes = await addCar(newCar).unwrap();
-    if (addCarRes.status === 201) {
-      const carId = addCarRes.data.carId;
-      await addPhotosToCar({ carId, formData }).unwrap();
-      reset();
-      navigate("/");
+
+    try {
+      setSpinnerState(true);
+      const addCarRes = await addCar(newCar).unwrap();
+      console.log("addCarRes", addCarRes);
+      if (addCarRes.status === 201) {
+        const carId = addCarRes.data.carId;
+        const addPhotosRes = await addPhotosToCar({ carId, formData }).unwrap();
+        console.log("addPhotosRes", addPhotosRes);
+        reset();
+        toast.success(`Car has been successfully added`);
+        setSpinnerState(false);
+        navigate("/");
+      }
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "An error occurred");
+      console.error(error);
+    } finally {
+      setSpinnerState(false);
     }
   };
 
@@ -348,7 +365,7 @@ const PostAdvertPage = () => {
     "1985",
   ];
 
-  if (isAddCarLoading || isAddPhotosLoading) {
+  if (spinnerState /* isAddCarLoading || isAddPhotosLoading */) {
     return <Spinner open={true} />;
   }
 

@@ -12,7 +12,8 @@ export const registrationAct = createAsyncThunk<IUser, IRegisterUserData>(
   async (userData: IRegisterUserData, { rejectWithValue }) => {
     try {
       const response = await axios.post(
-        "https://excited-pantyhose-fox.cyclic.app/api/registration",
+        "https://carmarketbacknest.onrender.com/api/registration",
+        /*   "https://excited-pantyhose-fox.cyclic.app/api/registration", */
         userData
       );
       return response.data;
@@ -33,7 +34,8 @@ export const loginAct = createAsyncThunk<IUser, ILoginUserData>(
     console.log("loginAct*****");
     try {
       const response = await axios.post(
-        "https://excited-pantyhose-fox.cyclic.app/api/auth/login",
+        "https://carmarketbacknest.onrender.com/api/auth/login",
+        /*    "https://excited-pantyhose-fox.cyclic.app/api/auth/login", */
         userData
       );
       console.log(response.data);

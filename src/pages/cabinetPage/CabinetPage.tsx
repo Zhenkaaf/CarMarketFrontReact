@@ -22,6 +22,8 @@ const CabinetPage = () => {
   } = useGetMyCarsQuery(userId || "");
   const [deleteCar, { error: deleteCarError, isLoading: isDeleting }] =
     useDeleteCarMutation();
+  const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
+    useUpdateCarMutation();
 
   const handleDeleteCar = async (carId: number) => {
     try {
@@ -40,7 +42,7 @@ const CabinetPage = () => {
     }
   };
 
-  /*   const handleUpdateCar = async (carId: number) => {
+  const handleUpdateCar = async (carId: number) => {
     const updatedCar = {
       year: "1999",
       price: 3333,
@@ -51,13 +53,13 @@ const CabinetPage = () => {
     } catch (error: unknown) {
       console.error(error);
     }
-  }; */
+  };
 
-  if (isGetMyCarsLoading || isGetMyCarsFetching || isDeleting) {
+  if (isGetMyCarsLoading || isGetMyCarsFetching || isDeleting || isUpdating) {
     return <Spinner open={true} />;
   }
 
-  if (getMyCarsError) {
+  if (getMyCarsError || updateCarError) {
     console.log(getMyCarsError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", matginTop: "50px" }}>
@@ -119,13 +121,13 @@ const CabinetPage = () => {
               >
                 Delete Car
               </Button>
-              {/*  <Button
+              <Button
                 onClick={() => handleUpdateCar(33)}
                 variant="contained"
                 color="secondary"
               >
                 Update Car
-              </Button> */}
+              </Button>
             </Box>
           </Box>
         ))}

@@ -5,17 +5,9 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { Link } from "react-router-dom";
-import {
-  PermIdentity,
-  AddCircle,
-  AccountCircle,
-  AccountBox,
-  AddBox,
-} from "@mui/icons-material";
+import { AccountBox, AddBox } from "@mui/icons-material";
 import { logOutAct } from "../../redux/user/userSlice";
 import { HEADER_HEIGHT } from "../../constants/constans";
-import AccountBoxIcon from "@mui/icons-material/AccountBox";
-import AddBoxIcon from "@mui/icons-material/AddBox";
 
 const Header = () => {
   const dispatch = useAppDispatch();
