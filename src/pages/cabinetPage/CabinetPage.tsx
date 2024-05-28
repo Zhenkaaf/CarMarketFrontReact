@@ -25,16 +25,15 @@ const CabinetPage = () => {
   const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
     useUpdateCarMutation();
 
-  const handleDeleteCar = async (carId: number) => {
+  const handleDeleteCar = async (carId: number, carMake: string) => {
     try {
       await deleteCar(carId).unwrap();
-
       const myUpdatedCars = await refetchMyCars();
       console.log("updated");
       console.log(myUpdatedCars);
       if (myUpdatedCars.isSuccess) {
         console.log("deleted");
-        toast.success(`Car with id ${carId} has been successfully deleted`);
+        toast.success(`Your ${carMake} has been successfully deleted`);
       }
     } catch (error: unknown) {
       toast.error((error as Error).message || "An error occurred");
@@ -42,14 +41,14 @@ const CabinetPage = () => {
     }
   };
 
-  const handleUpdateCar = async (carId: number) => {
+  const handleUpdateCar = async (carId: number, carMake: string) => {
     const updatedCar = {
       year: "1999",
       price: 3333,
     };
     try {
       await updateCar({ id: carId, updatedCar }).unwrap();
-      console.log(`Car with id ${carId} has been successfully updated`);
+      console.log(`Your ${carMake} has been successfully updated`);
     } catch (error: unknown) {
       console.error(error);
     }
@@ -115,19 +114,24 @@ const CabinetPage = () => {
               }}
             >
               <Button
-                onClick={() => handleDeleteCar(car.carId)}
+                onClick={() => handleDeleteCar(car.carId, car.carMake)}
                 variant="contained"
                 color="secondary"
               >
                 Delete Car
               </Button>
-              <Button
-                onClick={() => handleUpdateCar(33)}
-                variant="contained"
-                color="secondary"
+              <Link
+                to={`../edit-car/${car.carId}`}
+                style={{ textDecoration: "none" }}
               >
-                Update Car
-              </Button>
+                <Button
+                  onClick={() => handleUpdateCar(car.carId, car.carMake)}
+                  variant="contained"
+                  color="secondary"
+                >
+                  Edit Car
+                </Button>
+              </Link>
             </Box>
           </Box>
         ))}

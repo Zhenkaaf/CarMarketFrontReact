@@ -1,3 +1,6 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { useGetCarQuery } from "../../redux/carsApi";
+import Spinner from "../../components/Spinner";
 import {
   Box,
   Button,
@@ -5,31 +8,33 @@ import {
   InputAdornment,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
   TextareaAutosize,
   Typography,
 } from "@mui/material";
-import Spinner from "../../components/Spinner";
-import { FieldValues, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { ICarData } from "../../types";
-import {
-  useAddCarMutation,
-  useAddPhotosToCarMutation,
-} from "../../redux/carsApi";
 import AttachFiles from "../../components/attachFiles/AttachFiles";
-import { toast } from "react-toastify";
+import { FieldValues, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { ICarData } from "../../types";
 
-const PostAdvertPage = () => {
-  const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
-    useAddCarMutation();
-
-  const [
-    addPhotosToCar,
-    { error: addPhotosError, isLoading: isAddPhotosLoading },
-  ] = useAddPhotosToCarMutation();
+const EditPage = () => {
+  console.log("render");
+  const { carId } = useParams<{ carId: string }>();
+  const {
+    data: singleCar,
+    isLoading,
+    isFetching,
+    isError,
+  } = useGetCarQuery(carId || "");
+  const {
+    register,
+    formState: { errors, isValid },
+    handleSubmit,
+    reset,
+    setValue,
+  } = useForm({
+    mode: "onChange",
+  });
 
   const navigate = useNavigate();
   const [bodyType, setBodyType] = useState("");
@@ -40,18 +45,25 @@ const PostAdvertPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
 
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset,
-    setValue,
-  } = useForm({
-    mode: "onChange",
-  });
+  useEffect(() => {
+    console.log("useEffectWORKED");
+    if (singleCar) {
+      setBodyType(singleCar.bodyType || "");
+      setCarMake(singleCar.carMake || "");
+      setYear(singleCar.year || "");
+      setFuelType(singleCar.fuelType || "");
+      setSelectedFiles(singleCar.photoUrls || []);
+      setValue("model", singleCar.model || "");
+      setValue("price", singleCar.price || "");
+      setValue("mileage", singleCar.mileage || "");
+      setValue("city", singleCar.city || "");
+      setValue("desc", singleCar.desc || "");
+    }
+  }, [singleCar, setValue]);
+  console.log(singleCar);
 
   const onSubmit = async (carData: FieldValues) => {
     if (!bodyType) {
@@ -365,24 +377,13 @@ const PostAdvertPage = () => {
     "1985",
   ];
 
-  if (spinnerState /* isAddCarLoading || isAddPhotosLoading */) {
+  if (isLoading || isFetching) {
     return <Spinner open={true} />;
   }
-
-  if (addCarError) {
-    console.log(addCarError);
+  if (isError) {
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to post advert.
-      </Box>
-    );
-  }
-
-  if (addPhotosError) {
-    console.log(addPhotosError);
-    return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, photos were not uploaded.
+      <Box sx={{ fontSize: "24px", fontWeight: "bold" }}>
+        Something went wrong, unable to fetch car data.
       </Box>
     );
   }
@@ -400,7 +401,7 @@ const PostAdvertPage = () => {
         fontWeight={700}
         textAlign={"center"}
       >
-        Post advert
+        Edit page
       </Typography>
       <Box
         sx={{
@@ -738,4 +739,4 @@ const PostAdvertPage = () => {
   );
 };
 
-export default PostAdvertPage;
+export default EditPage;

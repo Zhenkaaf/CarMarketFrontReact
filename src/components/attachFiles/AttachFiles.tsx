@@ -11,15 +11,15 @@ import { useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 
-interface AttachFilesProps {
-  selectedFiles: File[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<File[]>>;
+interface AttachFilesProps<T> {
+  selectedFiles: T[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<T[]>>;
 }
 
-const AttachFiles: React.FC<AttachFilesProps> = ({
+const AttachFiles = <T,>({
   selectedFiles,
   setSelectedFiles,
-}) => {
+}: AttachFilesProps<T>) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
   const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
 
@@ -35,16 +35,17 @@ const AttachFiles: React.FC<AttachFilesProps> = ({
     console.log(event.target.files);
     const files = event.target.files;
     if (files) {
-      const allFiles = [...selectedFiles, ...files];
+      const allFiles = [
+        ...(selectedFiles as File[]),
+        ...(Array.from(files) as File[]),
+      ];
       if (allFiles.length > 7) {
         alert("You can select up to 7 photos, jpg / png.");
         return;
       }
-      const urls = Array.from(allFiles).map((file) =>
-        URL.createObjectURL(file)
-      );
+      const urls = allFiles.map((file) => URL.createObjectURL(file));
       setUploadedPhotos(urls);
-      setSelectedFiles(Array.from(allFiles));
+      setSelectedFiles(allFiles as unknown as T[]);
     }
   };
 

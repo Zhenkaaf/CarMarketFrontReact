@@ -10,6 +10,7 @@ interface Props {
 }
 
 export const ProtectedRoute: FC<Props> = ({ children }) => {
+  console.log("ProtectedRoute");
   const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
   const waitingForProfile = useAppSelector(
     (state) => state.userRed.waitingForProfile

@@ -7,6 +7,7 @@ import { ProtectedRoute } from "../components/ProtectedRoute";
 import PostAdvertPage from "../pages/postAdvertPage/PostAdvertPage";
 import CabinetPage from "../pages/cabinetPage/CabinetPage";
 import SingleAdvertPage from "../pages/singleAdvertPage/SingleAdvertPage";
+import EditPage from "../pages/editPage/EditPage";
 
 export const router = createBrowserRouter(
   [
@@ -44,6 +45,14 @@ export const router = createBrowserRouter(
           element: (
             <ProtectedRoute>
               <CabinetPage />
+            </ProtectedRoute>
+          ),
+        },
+        {
+          path: "/edit-car/:carId",
+          element: (
+            <ProtectedRoute>
+              <EditPage />
             </ProtectedRoute>
           ),
         },
