@@ -284,7 +284,7 @@ const SingleAdvertPage = () => {
                 margin: "0 auto",
               }}
             >
-              <ImageSlider images={singleCar.photoUrls} />
+              <ImageSlider images={singleCar.photos} />
             </Box>
           </Box>
         </Box>

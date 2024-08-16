@@ -5,7 +5,7 @@ import CarItem from "../../components/CarItem";
 
 const HomePage = () => {
   const { data: allCars } = useGetCarsQuery();
-  console.log(allCars);
+  console.log("запрос зв всеми авто", allCars);
 
   /*   const getErrorMessage = (error: unknown): string => {
     let message: string;

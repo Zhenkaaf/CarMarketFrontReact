@@ -1,5 +1,9 @@
 import { useNavigate, useParams } from "react-router-dom";
-import { useGetCarQuery } from "../../redux/carsApi";
+import {
+  useAddPhotosToCarMutation,
+  useGetCarQuery,
+  useUpdateCarMutation,
+} from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
 import {
   Box,
@@ -8,30 +12,46 @@ import {
   InputAdornment,
   MenuItem,
   Select,
+  SelectChangeEvent,
   TextField,
   TextareaAutosize,
   Typography,
+  Tooltip,
 } from "@mui/material";
 import AttachFiles from "../../components/attachFiles/AttachFiles";
 import { FieldValues, useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { ICarData } from "../../types";
+import { CAR_MAKES, YEARS } from "../../constants/constans";
+import { toast } from "react-toastify";
+import useDisableNumberInputWheel from "../../helpers/useDisableNumberInputWheel";
 
 const EditPage = () => {
-  console.log("render");
+  console.log("renderEditPageStart");
+  useDisableNumberInputWheel();
+
+  const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
+    useUpdateCarMutation();
+  const [
+    addPhotosToCar,
+    { error: addPhotosError, isLoading: isAddPhotosLoading },
+  ] = useAddPhotosToCarMutation();
   const { carId } = useParams<{ carId: string }>();
+
   const {
     data: singleCar,
     isLoading,
     isFetching,
     isError,
   } = useGetCarQuery(carId || "");
+
   const {
     register,
     formState: { errors, isValid },
     handleSubmit,
     reset,
     setValue,
+    watch,
   } = useForm({
     mode: "onChange",
   });
@@ -45,9 +65,47 @@ const EditPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
-  const [selectedFiles, setSelectedFiles] = useState<string[]>([]);
+  const [existingPhotos, setExistingPhotos] = useState<
+    { id: string; url: string }[]
+  >([]);
+  const [newFilesToUpload, setNewFilesToUpload] = useState<
+    { id: string; file: File; url: string }[]
+  >([]);
+  const [filesToDelete, setFilesToDelete] = useState<
+    { id: string; url: string }[]
+  >([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
+  const [hasFilesChanged, setHasFilesChanged] = useState(false);
+  /*  const [isFormChanged, setIsFormChanged] = useState(false); */
 
+  const watchedFields = watch([
+    "model",
+    "price",
+    "mileage",
+    "city",
+    "desc",
+    "bodyType",
+    "carMake",
+    "year",
+    "fuelType",
+  ]);
+
+  const isFormChanged = watchedFields.some(
+    (field, index) => field !== Object.values(singleCar || {})[index]
+  );
+  //console.log("!isValid", !isValid);
+  /*  console.log("isFormChanged", isFormChanged); */
+  //console.log("!hasFilesChanged", !hasFilesChanged);
+
+  /*   useEffect(() => {
+    if (singleCar) {
+      setExistingPhotos(singleCar.photoUrls || []);
+    }
+  }, [singleCar]); */
+
+  /* Компонент AttachFiles:
+
+Используйте useCallback для функций openFileFolder, selectFiles, и removePhoto, чтобы избежать создания новых функций при каждом рендере. */
   useEffect(() => {
     console.log("useEffectWORKED");
     if (singleCar) {
@@ -55,7 +113,7 @@ const EditPage = () => {
       setCarMake(singleCar.carMake || "");
       setYear(singleCar.year || "");
       setFuelType(singleCar.fuelType || "");
-      setSelectedFiles(singleCar.photoUrls || []);
+      setExistingPhotos(singleCar.photos || []);
       setValue("model", singleCar.model || "");
       setValue("price", singleCar.price || "");
       setValue("mileage", singleCar.mileage || "");
@@ -63,58 +121,46 @@ const EditPage = () => {
       setValue("desc", singleCar.desc || "");
     }
   }, [singleCar, setValue]);
-  console.log(singleCar);
 
-  const onSubmit = async (carData: FieldValues) => {
-    if (!bodyType) {
-      setBodyTypeError("Please select car body type.");
-      return;
-    }
-    if (!carMake) {
-      setCarMakeError("Please select car make.");
-      return;
-    }
-    if (!year) {
-      setYearError("Please select car year.");
-      return;
-    }
-    if (!fuelType) {
-      setFuelTypeError("Please select car fuel type.");
-      return;
-    }
-    if (selectedFiles.length < 0) {
+  const handleUpdateCar = async (formValues: FieldValues) => {
+    /*  if (existingPhotos.length < 0) {
       alert("please select a file");
       return;
-    }
-
+    } */
     const formData = new FormData();
-    selectedFiles.forEach((file) => {
+    newFilesToUpload.forEach(({ file, id }) => {
       formData.append("photos", file);
+      formData.append("photoIds", id);
     });
 
-    const newCar: ICarData = {
-      city: carData.city,
-      desc: carData.desc,
-      mileage: +carData.mileage,
-      model: carData.model,
-      price: +carData.price,
+    const updatedCar: ICarData = {
+      city: formValues.city,
+      desc: formValues.desc,
+      mileage: +formValues.mileage,
+      model: formValues.model,
+      price: +formValues.price,
       bodyType,
       carMake,
       year,
       fuelType,
+      photosToDelete: filesToDelete,
     };
-
+    console.log("updatedCar", updatedCar);
+    console.log("formData", formData);
     try {
       setSpinnerState(true);
-      const addCarRes = await addCar(newCar).unwrap();
-      console.log("addCarRes", addCarRes);
-      if (addCarRes.status === 201) {
-        const carId = addCarRes.data.carId;
-        const addPhotosRes = await addPhotosToCar({ carId, formData }).unwrap();
-        console.log("addPhotosRes", addPhotosRes);
+      const updatedCarRes = await updateCar({ id: carId, updatedCar }).unwrap();
+      if (updatedCarRes.status === "success") {
+        if (newFilesToUpload.length > 0) {
+          const addPhotosRes = await addPhotosToCar({
+            carId,
+            formData,
+          }).unwrap();
+          console.log("addPhotosRes", addPhotosRes);
+        }
         reset();
-        toast.success(`Car has been successfully added`);
         setSpinnerState(false);
+        toast.success(`Car has been successfully updated`);
         navigate("/");
       }
     } catch (error: unknown) {
@@ -129,18 +175,23 @@ const EditPage = () => {
     event: SelectChangeEvent,
     selectType: string
   ) => {
-    console.log(event.target.value);
+    console.log("event.target.value", event.target.value);
+    const value = event.target.value;
     if (selectType === "bodyType") {
-      setBodyType(event.target.value);
+      setBodyType(value);
+      /*  setValue("bodyType", value, { shouldValidate: true }); */
       setBodyTypeError("");
     } else if (selectType === "carMake") {
-      setCarMake(event.target.value);
+      setCarMake(value);
+      /* setValue("carMake", value, { shouldValidate: true }); */
       setCarMakeError("");
     } else if (selectType === "year") {
-      setYear(event.target.value);
+      setYear(value);
+      /*  setValue("year", value, { shouldValidate: true }); */
       setYearError("");
     } else if (selectType === "fuelType") {
-      setFuelType(event.target.value);
+      setFuelType(value);
+      /*  setValue("fuelType", value, { shouldValidate: true }); */
       setFuelTypeError("");
     }
   };
@@ -159,225 +210,7 @@ const EditPage = () => {
     setValue(event.target.name, inputValue);
   };
 
-  const carMakes = [
-    "VOLKSWAGEN",
-    "AUDI",
-    "SKODA",
-    "BMW",
-    "DACIA",
-    "DAEWOO",
-    "FIAT",
-    "FORD",
-    "GEELY",
-    "HONDA",
-    "HYUNDAI",
-    "JEEP",
-    "KIA",
-    "MAZDA",
-    "MERCEDES",
-    "MITSUBISHI",
-    "NISSAN",
-    "OPEL",
-    "PEUGEOT",
-    "RENAULT",
-    "SUBARU",
-    "TOYOTA",
-    "VOLVO",
-    "MOSKVICH",
-    "AC",
-    "ACURA",
-    "AIXAM",
-    "ALFA ROMEO",
-    "ARO",
-    "ASIA",
-    "ASTON MARTIN",
-    "AUSTIN",
-    "AVIA",
-    "BAIC",
-    "BARKAS",
-    "BAW",
-    "BENTLEY",
-    "BRILLIANCE",
-    "BUICK",
-    "BYD",
-    "CADILLAC",
-    "CAMC",
-    "CHANA",
-    "CHANGAN",
-    "CHANGHE",
-    "CHEVROLET",
-    "CHRYSLER",
-    "CITROEN",
-    "CUPRA",
-    "DADI",
-    "DAF",
-    "DAIHATSU",
-    "DATSUN",
-    "DODGE",
-    "DONGFENG",
-    "DS",
-    "DVL BOVA",
-    "EAGLE",
-    "EOS",
-    "FAW",
-    "FERRARI",
-    "FOTON",
-    "FREIGHTLINER",
-    "FSO",
-    "FUQI",
-    "GMC",
-    "GONOW",
-    "GREAT WALL",
-    "GROZ",
-    "HAFEI",
-    "HDC",
-    "HUABEI",
-    "HUANGHAI",
-    "HUMMER",
-    "I-VAN",
-    "IFA",
-    "IKARUS",
-    "INFINITI",
-    "INNOCENTI",
-    "INTERNATIONAL",
-    "ISUZU",
-    "IVECO",
-    "JAC",
-    "JAGUAR",
-    "JIANGNAN",
-    "JONWAY",
-    "KAROSA",
-    "KARSAN",
-    "KENWORTH",
-    "LANCIA",
-    "LAND ROVER",
-    "LANDWIND",
-    "LDV",
-    "LEXUS",
-    "LIAZ",
-    "LIFAN",
-    "LINCOLN",
-    "MAN",
-    "MASERATI",
-    "MERCURY",
-    "MG",
-    "MINI",
-    "MUDAN",
-    "MUSTANG",
-    "NEOPLAN",
-    "NYSA",
-    "OLDSMOBILE",
-    "ORA",
-    "PLYMOUTH",
-    "POLESTAR",
-    "PONTIAC",
-    "PORSCHE",
-    "PROTON",
-    "RAVON",
-    "ROBUR",
-    "ROVER",
-    "SAAB",
-    "SAIPA",
-    "SAMAND",
-    "SAMSUNG",
-    "SATURN",
-    "SCANIA",
-    "SCION",
-    "SEAT",
-    "SETRA",
-    "SHAANXI",
-    "SHAOLIN",
-    "SHUANGHUAN",
-    "SKYWELL",
-    "SMA",
-    "SMART",
-    "SOUEAST",
-    "SSANGYONG",
-    "SUZUKI",
-    "TAGAZ",
-    "TALBOT",
-    "TARPAN",
-    "TATA",
-    "TATRA",
-    "TEMSA",
-    "TESLA",
-    "TIANMA",
-    "TRABANT",
-    "VANHOOL",
-    "VEV",
-    "WARTBURG",
-    "WULING",
-    "XINKAI",
-    "YOUYI",
-    "YUEJIN",
-    "YUTONG",
-    "ZASTAVA",
-    "ZHONGTONG",
-    "ZUK",
-    "ZXAUTO",
-    "BAZ",
-    "BELAZ",
-    "BOGDAN",
-    "VAZ",
-    "GAZ",
-    "ZAZ",
-    "ZIL",
-    "IJ",
-    "KAMAZ",
-    "KRAZ",
-    "LAZ",
-    "MAZ",
-    "MOTO",
-    "PAZ",
-    "RAF",
-    "UAZ",
-    "URAL",
-  ];
-
-  const years = [
-    "2024",
-    "2023",
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-    "2014",
-    "2013",
-    "2012",
-    "2011",
-    "2010",
-    "2009",
-    "2008",
-    "2007",
-    "2006",
-    "2005",
-    "2004",
-    "2003",
-    "2002",
-    "2001",
-    "2000",
-    "1999",
-    "1998",
-    "1997",
-    "1996",
-    "1995",
-    "1994",
-    "1993",
-    "1992",
-    "1991",
-    "1990",
-    "1989",
-    "1988",
-    "1987",
-    "1986",
-    "1985",
-  ];
-
-  if (isLoading || isFetching) {
+  if (isLoading || isFetching || spinnerState) {
     return <Spinner open={true} />;
   }
   if (isError) {
@@ -413,9 +246,6 @@ const EditPage = () => {
           width: "100%",
           marginTop: "20px",
           backgroundColor: "#e1bee7",
-          /*  "@media (max-width: 360px)": {
-            padding: "5px",
-          }, */
         }}
       >
         <Box
@@ -424,7 +254,7 @@ const EditPage = () => {
           }}
         >
           <form
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit(handleUpdateCar)}
             style={{
               display: "flex",
               flexDirection: "column",
@@ -474,7 +304,7 @@ const EditPage = () => {
               >
                 Select car make
               </MenuItem>
-              {carMakes.map((carMake) => (
+              {CAR_MAKES.map((carMake) => (
                 <MenuItem
                   key={carMake}
                   value={carMake}
@@ -533,7 +363,7 @@ const EditPage = () => {
               >
                 Select year
               </MenuItem>
-              {years.map((year) => (
+              {YEARS.map((year) => (
                 <MenuItem
                   key={year}
                   value={year}
@@ -559,6 +389,7 @@ const EditPage = () => {
               required
               name="price"
               type="number"
+              inputMode="numeric"
               onInput={excludeSpacesAndZero}
               autoComplete="off"
               sx={{
@@ -607,6 +438,7 @@ const EditPage = () => {
               required
               name="mileage"
               type="number"
+              inputMode="numeric"
               onInput={excludeSpacesAndZero}
               sx={{
                 "& input": {
@@ -718,20 +550,46 @@ const EditPage = () => {
             </Box>
 
             <AttachFiles
-              selectedFiles={selectedFiles}
-              setSelectedFiles={setSelectedFiles}
+              /*  selectedFiles={selectedFiles} */
+              setExistingPhotos={setExistingPhotos}
+              existingPhotos={existingPhotos}
+              setHasFilesChanged={setHasFilesChanged}
+              setNewFilesToUpload={setNewFilesToUpload}
+              newFilesToUpload={newFilesToUpload}
+              filesToDelete={filesToDelete}
+              setFilesToDelete={setFilesToDelete}
             />
-
-            <Button
-              sx={{ marginTop: "10px" }}
-              type="submit"
-              disabled={!isValid || selectedFiles.length === 0}
-              fullWidth
-              variant="contained"
-              color="secondary"
+            {/* Tooltip for form validity */}
+            <Tooltip
+              title="Please make at least one change."
+              disableHoverListener={isValid}
+              arrow
             >
-              Publish
-            </Button>
+              <span>
+                {/* Tooltip for file selection */}
+                <Tooltip
+                  title="Please add at least one photo to update."
+                  disableHoverListener={existingPhotos.length > 0}
+                  arrow
+                >
+                  <span>
+                    <Button
+                      //Если форма валидна и хотя бы одно из условий (форма изменена или файлы изменены) выполнено, кнопка будет активной
+                      sx={{ marginTop: "10px" }}
+                      type="submit"
+                      /*  disabled={
+                        !isValid && (!isFormChanged || !hasFilesChanged)
+                      } */
+                      fullWidth
+                      variant="contained"
+                      color="secondary"
+                    >
+                      Update
+                    </Button>
+                  </span>
+                </Tooltip>
+              </span>
+            </Tooltip>
           </form>
         </Box>
       </Box>

@@ -2,11 +2,7 @@ import { Link } from "react-router-dom";
 import { useAppSelector } from "../../redux/redux-hooks";
 import CarItem from "../../components/CarItem";
 import { Box, Button, Typography } from "@mui/material";
-import {
-  useDeleteCarMutation,
-  useGetMyCarsQuery,
-  useUpdateCarMutation,
-} from "../../redux/carsApi";
+import { useDeleteCarMutation, useGetMyCarsQuery } from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 
@@ -22,9 +18,7 @@ const CabinetPage = () => {
   } = useGetMyCarsQuery(userId || "");
   const [deleteCar, { error: deleteCarError, isLoading: isDeleting }] =
     useDeleteCarMutation();
-  const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
-    useUpdateCarMutation();
-
+  console.log(myCars);
   const handleDeleteCar = async (carId: number, carMake: string) => {
     try {
       await deleteCar(carId).unwrap();
@@ -41,27 +35,18 @@ const CabinetPage = () => {
     }
   };
 
-  const handleUpdateCar = async (carId: number, carMake: string) => {
-    const updatedCar = {
-      year: "1999",
-      price: 3333,
-    };
-    try {
-      await updateCar({ id: carId, updatedCar }).unwrap();
-      console.log(`Your ${carMake} has been successfully updated`);
-    } catch (error: unknown) {
-      console.error(error);
-    }
-  };
-
-  if (isGetMyCarsLoading || isGetMyCarsFetching || isDeleting || isUpdating) {
+  if (
+    isGetMyCarsLoading ||
+    isGetMyCarsFetching ||
+    isDeleting /* || isUpdating */
+  ) {
     return <Spinner open={true} />;
   }
 
-  if (getMyCarsError || updateCarError) {
+  if (getMyCarsError /* || updateCarError */) {
     console.log(getMyCarsError);
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", matginTop: "50px" }}>
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
         Something went wrong, unable to fetch your cars.
       </Box>
     );
@@ -70,8 +55,16 @@ const CabinetPage = () => {
   if (deleteCarError) {
     console.log(deleteCarError);
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", matginTop: "50px" }}>
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
         Something went wrong, unable to delete your car.
+      </Box>
+    );
+  }
+
+  if (myCars?.length === 0) {
+    return (
+      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
+        You don't have any cars yet
       </Box>
     );
   }
@@ -90,7 +83,7 @@ const CabinetPage = () => {
         fontSize={24}
       >
         {" "}
-        My cars
+        My advertisements
       </Typography>
       {myCars &&
         myCars.map((car) => (
@@ -125,7 +118,7 @@ const CabinetPage = () => {
                 style={{ textDecoration: "none" }}
               >
                 <Button
-                  onClick={() => handleUpdateCar(car.carId, car.carMake)}
+                  /*   onClick={() => handleUpdateCar(car.carId, car.carMake)} */
                   variant="contained"
                   color="secondary"
                 >

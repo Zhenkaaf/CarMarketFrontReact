@@ -57,8 +57,8 @@ const CarItem = ({
             },
           }}
           image={
-            car.photoUrls
-              ? car.photoUrls[0]
+            car.photos?.length
+              ? car.photos[0].url
               : "https://gas-kvas.com/uploads/posts/2023-01/thumbs/1674658270_gas-kvas-com-p-konturnii-risunok-avto-27.jpg"
           }
           title={`Photo of ${car.carMake}`}

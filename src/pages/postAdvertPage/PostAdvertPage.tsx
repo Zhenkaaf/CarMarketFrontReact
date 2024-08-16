@@ -19,10 +19,17 @@ import {
   useAddCarMutation,
   useAddPhotosToCarMutation,
 } from "../../redux/carsApi";
-import AttachFiles from "../../components/attachFiles/AttachFiles";
 import { toast } from "react-toastify";
+import { CAR_MAKES, YEARS } from "../../constants/constans";
+import AttachFilesWhenCreate from "../../components/attachFilesWhenCreate/attachFilesWhenCreate";
+
+interface FileWithId {
+  file: File;
+  id: string;
+}
 
 const PostAdvertPage = () => {
+  console.log("renderPostAdvertPage");
   const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
     useAddCarMutation();
 
@@ -40,7 +47,8 @@ const PostAdvertPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  //const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<FileWithId[]>([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
 
   const {
@@ -76,10 +84,18 @@ const PostAdvertPage = () => {
     }
 
     const formData = new FormData();
-    selectedFiles.forEach((file) => {
-      formData.append("photos", file);
-    });
 
+    /*  selectedFiles.forEach((file) => {
+      formData.append("photos", file);
+    }); */
+    selectedFiles.forEach(({ file, id }) => {
+      formData.append("photos", file);
+      formData.append("photoIds", id);
+    });
+    /*  console.log("formData********");
+    formData.forEach((value, key) => {
+      console.log("key--", key, "value--", value);
+    }); */
     const newCar: ICarData = {
       city: carData.city,
       desc: carData.desc,
@@ -146,224 +162,6 @@ const PostAdvertPage = () => {
     }
     setValue(event.target.name, inputValue);
   };
-
-  const carMakes = [
-    "VOLKSWAGEN",
-    "AUDI",
-    "SKODA",
-    "BMW",
-    "DACIA",
-    "DAEWOO",
-    "FIAT",
-    "FORD",
-    "GEELY",
-    "HONDA",
-    "HYUNDAI",
-    "JEEP",
-    "KIA",
-    "MAZDA",
-    "MERCEDES",
-    "MITSUBISHI",
-    "NISSAN",
-    "OPEL",
-    "PEUGEOT",
-    "RENAULT",
-    "SUBARU",
-    "TOYOTA",
-    "VOLVO",
-    "MOSKVICH",
-    "AC",
-    "ACURA",
-    "AIXAM",
-    "ALFA ROMEO",
-    "ARO",
-    "ASIA",
-    "ASTON MARTIN",
-    "AUSTIN",
-    "AVIA",
-    "BAIC",
-    "BARKAS",
-    "BAW",
-    "BENTLEY",
-    "BRILLIANCE",
-    "BUICK",
-    "BYD",
-    "CADILLAC",
-    "CAMC",
-    "CHANA",
-    "CHANGAN",
-    "CHANGHE",
-    "CHEVROLET",
-    "CHRYSLER",
-    "CITROEN",
-    "CUPRA",
-    "DADI",
-    "DAF",
-    "DAIHATSU",
-    "DATSUN",
-    "DODGE",
-    "DONGFENG",
-    "DS",
-    "DVL BOVA",
-    "EAGLE",
-    "EOS",
-    "FAW",
-    "FERRARI",
-    "FOTON",
-    "FREIGHTLINER",
-    "FSO",
-    "FUQI",
-    "GMC",
-    "GONOW",
-    "GREAT WALL",
-    "GROZ",
-    "HAFEI",
-    "HDC",
-    "HUABEI",
-    "HUANGHAI",
-    "HUMMER",
-    "I-VAN",
-    "IFA",
-    "IKARUS",
-    "INFINITI",
-    "INNOCENTI",
-    "INTERNATIONAL",
-    "ISUZU",
-    "IVECO",
-    "JAC",
-    "JAGUAR",
-    "JIANGNAN",
-    "JONWAY",
-    "KAROSA",
-    "KARSAN",
-    "KENWORTH",
-    "LANCIA",
-    "LAND ROVER",
-    "LANDWIND",
-    "LDV",
-    "LEXUS",
-    "LIAZ",
-    "LIFAN",
-    "LINCOLN",
-    "MAN",
-    "MASERATI",
-    "MERCURY",
-    "MG",
-    "MINI",
-    "MUDAN",
-    "MUSTANG",
-    "NEOPLAN",
-    "NYSA",
-    "OLDSMOBILE",
-    "ORA",
-    "PLYMOUTH",
-    "POLESTAR",
-    "PONTIAC",
-    "PORSCHE",
-    "PROTON",
-    "RAVON",
-    "ROBUR",
-    "ROVER",
-    "SAAB",
-    "SAIPA",
-    "SAMAND",
-    "SAMSUNG",
-    "SATURN",
-    "SCANIA",
-    "SCION",
-    "SEAT",
-    "SETRA",
-    "SHAANXI",
-    "SHAOLIN",
-    "SHUANGHUAN",
-    "SKYWELL",
-    "SMA",
-    "SMART",
-    "SOUEAST",
-    "SSANGYONG",
-    "SUZUKI",
-    "TAGAZ",
-    "TALBOT",
-    "TARPAN",
-    "TATA",
-    "TATRA",
-    "TEMSA",
-    "TESLA",
-    "TIANMA",
-    "TRABANT",
-    "VANHOOL",
-    "VEV",
-    "WARTBURG",
-    "WULING",
-    "XINKAI",
-    "YOUYI",
-    "YUEJIN",
-    "YUTONG",
-    "ZASTAVA",
-    "ZHONGTONG",
-    "ZUK",
-    "ZXAUTO",
-    "BAZ",
-    "BELAZ",
-    "BOGDAN",
-    "VAZ",
-    "GAZ",
-    "ZAZ",
-    "ZIL",
-    "IJ",
-    "KAMAZ",
-    "KRAZ",
-    "LAZ",
-    "MAZ",
-    "MOTO",
-    "PAZ",
-    "RAF",
-    "UAZ",
-    "URAL",
-  ];
-
-  const years = [
-    "2024",
-    "2023",
-    "2022",
-    "2021",
-    "2020",
-    "2019",
-    "2018",
-    "2017",
-    "2016",
-    "2015",
-    "2014",
-    "2013",
-    "2012",
-    "2011",
-    "2010",
-    "2009",
-    "2008",
-    "2007",
-    "2006",
-    "2005",
-    "2004",
-    "2003",
-    "2002",
-    "2001",
-    "2000",
-    "1999",
-    "1998",
-    "1997",
-    "1996",
-    "1995",
-    "1994",
-    "1993",
-    "1992",
-    "1991",
-    "1990",
-    "1989",
-    "1988",
-    "1987",
-    "1986",
-    "1985",
-  ];
 
   if (spinnerState /* isAddCarLoading || isAddPhotosLoading */) {
     return <Spinner open={true} />;
@@ -473,7 +271,7 @@ const PostAdvertPage = () => {
               >
                 Select car make
               </MenuItem>
-              {carMakes.map((carMake) => (
+              {CAR_MAKES.map((carMake) => (
                 <MenuItem
                   key={carMake}
                   value={carMake}
@@ -532,7 +330,7 @@ const PostAdvertPage = () => {
               >
                 Select year
               </MenuItem>
-              {years.map((year) => (
+              {YEARS.map((year) => (
                 <MenuItem
                   key={year}
                   value={year}
@@ -716,7 +514,7 @@ const PostAdvertPage = () => {
               />
             </Box>
 
-            <AttachFiles
+            <AttachFilesWhenCreate
               selectedFiles={selectedFiles}
               setSelectedFiles={setSelectedFiles}
             />

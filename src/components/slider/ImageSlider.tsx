@@ -9,7 +9,7 @@ import s from "./imageSlider.module.css";
   }[];
 }; */
 type ImageSliderProps = {
-  images: string[] | null;
+  images: { url: string; id: string }[] | null;
 };
 
 export function ImageSlider({ images }: ImageSliderProps) {
@@ -53,10 +53,10 @@ export function ImageSlider({ images }: ImageSliderProps) {
           overflow: "hidden",
         }}
       >
-        {images?.map((url, index) => (
+        {images?.map((imageInfo, index) => (
           <img
-            key={url}
-            src={url}
+            key={imageInfo.id}
+            src={imageInfo.url}
             aria-hidden={imageIndex !== index}
             className={s.imgSliderImg}
             style={{

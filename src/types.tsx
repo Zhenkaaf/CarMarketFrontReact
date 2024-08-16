@@ -29,7 +29,7 @@ export interface ICar {
   createdAt: string;
   desc: string;
   fuelType: string;
-  photoUrls: string[] | null;
+  photos: { url: string; id: string }[] | null;
   mileage: number;
   price: number;
   updatedAt: string;
@@ -41,6 +41,13 @@ export interface ICar {
   };
 }
 
+interface INoCarsResponse {
+  message: string;
+  cars: ICar[];
+}
+
+export type GetMyCarsResponse = ICar[] | INoCarsResponse;
+
 export interface ICarData {
   city: string;
   desc: string;
@@ -51,6 +58,7 @@ export interface ICarData {
   carMake: string;
   year: string;
   fuelType: string;
+  photosToDelete?: { id: string; url: string }[];
 }
 
 /* export interface ISingleCar {

@@ -7,21 +7,68 @@ import {
   ImageListItemBar,
   Typography,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
+import { v4 as uuidv4 } from "uuid";
 
-interface AttachFilesProps<T> {
-  selectedFiles: T[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<T[]>>;
+interface AttachFilesProps {
+  setExistingPhotos: React.Dispatch<
+    React.SetStateAction<{ id: string; url: string }[]>
+  >;
+  //setNewFilesToUpload: React.Dispatch<React.SetStateAction<File[]>>;
+  setNewFilesToUpload: React.Dispatch<
+    React.SetStateAction<{ id: string; file: File; url: string }[]>
+  >;
+  setFilesToDelete: React.Dispatch<
+    React.SetStateAction<{ id: string; url: string }[]>
+  >;
+  setHasFilesChanged: (value: boolean) => void;
+  existingPhotos: { id: string; url: string }[];
+  //newFilesToUpload: File[];
+  newFilesToUpload: { id: string; file: File; url: string }[];
+  filesToDelete: { id: string; url: string }[];
 }
 
-const AttachFiles = <T,>({
-  selectedFiles,
-  setSelectedFiles,
-}: AttachFilesProps<T>) => {
+const AttachFiles = ({
+  setExistingPhotos,
+  setNewFilesToUpload,
+  setHasFilesChanged,
+  setFilesToDelete,
+  existingPhotos,
+  newFilesToUpload,
+  filesToDelete,
+}: AttachFilesProps) => {
+  console.log("uploadedFiles", existingPhotos);
   const filePickerRef = useRef<HTMLInputElement>(null);
-  const [uploadedPhotos, setUploadedPhotos] = useState<string[]>([]);
+
+  const [existingAndSelectedPhotos, setExistingAndSelectedPhotos] = useState<
+    { id: string; file?: File; url: string }[]
+  >([]);
+
+  console.log("existingAndSelectedPhotos", existingAndSelectedPhotos);
+  console.log("newFilesToUpload", newFilesToUpload);
+  console.log("filesToDelete", filesToDelete);
+  useEffect(() => {
+    setExistingAndSelectedPhotos([...existingPhotos]);
+  }, [existingPhotos]);
+
+  /*   useEffect(() => {
+    if (uploadedFiles) {
+      console.log("useEffectAttachFiles------------");
+      const urls = uploadedFiles.map((file) =>
+        typeof file === "string" ? file : URL.createObjectURL(file)
+      );
+      setExistingAndSelectedPhotos(urls);
+    }
+  }, [uploadedFiles]); */
+
+  /*  useEffect(() => {
+    if (uploadedFiles && setHasFilesChanged) {
+      const filesChanged = hasFilesChanged(uploadedFiles, uploadedFiles);
+      setHasFilesChanged(filesChanged);
+    }
+  }, [uploadedFiles, uploadedFiles, setHasFilesChanged]); */
 
   const openFileFolder = (
     event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
@@ -30,46 +77,128 @@ const AttachFiles = <T,>({
     filePickerRef.current?.click();
   };
 
-  const selectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleChange");
-    console.log(event.target.files);
+  /*   const selectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const allFiles = [
-        ...(selectedFiles as File[]),
-        ...(Array.from(files) as File[]),
-      ];
+      //const newFiles = Array.from(files) as File[];
+      const newFiles = Array.from(files).map((file) => ({
+        id: uuidv4(),
+        file,
+        url: URL.createObjectURL(file),
+      }));
+      console.log("newFiles", newFiles);
+      console.log(
+        "existingAndSelectedPhotos.length",
+        existingAndSelectedPhotos.length
+      );
+      console.log("newFiles.length", newFiles.length);
+      console.log("filesToDelete.length", filesToDelete.length);
+      const totalFilesCount =
+        existingAndSelectedPhotos.length +
+        newFiles.length -
+        filesToDelete.length;
+      console.log("totalFilesCount****", totalFilesCount);
+      // Очистка значения `input`
+      if (filePickerRef.current) {
+        filePickerRef.current.value = "";
+      }
+       //Очистка значения input в элементе <input type="file"> необходима для того, чтобы ////пользователи могли повторно выбирать те же файлы, которые они уже выбрали ранее. Без этой //очистки браузер может не вызывать событие onChange, если пользователь выбирает те же самые файлы повторно, поскольку значение input не изменяется. 
+      if (totalFilesCount > 7) {
+        alert("You can select up to 7 photos, jpg / png.");
+        return;
+      }
+      //const urls = newFiles.map((file) => URL.createObjectURL(file));
+      //const urls = newFiles.map((newFile) => URL.createObjectURL(newFile.file));
+      setExistingAndSelectedPhotos((prev) => [
+        ...prev,
+        ...newFiles.map(({ url }) => url),
+      ]);
+      setNewFilesToUpload((prev) => [...prev, ...newFiles]);
+    }
+  }; */
+  const selectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newFiles = Array.from(files).map((file) => ({
+        id: uuidv4(),
+        file,
+        url: URL.createObjectURL(file),
+      }));
+      console.log("newFiles", newFiles);
+      const allFiles = [...existingAndSelectedPhotos, ...newFiles].filter(
+        (file) =>
+          !filesToDelete.some((deletedFile) => deletedFile.url === file.url)
+      );
+
+      console.log("allFiles.length", allFiles.length);
+
       if (allFiles.length > 7) {
         alert("You can select up to 7 photos, jpg / png.");
         return;
       }
-      const urls = allFiles.map((file) => URL.createObjectURL(file));
-      setUploadedPhotos(urls);
-      setSelectedFiles(allFiles as unknown as T[]);
+
+      // Обновление состояний
+      setExistingAndSelectedPhotos((prev) => [
+        ...prev,
+        ...newFiles.map((file) => file),
+      ]);
+      setNewFilesToUpload((prev) => [...prev, ...newFiles]);
     }
   };
 
   const setFirstPhoto = (index: number) => {
     console.log("setFirstPhoto", index);
-    const copyOfUploadedPhotos = [...uploadedPhotos];
-    const copyOfSelectedFiles = [...selectedFiles];
-    const firstPhoto = copyOfUploadedPhotos.splice(index, 1)[0];
-    copyOfUploadedPhotos.unshift(firstPhoto);
-    const firstFile = copyOfSelectedFiles.splice(index, 1)[0];
-    copyOfSelectedFiles.unshift(firstFile);
-    setUploadedPhotos(copyOfUploadedPhotos);
-    setSelectedFiles(copyOfSelectedFiles);
+    const copyOfexistingAndSelectedPhotos = [...existingAndSelectedPhotos];
+    const copyOfuploadedFiles = [...existingPhotos];
+    const firstPhoto = copyOfexistingAndSelectedPhotos.splice(index, 1)[0];
+    copyOfexistingAndSelectedPhotos.unshift(firstPhoto);
+    const firstFile = copyOfuploadedFiles.splice(index, 1)[0];
+    copyOfuploadedFiles.unshift(firstFile);
+    setExistingAndSelectedPhotos(copyOfexistingAndSelectedPhotos);
+    // setuploadedFiles(copyOfuploadedFiles);
   };
 
-  const removePhoto = (indexToRemove: number) => {
-    const updatedUploadedPhotos = uploadedPhotos.filter(
-      (_, index) => index !== indexToRemove
+  const deletePhoto = (photoId: string) => {
+    const photoToDelete = existingAndSelectedPhotos.find(
+      (photo) => photo.id === photoId
     );
-    const updatedSelectedFiles = selectedFiles.filter(
-      (_, index) => index !== indexToRemove
+    if (photoToDelete?.url.startsWith("http")) {
+      setFilesToDelete((prev) => [...prev, photoToDelete]);
+    }
+    const filteredAllFiles = existingAndSelectedPhotos.filter(
+      (photo) => photo.id !== photoId
     );
-    setUploadedPhotos(updatedUploadedPhotos);
-    setSelectedFiles(updatedSelectedFiles);
+    // Освобождение URL-объекта
+    if (photoToDelete?.url.startsWith("blob")) {
+      console.log("удаление BLOB");
+      URL.revokeObjectURL(photoToDelete.url);
+      //Когда вы вызываете URL.createObjectURL(file), браузер создает временный URL, который ссылается на указанный файл в памяти. Этот URL можно использовать для отображения файла. Однако этот URL будет существовать до тех пор, пока вы его явно не освободите.
+      setNewFilesToUpload((prev) =>
+        prev.filter((photo) => photo.id !== photoId)
+      );
+    }
+    setExistingAndSelectedPhotos(filteredAllFiles);
+  };
+
+  const hasFilesChanged = (
+    prevFiles: (File | string)[] | undefined,
+    currentFiles: (File | string)[]
+  ): boolean => {
+    // Преобразуем массив файлов в строки с описанием файла
+    const fileToString = (file: File | string) =>
+      typeof file === "string"
+        ? file
+        : `${file.name}_${file.size}_${file.lastModified}`;
+
+    // Преобразуем массив файлов в строки и сортируем
+    const prevFileStrings = prevFiles?.map(fileToString).sort() || [];
+    const currentFileStrings = currentFiles.map(fileToString).sort();
+
+    // Сравниваем отсортированные массивы строк
+    return (
+      prevFileStrings.length !== currentFileStrings.length ||
+      prevFileStrings.some((str, index) => str !== currentFileStrings[index])
+    );
   };
 
   return (
@@ -124,7 +253,7 @@ const AttachFiles = <T,>({
         rowHeight={164}
         gap={8}
       >
-        {uploadedPhotos.map((photoUrl, index) => (
+        {existingAndSelectedPhotos.map((photo, index) => (
           <ImageListItem
             key={index}
             cols={index === 0 ? 2 : 1}
@@ -133,8 +262,8 @@ const AttachFiles = <T,>({
             {index === 0 && [
               <img
                 key={`photo-${index}`}
-                srcSet={photoUrl}
-                src={photoUrl}
+                srcSet={photo.url}
+                src={photo.url}
                 alt={`Uploaded Photo ${index + 1}`}
                 loading="lazy"
                 style={{
@@ -154,8 +283,11 @@ const AttachFiles = <T,>({
                   },
                 }}
                 actionIcon={
-                  <IconButton sx={{ color: "red" }}>
-                    <DeleteForeverIcon onClick={() => removePhoto(index)} />
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => deletePhoto(photo.id)}
+                  >
+                    <DeleteForeverIcon />
                   </IconButton>
                 }
               />,
@@ -163,8 +295,8 @@ const AttachFiles = <T,>({
             {index !== 0 && [
               <img
                 key={`photo-${index}`}
-                srcSet={photoUrl}
-                src={photoUrl}
+                srcSet={photo.url}
+                src={photo.url}
                 alt={`Uploaded Photo ${index + 1}`}
                 loading="lazy"
                 style={{
@@ -192,11 +324,11 @@ const AttachFiles = <T,>({
                   },
                 }}
                 actionIcon={
-                  <IconButton sx={{ color: "red" }}>
-                    <DeleteForeverIcon
-                      fontSize="small"
-                      onClick={() => removePhoto(index)}
-                    />
+                  <IconButton
+                    sx={{ color: "red" }}
+                    onClick={() => deletePhoto(photo.id)}
+                  >
+                    <DeleteForeverIcon fontSize="small" />
                   </IconButton>
                 }
               />,
