@@ -1,3 +1,7 @@
+import { FieldValues, useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
+import { ChangeEvent, useState } from "react";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -8,20 +12,19 @@ import {
   SelectChangeEvent,
   TextField,
   TextareaAutosize,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import Spinner from "../../components/Spinner";
-import { FieldValues, useForm } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import { ICarData } from "../../types";
+import AttachFilesWhenCreate from "../../components/attachFilesWhenCreate/AttachFilesWhenCreate";
 import {
   useAddCarMutation,
   useAddPhotosToCarMutation,
 } from "../../redux/carsApi";
-import { toast } from "react-toastify";
 import { CAR_MAKES, YEARS } from "../../constants/constans";
-import AttachFilesWhenCreate from "../../components/attachFilesWhenCreate/attachFilesWhenCreate";
+import { useDisableNumberInputWheel } from "../../helpers/useDisableNumberInputWheel";
+import { ICarData, IFormValues } from "../../types";
+import { excludeSpacesAndZero } from "../../helpers/excludeSpacesAndZero";
 
 interface FileWithId {
   file: File;
@@ -30,6 +33,7 @@ interface FileWithId {
 
 const PostAdvertPage = () => {
   console.log("renderPostAdvertPage");
+  useDisableNumberInputWheel();
   const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
     useAddCarMutation();
 
@@ -47,7 +51,6 @@ const PostAdvertPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
-  //const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<FileWithId[]>([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
 
@@ -57,7 +60,7 @@ const PostAdvertPage = () => {
     handleSubmit,
     reset,
     setValue,
-  } = useForm({
+  } = useForm<IFormValues>({
     mode: "onChange",
   });
 
@@ -78,21 +81,18 @@ const PostAdvertPage = () => {
       setFuelTypeError("Please select car fuel type.");
       return;
     }
-    if (selectedFiles.length < 0) {
+    /*  if (selectedFiles.length < 0) {
       alert("please select a file");
       return;
-    }
+    } */
 
     const formData = new FormData();
-
-    /*  selectedFiles.forEach((file) => {
-      formData.append("photos", file);
-    }); */
     selectedFiles.forEach(({ file, id }) => {
       formData.append("photos", file);
-      formData.append("photoIds", id);
+      //использование "[]" в ключе при добавлении данных в FormData влияет на то, как эти данные интерпретируются на сервере
+      formData.append("photoIds[]", id);
     });
-    /*  console.log("formData********");
+    /* console.log("formData********", formData);
     formData.forEach((value, key) => {
       console.log("key--", key, "value--", value);
     }); */
@@ -147,20 +147,6 @@ const PostAdvertPage = () => {
       setFuelType(event.target.value);
       setFuelTypeError("");
     }
-  };
-
-  const excludeSpacesAndZero = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = event.target.value.replace(/\s/g, "");
-    if (inputValue.length === 1 && inputValue[0] === "0") {
-      inputValue = "";
-    }
-    if (inputValue.length > 6) {
-      inputValue = inputValue.slice(0, 6);
-    }
-    if (event.target.name == "mileage") {
-      inputValue = inputValue.slice(0, 3);
-    }
-    setValue(event.target.name, inputValue);
   };
 
   if (spinnerState /* isAddCarLoading || isAddPhotosLoading */) {
@@ -312,8 +298,11 @@ const PostAdvertPage = () => {
               error={Boolean(errors?.model)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={
-                errors?.model && <p>{errors?.model?.message as string}</p>
+                errors?.model ? (errors.model.message as string) : null
               }
+              /* helperText={
+                errors?.model && <p>{errors?.model?.message as string}</p>
+              } */
             />
 
             <Select
@@ -356,7 +345,9 @@ const PostAdvertPage = () => {
               required
               name="price"
               type="number"
-              onInput={excludeSpacesAndZero}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                excludeSpacesAndZero(event, setValue)
+              }
               autoComplete="off"
               sx={{
                 "& input": {
@@ -392,7 +383,7 @@ const PostAdvertPage = () => {
               }}
               error={Boolean(errors?.price)}
               helperText={
-                errors?.price && <p>{errors?.price?.message as string}</p>
+                errors?.price ? (errors.price.message as string) : null
               }
             />
 
@@ -404,7 +395,9 @@ const PostAdvertPage = () => {
               required
               name="mileage"
               type="number"
-              onInput={excludeSpacesAndZero}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                excludeSpacesAndZero(event, setValue)
+              }
               sx={{
                 "& input": {
                   background: "white",
@@ -439,7 +432,7 @@ const PostAdvertPage = () => {
               }}
               error={Boolean(errors?.mileage)}
               helperText={
-                errors?.mileage && <p>{errors?.mileage?.message as string}</p>
+                errors?.mileage ? (errors.mileage.message as string) : null
               }
             />
 
@@ -496,9 +489,7 @@ const PostAdvertPage = () => {
               name="city"
               error={Boolean(errors?.city)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
-              helperText={
-                errors?.city && <p>{errors?.city?.message as string}</p>
-              }
+              helperText={errors?.city ? (errors.city.message as string) : null}
             />
 
             <Box>
@@ -518,17 +509,25 @@ const PostAdvertPage = () => {
               selectedFiles={selectedFiles}
               setSelectedFiles={setSelectedFiles}
             />
-
-            <Button
-              sx={{ marginTop: "10px" }}
-              type="submit"
-              disabled={!isValid || selectedFiles.length === 0}
-              fullWidth
-              variant="contained"
-              color="secondary"
+            <Tooltip
+              title="Please fill in all fields."
+              disableHoverListener={isValid}
+              disableInteractive
+              arrow
             >
-              Publish
-            </Button>
+              <span>
+                <Button
+                  sx={{ marginTop: "10px" }}
+                  type="submit"
+                  disabled={!isValid || selectedFiles.length === 0}
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                >
+                  Publish
+                </Button>
+              </span>
+            </Tooltip>
           </form>
         </Box>
       </Box>

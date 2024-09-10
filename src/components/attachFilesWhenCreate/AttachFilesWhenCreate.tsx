@@ -7,7 +7,7 @@ import {
   ImageListItemBar,
   Typography,
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import { v4 as uuidv4 } from "uuid";
@@ -26,11 +26,8 @@ const AttachFilesWhenCreate = ({
   selectedFiles,
   setSelectedFiles,
 }: AttachFilesWhenCreateProps) => {
-  console.log("renderAttachFilesWhenCreate");
   const filePickerRef = useRef<HTMLInputElement>(null);
-  const [mainPhotoId, setMainPhotoId] = useState<string | null>(null);
-  //const [filesUrls, setFilesUrls] = useState<string[]>([]);
-  console.log(selectedFiles);
+  console.log("selectedFiles", selectedFiles);
   const openFileFolder = (
     event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
   ) => {
@@ -39,7 +36,6 @@ const AttachFilesWhenCreate = ({
   };
 
   const selectFiles = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log("handleChange");
     const files = event.target.files;
     if (files) {
       //Преобразуем FileList в массив
@@ -48,68 +44,34 @@ const AttachFilesWhenCreate = ({
         file,
         id: uuidv4(),
       }));
+      console.log("newFilesWithId*******", newFilesWithId);
       const allFiles = [...selectedFiles, ...newFilesWithId];
-      //const allFiles = [...selectedFiles, ...newFiles];
       // Очистка значения `input`
       if (filePickerRef.current) {
         filePickerRef.current.value = "";
       }
-      if (allFiles.length > 7) {
-        alert("You can select up to 7 photos, jpg / png.");
+      if (allFiles.length > 5) {
+        alert("You can select up to 5 photos, jpg / png.");
         return;
       }
-      /* const blobs = allFiles.map((file) => URL.createObjectURL(file));
-      console.log(blobs); */
       setSelectedFiles(allFiles);
     }
+    // Сброс значения поля ввода, чтоб повторно выбирать один и тот же файл
+    //event.target.value = "";
   };
 
-  /* const setFirstPhoto = (index: number) => {
-    console.log("setFirstPhoto", index);
-    const copyOffilesUrls = [...filesUrls];
-    const copyOfSelectedFiles = [...selectedFiles];
-    const firstPhoto = copyOffilesUrls.splice(index, 1)[0];
-    copyOffilesUrls.unshift(firstPhoto);
-    const firstFile = copyOfSelectedFiles.splice(index, 1)[0];
-    copyOfSelectedFiles.unshift(firstFile);
-    setFilesUrls(copyOffilesUrls);
-    setSelectedFiles(copyOfSelectedFiles);
-  }; */
   const setFirstPhoto = (index: number) => {
-    console.log("setFirstPhoto", index);
     const copyOfSelectedFiles = [...selectedFiles];
     const firstFile = copyOfSelectedFiles.splice(index, 1)[0];
     copyOfSelectedFiles.unshift(firstFile);
     setSelectedFiles(copyOfSelectedFiles);
-    /* setMainPhotoId(firstFile.photoId); */
   };
 
-  /* const removePhoto = (indexToRemove: number) => {
-    const updatedfilesUrls = filesUrls.filter(
-      (_, index) => index !== indexToRemove
+  const deletePhoto = (photoId: string) => {
+    const filteredSelectedFiles = selectedFiles.filter(
+      (file) => file.id !== photoId
     );
-    const updatedSelectedFiles = selectedFiles.filter(
-      (_, index) => index !== indexToRemove
-    );
-    setFilesUrls(updatedfilesUrls);
-    setSelectedFiles(updatedSelectedFiles);
-  }; */
-  const removePhoto = (indexToRemove: number) => {
-    // Удаляем фото из списка
-    const updatedSelectedFiles = selectedFiles.filter(
-      (_, index) => index !== indexToRemove
-    );
-    // Если удаляем главное фото
-    if (selectedFiles[indexToRemove].photoId === mainPhotoId) {
-      // Устанавливаем новый ID главного фото, если есть другие фото
-      if (updatedSelectedFiles.length > 0) {
-        setMainPhotoId(updatedSelectedFiles[0].photoId);
-      } else {
-        setMainPhotoId(null); // Нет фото, сбрасываем значение
-      }
-    }
-    // Обновляем состояние с новыми фото
-    setSelectedFiles(updatedSelectedFiles);
+    setSelectedFiles(filteredSelectedFiles);
   };
 
   return (
@@ -131,7 +93,7 @@ const AttachFilesWhenCreate = ({
           marginLeft: "5px",
         }}
       >
-        max 7 photos, jpg / png
+        max 5 photos, jpg / png
       </Typography>
 
       <input
@@ -166,15 +128,13 @@ const AttachFilesWhenCreate = ({
       >
         {selectedFiles.map((fileWithId, index) => (
           <ImageListItem
-            key={index}
+            key={fileWithId.id}
             cols={index === 0 ? 2 : 1}
             rows={index === 0 ? 2 : 1}
           >
             {index === 0 && [
               <img
-                key={`photo-${index}`}
-                //srcSet={photoUrl}
-                /*  src={photoUrl} */
+                key={`photo0-${fileWithId.id}`}
                 src={URL.createObjectURL(fileWithId.file)}
                 alt={`Uploaded Photo ${index + 1}`}
                 loading="lazy"
@@ -187,7 +147,7 @@ const AttachFilesWhenCreate = ({
                 }}
               />,
               <ImageListItemBar
-                key={`bar-${index}`}
+                key={`bar0-${fileWithId.id}`}
                 title="Main photo"
                 sx={{
                   "& .MuiImageListItemBar-title": {
@@ -197,7 +157,7 @@ const AttachFilesWhenCreate = ({
                 actionIcon={
                   <IconButton
                     sx={{ color: "red" }}
-                    onClick={() => removePhoto(index)}
+                    onClick={() => deletePhoto(fileWithId.id)}
                   >
                     <DeleteForeverIcon />
                   </IconButton>
@@ -206,9 +166,7 @@ const AttachFilesWhenCreate = ({
             ]}
             {index !== 0 && [
               <img
-                key={`photo-${index}`}
-                //srcSet={photoUrl}
-                /*  src={photoUrl} */
+                key={`photo-${fileWithId.id}`}
                 src={URL.createObjectURL(fileWithId.file)}
                 alt={`Uploaded Photo ${index + 1}`}
                 loading="lazy"
@@ -222,7 +180,7 @@ const AttachFilesWhenCreate = ({
                 onClick={() => setFirstPhoto(index)}
               />,
               <ImageListItemBar
-                key={`bar-${index}`}
+                key={`bar-${fileWithId.id}`}
                 subtitle="Click to photo to set as main"
                 sx={{
                   "@media (max-width: 540px)": {
@@ -239,7 +197,7 @@ const AttachFilesWhenCreate = ({
                 actionIcon={
                   <IconButton
                     sx={{ color: "red" }}
-                    onClick={() => removePhoto(index)}
+                    onClick={() => deletePhoto(fileWithId.id)}
                   >
                     <DeleteForeverIcon fontSize="small" />
                   </IconButton>

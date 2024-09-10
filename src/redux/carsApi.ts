@@ -44,11 +44,17 @@ export const carsApi = createApi({
     }),
 
     addPhotosToCar: builder.mutation({
-      query: ({ carId, formData }) => ({
-        url: `car/add-photos/${carId}`,
-        method: "POST",
-        body: formData,
-      }),
+      query: ({ carId, mainPhotoId, formData }) => {
+        //url: `car/add-photos/${carId}?mainPhotoId=${mainPhotoId}`,
+        const url = mainPhotoId
+          ? `car/add-photos/${carId}?mainPhotoId=${mainPhotoId}`
+          : `car/add-photos/${carId}`;
+        return {
+          url,
+          method: "POST",
+          body: formData,
+        };
+      },
       invalidatesTags: ["Cars"],
     }),
 

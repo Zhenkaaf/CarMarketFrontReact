@@ -20,8 +20,10 @@ import { toast } from "react-toastify";
 const LoginPage = () => {
   const dispatch = useAppDispatch();
   const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
+  console.log("isUserAuth", isUserAuth);
   const loginError = useAppSelector((state) => state.userRed.loginError);
   const isUserLoading = useAppSelector((state) => state.userRed.isUserLoading);
+  console.log("isUserLoading", isUserLoading);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const navigate = useNavigate();

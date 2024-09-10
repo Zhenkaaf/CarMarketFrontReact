@@ -61,6 +61,26 @@ export interface ICarData {
   photosToDelete?: { id: string; url: string }[];
 }
 
+export interface IInitTxtFieldsValues {
+  model: string;
+  price: number;
+  mileage: number;
+  city: string;
+  desc: string;
+}
+
+export interface IFormValues {
+  model: string;
+  price: number;
+  mileage: number;
+  city: string;
+  desc?: string;
+  bodyType: string;
+  carMake: string;
+  year: string;
+  fuelType: string;
+}
+
 /* export interface ISingleCar {
   carId: number;
   bodyType: string;

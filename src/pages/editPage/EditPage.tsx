@@ -1,10 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
-import {
-  useAddPhotosToCarMutation,
-  useGetCarQuery,
-  useUpdateCarMutation,
-} from "../../redux/carsApi";
-import Spinner from "../../components/Spinner";
+import { FieldValues, useForm } from "react-hook-form";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import {
   Box,
   Button,
@@ -18,25 +15,29 @@ import {
   Typography,
   Tooltip,
 } from "@mui/material";
+import { useDisableNumberInputWheel } from "../../helpers/useDisableNumberInputWheel";
+import { excludeSpacesAndZero } from "../../helpers/excludeSpacesAndZero";
+import {
+  useAddPhotosToCarMutation,
+  useGetCarQuery,
+  useUpdateCarMutation,
+} from "../../redux/carsApi";
 import AttachFiles from "../../components/attachFiles/AttachFiles";
-import { FieldValues, useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { ICarData } from "../../types";
+import Spinner from "../../components/Spinner";
 import { CAR_MAKES, YEARS } from "../../constants/constans";
-import { toast } from "react-toastify";
-import useDisableNumberInputWheel from "../../helpers/useDisableNumberInputWheel";
+import { ICarData, IFormValues, IInitTxtFieldsValues } from "../../types";
 
 const EditPage = () => {
-  console.log("renderEditPageStart");
+  console.log("RENDEREDITPAGE**************");
   useDisableNumberInputWheel();
-
+  const { carId } = useParams<{ carId: string }>();
   const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
     useUpdateCarMutation();
+
   const [
     addPhotosToCar,
     { error: addPhotosError, isLoading: isAddPhotosLoading },
   ] = useAddPhotosToCarMutation();
-  const { carId } = useParams<{ carId: string }>();
 
   const {
     data: singleCar,
@@ -52,8 +53,9 @@ const EditPage = () => {
     reset,
     setValue,
     watch,
-  } = useForm({
+  } = useForm<IFormValues>({
     mode: "onChange",
+    reValidateMode: "onChange",
   });
 
   const navigate = useNavigate();
@@ -65,6 +67,12 @@ const EditPage = () => {
   const [carMakeError, setCarMakeError] = useState<string>("");
   const [yearError, setYearError] = useState<string>("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
+  const [mainPhotoId, setMainPhotoId] = useState("");
+  const initialMainPhotoIdRef = useRef<null | string>(null);
+  const [initTxtFieldsValues, setInitTxtFieldsValues] =
+    useState<IInitTxtFieldsValues | null>(null);
+  const [isFormChanged, setIsFormChanged] = useState(false);
+  const [allInitValuesSet, setAllInitValuesSet] = useState(false);
   const [existingPhotos, setExistingPhotos] = useState<
     { id: string; url: string }[]
   >([]);
@@ -75,39 +83,14 @@ const EditPage = () => {
     { id: string; url: string }[]
   >([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
-  const [hasFilesChanged, setHasFilesChanged] = useState(false);
-  /*  const [isFormChanged, setIsFormChanged] = useState(false); */
 
-  const watchedFields = watch([
-    "model",
-    "price",
-    "mileage",
-    "city",
-    "desc",
-    "bodyType",
-    "carMake",
-    "year",
-    "fuelType",
-  ]);
-
-  const isFormChanged = watchedFields.some(
-    (field, index) => field !== Object.values(singleCar || {})[index]
-  );
-  //console.log("!isValid", !isValid);
-  /*  console.log("isFormChanged", isFormChanged); */
-  //console.log("!hasFilesChanged", !hasFilesChanged);
-
-  /*   useEffect(() => {
-    if (singleCar) {
-      setExistingPhotos(singleCar.photoUrls || []);
-    }
-  }, [singleCar]); */
-
-  /* Компонент AttachFiles:
-
-Используйте useCallback для функций openFileFolder, selectFiles, и removePhoto, чтобы избежать создания новых функций при каждом рендере. */
   useEffect(() => {
-    console.log("useEffectWORKED");
+    if (initialMainPhotoIdRef.current === null && mainPhotoId) {
+      initialMainPhotoIdRef.current = mainPhotoId;
+    }
+  }, [mainPhotoId]);
+
+  useEffect(() => {
     if (singleCar) {
       setBodyType(singleCar.bodyType || "");
       setCarMake(singleCar.carMake || "");
@@ -115,12 +98,49 @@ const EditPage = () => {
       setFuelType(singleCar.fuelType || "");
       setExistingPhotos(singleCar.photos || []);
       setValue("model", singleCar.model || "");
-      setValue("price", singleCar.price || "");
-      setValue("mileage", singleCar.mileage || "");
+      setValue("price", singleCar.price || 0);
+      setValue("mileage", singleCar.mileage || 0);
       setValue("city", singleCar.city || "");
       setValue("desc", singleCar.desc || "");
+      setInitTxtFieldsValues({
+        model: singleCar.model || "",
+        price: singleCar.price || 0,
+        mileage: singleCar.mileage || 0,
+        city: singleCar.city || "",
+        desc: singleCar.desc || "",
+      });
+
+      setAllInitValuesSet(true);
     }
   }, [singleCar, setValue]);
+
+  const [watchModel, watchPrice, watchMileage, watchCity, watchDesc] = watch([
+    "model",
+    "price",
+    "mileage",
+    "city",
+    "desc",
+  ]);
+
+  useEffect(() => {
+    if (initTxtFieldsValues && allInitValuesSet) {
+      const isChanged =
+        watchModel !== initTxtFieldsValues.model ||
+        +watchPrice !== initTxtFieldsValues.price ||
+        +watchMileage !== initTxtFieldsValues.mileage ||
+        watchCity !== initTxtFieldsValues.city ||
+        watchDesc !== initTxtFieldsValues.desc;
+      setIsFormChanged(isChanged);
+    }
+  }, [
+    watchModel,
+    watchPrice,
+    watchMileage,
+    watchCity,
+    watchDesc,
+    initTxtFieldsValues,
+    allInitValuesSet,
+  ]);
 
   const handleUpdateCar = async (formValues: FieldValues) => {
     /*  if (existingPhotos.length < 0) {
@@ -130,7 +150,8 @@ const EditPage = () => {
     const formData = new FormData();
     newFilesToUpload.forEach(({ file, id }) => {
       formData.append("photos", file);
-      formData.append("photoIds", id);
+      //использование "[]" в ключе при добавлении данных в FormData влияет на то, как эти данные интерпретируются на сервере
+      formData.append("photoIds[]", id);
     });
 
     const updatedCar: ICarData = {
@@ -151,9 +172,10 @@ const EditPage = () => {
       setSpinnerState(true);
       const updatedCarRes = await updateCar({ id: carId, updatedCar }).unwrap();
       if (updatedCarRes.status === "success") {
-        if (newFilesToUpload.length > 0) {
+        if (newFilesToUpload.length > 0 || mainPhotoId) {
           const addPhotosRes = await addPhotosToCar({
             carId,
+            mainPhotoId,
             formData,
           }).unwrap();
           console.log("addPhotosRes", addPhotosRes);
@@ -175,42 +197,28 @@ const EditPage = () => {
     event: SelectChangeEvent,
     selectType: string
   ) => {
-    console.log("event.target.value", event.target.value);
     const value = event.target.value;
     if (selectType === "bodyType") {
       setBodyType(value);
-      /*  setValue("bodyType", value, { shouldValidate: true }); */
+      setValue("bodyType", value, { shouldValidate: true });
       setBodyTypeError("");
     } else if (selectType === "carMake") {
       setCarMake(value);
-      /* setValue("carMake", value, { shouldValidate: true }); */
+      setValue("carMake", value, { shouldValidate: true });
       setCarMakeError("");
     } else if (selectType === "year") {
       setYear(value);
-      /*  setValue("year", value, { shouldValidate: true }); */
+      setValue("year", value, { shouldValidate: true });
       setYearError("");
     } else if (selectType === "fuelType") {
       setFuelType(value);
-      /*  setValue("fuelType", value, { shouldValidate: true }); */
+      setValue("fuelType", value, { shouldValidate: true });
       setFuelTypeError("");
     }
+    setIsFormChanged(true);
   };
 
-  const excludeSpacesAndZero = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let inputValue = event.target.value.replace(/\s/g, "");
-    if (inputValue.length === 1 && inputValue[0] === "0") {
-      inputValue = "";
-    }
-    if (inputValue.length > 6) {
-      inputValue = inputValue.slice(0, 6);
-    }
-    if (event.target.name == "mileage") {
-      inputValue = inputValue.slice(0, 3);
-    }
-    setValue(event.target.name, inputValue);
-  };
-
-  if (isLoading || isFetching || spinnerState) {
+  if (isLoading || isFetching || spinnerState || !singleCar) {
     return <Spinner open={true} />;
   }
   if (isError) {
@@ -345,7 +353,7 @@ const EditPage = () => {
               error={Boolean(errors?.model)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={
-                errors?.model && <p>{errors?.model?.message as string}</p>
+                errors?.model ? (errors.model.message as string) : null
               }
             />
 
@@ -390,7 +398,10 @@ const EditPage = () => {
               name="price"
               type="number"
               inputMode="numeric"
-              onInput={excludeSpacesAndZero}
+              //onInput={excludeSpacesAndZero}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                excludeSpacesAndZero(event, setValue)
+              }
               autoComplete="off"
               sx={{
                 "& input": {
@@ -426,7 +437,7 @@ const EditPage = () => {
               }}
               error={Boolean(errors?.price)}
               helperText={
-                errors?.price && <p>{errors?.price?.message as string}</p>
+                errors?.price ? (errors.price.message as string) : null
               }
             />
 
@@ -439,7 +450,10 @@ const EditPage = () => {
               name="mileage"
               type="number"
               inputMode="numeric"
-              onInput={excludeSpacesAndZero}
+              //onInput={excludeSpacesAndZero}
+              onChange={(event: ChangeEvent<HTMLInputElement>) =>
+                excludeSpacesAndZero(event, setValue)
+              }
               sx={{
                 "& input": {
                   background: "white",
@@ -474,7 +488,7 @@ const EditPage = () => {
               }}
               error={Boolean(errors?.mileage)}
               helperText={
-                errors?.mileage && <p>{errors?.mileage?.message as string}</p>
+                errors?.mileage ? (errors.mileage.message as string) : null
               }
             />
 
@@ -531,9 +545,7 @@ const EditPage = () => {
               name="city"
               error={Boolean(errors?.city)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
-              helperText={
-                errors?.city && <p>{errors?.city?.message as string}</p>
-              }
+              helperText={errors?.city ? (errors.city.message as string) : null}
             />
 
             <Box>
@@ -550,44 +562,38 @@ const EditPage = () => {
             </Box>
 
             <AttachFiles
-              /*  selectedFiles={selectedFiles} */
-              setExistingPhotos={setExistingPhotos}
               existingPhotos={existingPhotos}
-              setHasFilesChanged={setHasFilesChanged}
               setNewFilesToUpload={setNewFilesToUpload}
-              newFilesToUpload={newFilesToUpload}
               filesToDelete={filesToDelete}
               setFilesToDelete={setFilesToDelete}
+              setMainPhotoId={setMainPhotoId}
             />
-            {/* Tooltip for form validity */}
             <Tooltip
               title="Please make at least one change."
-              disableHoverListener={isValid}
+              disableHoverListener={isValid && isFormChanged}
+              disableInteractive
               arrow
             >
               <span>
-                {/* Tooltip for file selection */}
-                <Tooltip
-                  title="Please add at least one photo to update."
-                  disableHoverListener={existingPhotos.length > 0}
-                  arrow
+                <Button
+                  sx={{ marginTop: "10px" }}
+                  type="submit"
+                  //будет активна, если одно из условий истинно.
+                  disabled={
+                    !(
+                      (isValid && isFormChanged) ||
+                      filesToDelete.length ||
+                      newFilesToUpload.length ||
+                      (initialMainPhotoIdRef.current &&
+                        mainPhotoId !== initialMainPhotoIdRef.current)
+                    )
+                  }
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
                 >
-                  <span>
-                    <Button
-                      //Если форма валидна и хотя бы одно из условий (форма изменена или файлы изменены) выполнено, кнопка будет активной
-                      sx={{ marginTop: "10px" }}
-                      type="submit"
-                      /*  disabled={
-                        !isValid && (!isFormChanged || !hasFilesChanged)
-                      } */
-                      fullWidth
-                      variant="contained"
-                      color="secondary"
-                    >
-                      Update
-                    </Button>
-                  </span>
-                </Tooltip>
+                  Update
+                </Button>
               </span>
             </Tooltip>
           </form>
