@@ -25,7 +25,7 @@ export interface ICar {
   carId: number;
   carMake: string;
   model: string;
-  city: string;
+  region: string;
   createdAt: string;
   desc: string;
   fuelType: string;
@@ -49,7 +49,7 @@ interface INoCarsResponse {
 export type GetMyCarsResponse = ICar[] | INoCarsResponse;
 
 export interface ICarData {
-  city: string;
+  region: string;
   desc: string;
   mileage: number;
   model: string;
@@ -65,7 +65,7 @@ export interface IInitTxtFieldsValues {
   model: string;
   price: number;
   mileage: number;
-  city: string;
+  region: string;
   desc: string;
 }
 
@@ -73,7 +73,7 @@ export interface IFormValues {
   model: string;
   price: number;
   mileage: number;
-  city: string;
+  region: string;
   desc?: string;
   bodyType: string;
   carMake: string;

@@ -217,9 +217,7 @@ const SingleAdvertPage = () => {
                     color="secondary"
                   />
                   <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.city.length > 20
-                      ? singleCar.city.slice(0, 20)
-                      : singleCar.city}
+                    {singleCar.region}
                   </Typography>
                 </Box>
 

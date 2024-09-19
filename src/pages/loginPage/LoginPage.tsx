@@ -34,7 +34,7 @@ const LoginPage = () => {
     reset,
     setValue,
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   useEffect(() => {

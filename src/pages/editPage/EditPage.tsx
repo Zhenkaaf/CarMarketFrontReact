@@ -22,13 +22,12 @@ import {
   useGetCarQuery,
   useUpdateCarMutation,
 } from "../../redux/carsApi";
-import AttachFiles from "../../components/attachFiles/AttachFiles";
+import AttachFilesEdit from "../../components/attachFiles/AttachFilesEdit";
 import Spinner from "../../components/Spinner";
 import { CAR_MAKES, YEARS } from "../../constants/constans";
 import { ICarData, IFormValues, IInitTxtFieldsValues } from "../../types";
 
 const EditPage = () => {
-  console.log("RENDEREDITPAGE**************");
   useDisableNumberInputWheel();
   const { carId } = useParams<{ carId: string }>();
   const [updateCar, { error: updateCarError, isLoading: isUpdating }] =
@@ -60,13 +59,15 @@ const EditPage = () => {
 
   const navigate = useNavigate();
   const [bodyType, setBodyType] = useState("");
-  const [carMake, setCarMake] = useState("");
-  const [year, setYear] = useState("");
-  const [fuelType, setFuelType] = useState("");
   const [bodyTypeError, setBodyTypeError] = useState<string>("");
+  const [carMake, setCarMake] = useState("");
   const [carMakeError, setCarMakeError] = useState<string>("");
+  const [year, setYear] = useState("");
   const [yearError, setYearError] = useState<string>("");
+  const [fuelType, setFuelType] = useState("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
+  const [region, setRegion] = useState("");
+  const [regionError, setRegionError] = useState("");
   const [mainPhotoId, setMainPhotoId] = useState("");
   const initialMainPhotoIdRef = useRef<null | string>(null);
   const [initTxtFieldsValues, setInitTxtFieldsValues] =
@@ -96,17 +97,16 @@ const EditPage = () => {
       setCarMake(singleCar.carMake || "");
       setYear(singleCar.year || "");
       setFuelType(singleCar.fuelType || "");
+      setRegion(singleCar.region || "");
       setExistingPhotos(singleCar.photos || []);
       setValue("model", singleCar.model || "");
       setValue("price", singleCar.price || 0);
       setValue("mileage", singleCar.mileage || 0);
-      setValue("city", singleCar.city || "");
       setValue("desc", singleCar.desc || "");
       setInitTxtFieldsValues({
         model: singleCar.model || "",
         price: singleCar.price || 0,
         mileage: singleCar.mileage || 0,
-        city: singleCar.city || "",
         desc: singleCar.desc || "",
       });
 
@@ -114,11 +114,10 @@ const EditPage = () => {
     }
   }, [singleCar, setValue]);
 
-  const [watchModel, watchPrice, watchMileage, watchCity, watchDesc] = watch([
+  const [watchModel, watchPrice, watchMileage, watchDesc] = watch([
     "model",
     "price",
     "mileage",
-    "city",
     "desc",
   ]);
 
@@ -128,7 +127,6 @@ const EditPage = () => {
         watchModel !== initTxtFieldsValues.model ||
         +watchPrice !== initTxtFieldsValues.price ||
         +watchMileage !== initTxtFieldsValues.mileage ||
-        watchCity !== initTxtFieldsValues.city ||
         watchDesc !== initTxtFieldsValues.desc;
       setIsFormChanged(isChanged);
     }
@@ -136,17 +134,12 @@ const EditPage = () => {
     watchModel,
     watchPrice,
     watchMileage,
-    watchCity,
     watchDesc,
     initTxtFieldsValues,
     allInitValuesSet,
   ]);
 
   const handleUpdateCar = async (formValues: FieldValues) => {
-    /*  if (existingPhotos.length < 0) {
-      alert("please select a file");
-      return;
-    } */
     const formData = new FormData();
     newFilesToUpload.forEach(({ file, id }) => {
       formData.append("photos", file);
@@ -155,7 +148,6 @@ const EditPage = () => {
     });
 
     const updatedCar: ICarData = {
-      city: formValues.city,
       desc: formValues.desc,
       mileage: +formValues.mileage,
       model: formValues.model,
@@ -164,21 +156,20 @@ const EditPage = () => {
       carMake,
       year,
       fuelType,
+      region,
       photosToDelete: filesToDelete,
     };
-    console.log("updatedCar", updatedCar);
-    console.log("formData", formData);
+
     try {
       setSpinnerState(true);
       const updatedCarRes = await updateCar({ id: carId, updatedCar }).unwrap();
       if (updatedCarRes.status === "success") {
         if (newFilesToUpload.length > 0 || mainPhotoId) {
-          const addPhotosRes = await addPhotosToCar({
+          await addPhotosToCar({
             carId,
             mainPhotoId,
             formData,
           }).unwrap();
-          console.log("addPhotosRes", addPhotosRes);
         }
         reset();
         setSpinnerState(false);
@@ -214,6 +205,10 @@ const EditPage = () => {
       setFuelType(value);
       setValue("fuelType", value, { shouldValidate: true });
       setFuelTypeError("");
+    } else if (selectType === "region") {
+      setRegion(value);
+      setValue("region", value, { shouldValidate: true });
+      setRegionError("");
     }
     setIsFormChanged(true);
   };
@@ -522,7 +517,58 @@ const EditPage = () => {
               </FormHelperText>
             )}
 
-            <TextField
+            <Select
+              value={region}
+              onChange={(event) => {
+                setRegion(event.target.value);
+                setRegionError("");
+              }}
+              displayEmpty
+              fullWidth
+              error={Boolean(regionError)}
+              sx={{ background: "white" }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Region
+              </MenuItem>
+              <MenuItem value={"Cherkasy"}>Cherkasy</MenuItem>
+              <MenuItem value={"Chernihiv"}>Chernihiv</MenuItem>
+              <MenuItem value={"Chernivtsi"}>Chernivtsi</MenuItem>
+              <MenuItem value={"Dnipropetrovsk"}>Dnipropetrovsk</MenuItem>
+              <MenuItem value={"Donetsk"}>Donetsk</MenuItem>
+              <MenuItem value={"Ivano-Frankivsk"}>Ivano-Frankivsk</MenuItem>
+              <MenuItem value={"Kharkiv"}>Kharkiv</MenuItem>
+              <MenuItem value={"Kherson"}>Kherson</MenuItem>
+              <MenuItem value={"Khmelnytskyi"}>Khmelnytskyi</MenuItem>
+              <MenuItem value={"Kiev"}>Kiev</MenuItem>
+              <MenuItem value={"Kirovohrad"}>Kirovohrad</MenuItem>
+              <MenuItem value={"Luhansk"}>Luhansk</MenuItem>
+              <MenuItem value={"Lviv"}>Lviv</MenuItem>
+              <MenuItem value={"Mykolaiv"}>Mykolaiv</MenuItem>
+              <MenuItem value={"Odessa"}>Odessa</MenuItem>
+              <MenuItem value={"Poltava"}>Poltava</MenuItem>
+              <MenuItem value={"Rivne"}>Rivne</MenuItem>
+              <MenuItem value={"Sumy"}>Sumy</MenuItem>
+              <MenuItem value={"Ternopil"}>Ternopil</MenuItem>
+              <MenuItem value={"Vinnytsia"}>Vinnytsia</MenuItem>
+              <MenuItem value={"Volyn"}>Volyn</MenuItem>
+              <MenuItem value={"Zakarpattia"}>Zakarpattia</MenuItem>
+              <MenuItem value={"Zaporizhia"}>Zaporizhia</MenuItem>
+              <MenuItem value={"Zhytomyr"}>Zhytomyr</MenuItem>
+            </Select>
+            {regionError && (
+              <FormHelperText
+                error
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
+              >
+                {regionError}
+              </FormHelperText>
+            )}
+
+            {/* <TextField
               {...register("city", {
                 required: "City is required",
                 minLength: {
@@ -546,7 +592,7 @@ const EditPage = () => {
               error={Boolean(errors?.city)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={errors?.city ? (errors.city.message as string) : null}
-            />
+            /> */}
 
             <Box>
               <TextareaAutosize
@@ -561,7 +607,7 @@ const EditPage = () => {
               />
             </Box>
 
-            <AttachFiles
+            <AttachFilesEdit
               existingPhotos={existingPhotos}
               setNewFilesToUpload={setNewFilesToUpload}
               filesToDelete={filesToDelete}

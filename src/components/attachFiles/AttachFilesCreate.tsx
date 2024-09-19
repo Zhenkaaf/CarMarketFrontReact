@@ -12,20 +12,20 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import { v4 as uuidv4 } from "uuid";
 
-interface FileWithId {
+interface IFileWithId {
   file: File;
   id: string;
 }
 
-interface AttachFilesWhenCreateProps {
-  selectedFiles: FileWithId[];
-  setSelectedFiles: React.Dispatch<React.SetStateAction<FileWithId[]>>;
+interface IAttachFilesWhenCreateProps {
+  selectedFiles: IFileWithId[];
+  setSelectedFiles: React.Dispatch<React.SetStateAction<IFileWithId[]>>;
 }
 
-const AttachFilesWhenCreate = ({
+const AttachFilesCreate = ({
   selectedFiles,
   setSelectedFiles,
-}: AttachFilesWhenCreateProps) => {
+}: IAttachFilesWhenCreateProps) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
   console.log("selectedFiles", selectedFiles);
   const openFileFolder = (
@@ -211,4 +211,4 @@ const AttachFilesWhenCreate = ({
   );
 };
 
-export default AttachFilesWhenCreate;
+export default AttachFilesCreate;

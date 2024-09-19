@@ -1,25 +1,16 @@
-import { Box, Skeleton } from "@mui/material";
+import { Box, Button, Collapse, Skeleton, useMediaQuery } from "@mui/material";
 import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link } from "react-router-dom";
 import CarItem from "../../components/CarItem";
+import SearchParameters from "../../components/searchParameters/SearchParameters";
+import { useState } from "react";
 
 const HomePage = () => {
   const { data: allCars } = useGetCarsQuery();
-  console.log("запрос зв всеми авто", allCars);
+  console.log("все авто", allCars);
 
-  /*   const getErrorMessage = (error: unknown): string => {
-    let message: string;
-    if (error instanceof Error) {
-      message = error.message;
-    } else if (error && typeof error === "object" && "message" in error) {
-      message = String(error.message);
-    } else if (typeof error === "string") {
-      message = error;
-    } else {
-      message = "Something went wrong";
-    }
-    return message;
-  }; */
+  const [isSearchParamOpen, setIsSearchParamOpen] = useState(false);
+  const isLargeScreen = useMediaQuery("(min-width:1280px)");
 
   /*   if (isLoading) return <h1>Loading...</h1>; */
 
@@ -32,6 +23,34 @@ const HomePage = () => {
         marginTop: "20px",
       }}
     >
+      <Box
+        sx={{
+          display: "flex",
+          marginBottom: "20px",
+          "@media (max-width: 1140px)": {
+            padding: "0px 20px",
+          },
+        }}
+      >
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => {
+            setIsSearchParamOpen(!isSearchParamOpen);
+          }}
+          sx={{
+            width: "100%",
+          }}
+        >
+          {isSearchParamOpen
+            ? "Close search parameters"
+            : "Open search parameters"}
+        </Button>
+      </Box>
+      <Collapse in={isSearchParamOpen}>
+        <SearchParameters />
+      </Collapse>
+      {/*  {isSearchParamOpen ? (<SearchParameters />) : null} */}
       {allCars ? (
         allCars.map((car) => (
           <Link
@@ -41,7 +60,8 @@ const HomePage = () => {
           >
             <CarItem
               car={car}
-              applyHoverStyles={true}
+              //applyHoverStyles={true}
+              applyHoverStyles={isLargeScreen}
             />
           </Link>
         ))

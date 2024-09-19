@@ -12,7 +12,7 @@ import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import { v4 as uuidv4 } from "uuid";
 
-interface AttachFilesProps {
+interface IAttachFilesProps {
   setNewFilesToUpload: React.Dispatch<
     React.SetStateAction<{ id: string; file: File; url: string }[]>
   >;
@@ -24,16 +24,15 @@ interface AttachFilesProps {
   filesToDelete: { id: string; url: string }[];
 }
 
-const AttachFiles = ({
+const AttachFilesEdit = ({
   setNewFilesToUpload,
   setFilesToDelete,
   setMainPhotoId,
   existingPhotos,
   filesToDelete,
-}: AttachFilesProps) => {
+}: IAttachFilesProps) => {
   console.log("uploadedFiles", existingPhotos);
   const filePickerRef = useRef<HTMLInputElement>(null);
-
   const [existingAndSelectedPhotos, setExistingAndSelectedPhotos] = useState<
     { id: string; file?: File; url: string }[]
   >([]);
@@ -41,23 +40,6 @@ const AttachFiles = ({
   useEffect(() => {
     setExistingAndSelectedPhotos([...existingPhotos]);
   }, [existingPhotos]);
-
-  /*   useEffect(() => {
-    if (uploadedFiles) {
-      console.log("useEffectAttachFiles------------");
-      const urls = uploadedFiles.map((file) =>
-        typeof file === "string" ? file : URL.createObjectURL(file)
-      );
-      setExistingAndSelectedPhotos(urls);
-    }
-  }, [uploadedFiles]); */
-
-  /*  useEffect(() => {
-    if (uploadedFiles && setHasFilesChanged) {
-      const filesChanged = hasFilesChanged(uploadedFiles, uploadedFiles);
-      setHasFilesChanged(filesChanged);
-    }
-  }, [uploadedFiles, uploadedFiles, setHasFilesChanged]); */
 
   const openFileFolder = (
     event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
@@ -91,13 +73,6 @@ const AttachFiles = ({
   };
 
   const setFirstPhoto = (mainPhotoId: string) => {
-    /*  const copyOfexistingAndSelectedPhotos = [...existingAndSelectedPhotos];
-    const copyOfuploadedFiles = [...existingPhotos];
-    const firstPhoto = copyOfexistingAndSelectedPhotos.splice(index, 1)[0];
-    copyOfexistingAndSelectedPhotos.unshift(firstPhoto);
-    const firstFile = copyOfuploadedFiles.splice(index, 1)[0];
-    copyOfuploadedFiles.unshift(firstFile);
-    setExistingAndSelectedPhotos(copyOfexistingAndSelectedPhotos); */
     setExistingAndSelectedPhotos((prev) => {
       const mainPhoto = prev.find((photo) => photo.id === mainPhotoId);
       if (!mainPhoto) return prev;
@@ -136,27 +111,6 @@ const AttachFiles = ({
       setMainPhotoId("");
     }
   }, [existingAndSelectedPhotos, setMainPhotoId]);
-
-  const hasFilesChanged = (
-    prevFiles: (File | string)[] | undefined,
-    currentFiles: (File | string)[]
-  ): boolean => {
-    // Преобразуем массив файлов в строки с описанием файла
-    const fileToString = (file: File | string) =>
-      typeof file === "string"
-        ? file
-        : `${file.name}_${file.size}_${file.lastModified}`;
-
-    // Преобразуем массив файлов в строки и сортируем
-    const prevFileStrings = prevFiles?.map(fileToString).sort() || [];
-    const currentFileStrings = currentFiles.map(fileToString).sort();
-
-    // Сравниваем отсортированные массивы строк
-    return (
-      prevFileStrings.length !== currentFileStrings.length ||
-      prevFileStrings.some((str, index) => str !== currentFileStrings[index])
-    );
-  };
 
   return (
     <Box>
@@ -295,4 +249,4 @@ const AttachFiles = ({
   );
 };
 
-export default AttachFiles;
+export default AttachFilesEdit;

@@ -38,7 +38,7 @@ const RegistrationPage = () => {
     watch,
     setValue,
   } = useForm({
-    mode: "onBlur",
+    mode: "onChange",
   });
 
   const watchPassword = watch("password", "");

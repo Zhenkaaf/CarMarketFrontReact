@@ -9,14 +9,13 @@ import {
   InputAdornment,
   MenuItem,
   Select,
-  SelectChangeEvent,
   TextField,
   TextareaAutosize,
   Tooltip,
   Typography,
 } from "@mui/material";
 import Spinner from "../../components/Spinner";
-import AttachFilesWhenCreate from "../../components/attachFilesWhenCreate/AttachFilesWhenCreate";
+import AttachFilesCreate from "../../components/attachFiles/AttachFilesCreate";
 import {
   useAddCarMutation,
   useAddPhotosToCarMutation,
@@ -26,7 +25,7 @@ import { useDisableNumberInputWheel } from "../../helpers/useDisableNumberInputW
 import { ICarData, IFormValues } from "../../types";
 import { excludeSpacesAndZero } from "../../helpers/excludeSpacesAndZero";
 
-interface FileWithId {
+interface IFileWithId {
   file: File;
   id: string;
 }
@@ -34,8 +33,10 @@ interface FileWithId {
 const PostAdvertPage = () => {
   console.log("renderPostAdvertPage");
   useDisableNumberInputWheel();
-  const [addCar, { error: addCarError, isLoading: isAddCarLoading }] =
-    useAddCarMutation();
+  const [
+    addCar,
+    { error: addCarError, isLoading: isAddCarLoading, reset: resetCarError },
+  ] = useAddCarMutation();
 
   const [
     addPhotosToCar,
@@ -44,14 +45,16 @@ const PostAdvertPage = () => {
 
   const navigate = useNavigate();
   const [bodyType, setBodyType] = useState("");
-  const [carMake, setCarMake] = useState("");
-  const [year, setYear] = useState("");
-  const [fuelType, setFuelType] = useState("");
   const [bodyTypeError, setBodyTypeError] = useState<string>("");
+  const [carMake, setCarMake] = useState("");
   const [carMakeError, setCarMakeError] = useState<string>("");
+  const [year, setYear] = useState("");
   const [yearError, setYearError] = useState<string>("");
+  const [fuelType, setFuelType] = useState("");
   const [fuelTypeError, setFuelTypeError] = useState<string>("");
-  const [selectedFiles, setSelectedFiles] = useState<FileWithId[]>([]);
+  const [region, setRegion] = useState("");
+  const [regionError, setRegionError] = useState("");
+  const [selectedFiles, setSelectedFiles] = useState<IFileWithId[]>([]);
   const [spinnerState, setSpinnerState] = useState<boolean>(false);
 
   const {
@@ -81,10 +84,10 @@ const PostAdvertPage = () => {
       setFuelTypeError("Please select car fuel type.");
       return;
     }
-    /*  if (selectedFiles.length < 0) {
-      alert("please select a file");
+    if (!region) {
+      setRegionError("Please select region.");
       return;
-    } */
+    }
 
     const formData = new FormData();
     selectedFiles.forEach(({ file, id }) => {
@@ -97,7 +100,6 @@ const PostAdvertPage = () => {
       console.log("key--", key, "value--", value);
     }); */
     const newCar: ICarData = {
-      city: carData.city,
       desc: carData.desc,
       mileage: +carData.mileage,
       model: carData.model,
@@ -106,6 +108,7 @@ const PostAdvertPage = () => {
       carMake,
       year,
       fuelType,
+      region,
     };
 
     try {
@@ -129,26 +132,6 @@ const PostAdvertPage = () => {
     }
   };
 
-  const handleChangeSelects = (
-    event: SelectChangeEvent,
-    selectType: string
-  ) => {
-    console.log(event.target.value);
-    if (selectType === "bodyType") {
-      setBodyType(event.target.value);
-      setBodyTypeError("");
-    } else if (selectType === "carMake") {
-      setCarMake(event.target.value);
-      setCarMakeError("");
-    } else if (selectType === "year") {
-      setYear(event.target.value);
-      setYearError("");
-    } else if (selectType === "fuelType") {
-      setFuelType(event.target.value);
-      setFuelTypeError("");
-    }
-  };
-
   if (spinnerState /* isAddCarLoading || isAddPhotosLoading */) {
     return <Spinner open={true} />;
   }
@@ -156,9 +139,18 @@ const PostAdvertPage = () => {
   if (addCarError) {
     console.log(addCarError);
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to post advert.
-      </Box>
+      <>
+        <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
+          Something went wrong, unable to post advert.
+        </Box>
+        <Button
+          onClick={() => {
+            resetCarError();
+          }}
+        >
+          Try again
+        </Button>
+      </>
     );
   }
 
@@ -216,7 +208,10 @@ const PostAdvertPage = () => {
           >
             <Select
               value={bodyType}
-              onChange={(event) => handleChangeSelects(event, "bodyType")}
+              onChange={(event) => {
+                setBodyType(event.target.value);
+                setBodyTypeError("");
+              }}
               displayEmpty
               fullWidth
               error={Boolean(bodyTypeError)}
@@ -245,7 +240,10 @@ const PostAdvertPage = () => {
 
             <Select
               value={carMake}
-              onChange={(event) => handleChangeSelects(event, "carMake")}
+              onChange={(event) => {
+                setCarMake(event.target.value);
+                setCarMakeError("");
+              }}
               displayEmpty
               fullWidth
               error={Boolean(carMakeError)}
@@ -300,14 +298,14 @@ const PostAdvertPage = () => {
               helperText={
                 errors?.model ? (errors.model.message as string) : null
               }
-              /* helperText={
-                errors?.model && <p>{errors?.model?.message as string}</p>
-              } */
             />
 
             <Select
               value={year}
-              onChange={(event) => handleChangeSelects(event, "year")}
+              onChange={(event) => {
+                setYear(event.target.value);
+                setYearError("");
+              }}
               displayEmpty
               fullWidth
               error={Boolean(yearError)}
@@ -438,7 +436,10 @@ const PostAdvertPage = () => {
 
             <Select
               value={fuelType}
-              onChange={(event) => handleChangeSelects(event, "fuelType")}
+              onChange={(event) => {
+                setFuelType(event.target.value);
+                setFuelTypeError("");
+              }}
               displayEmpty
               fullWidth
               error={Boolean(fuelTypeError)}
@@ -466,7 +467,57 @@ const PostAdvertPage = () => {
               </FormHelperText>
             )}
 
-            <TextField
+            <Select
+              value={region}
+              onChange={(event) => {
+                setRegion(event.target.value);
+                setRegionError("");
+              }}
+              displayEmpty
+              fullWidth
+              error={Boolean(regionError)}
+              sx={{ background: "white" }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Region
+              </MenuItem>
+              <MenuItem value={"Cherkasy"}>Cherkasy</MenuItem>
+              <MenuItem value={"Chernihiv"}>Chernihiv</MenuItem>
+              <MenuItem value={"Chernivtsi"}>Chernivtsi</MenuItem>
+              <MenuItem value={"Dnipropetrovsk"}>Dnipropetrovsk</MenuItem>
+              <MenuItem value={"Donetsk"}>Donetsk</MenuItem>
+              <MenuItem value={"Ivano-Frankivsk"}>Ivano-Frankivsk</MenuItem>
+              <MenuItem value={"Kharkiv"}>Kharkiv</MenuItem>
+              <MenuItem value={"Kherson"}>Kherson</MenuItem>
+              <MenuItem value={"Khmelnytskyi"}>Khmelnytskyi</MenuItem>
+              <MenuItem value={"Kiev"}>Kiev</MenuItem>
+              <MenuItem value={"Kirovohrad"}>Kirovohrad</MenuItem>
+              <MenuItem value={"Luhansk"}>Luhansk</MenuItem>
+              <MenuItem value={"Lviv"}>Lviv</MenuItem>
+              <MenuItem value={"Mykolaiv"}>Mykolaiv</MenuItem>
+              <MenuItem value={"Odessa"}>Odessa</MenuItem>
+              <MenuItem value={"Poltava"}>Poltava</MenuItem>
+              <MenuItem value={"Rivne"}>Rivne</MenuItem>
+              <MenuItem value={"Sumy"}>Sumy</MenuItem>
+              <MenuItem value={"Ternopil"}>Ternopil</MenuItem>
+              <MenuItem value={"Vinnytsia"}>Vinnytsia</MenuItem>
+              <MenuItem value={"Volyn"}>Volyn</MenuItem>
+              <MenuItem value={"Zakarpattia"}>Zakarpattia</MenuItem>
+              <MenuItem value={"Zaporizhia"}>Zaporizhia</MenuItem>
+              <MenuItem value={"Zhytomyr"}>Zhytomyr</MenuItem>
+            </Select>
+            {regionError && (
+              <FormHelperText
+                error
+                sx={{ marginLeft: "15px", marginTop: "-7px" }}
+              >
+                {regionError}
+              </FormHelperText>
+            )}
+            {/* <TextField
               {...register("city", {
                 required: "City is required",
                 minLength: {
@@ -490,7 +541,7 @@ const PostAdvertPage = () => {
               error={Boolean(errors?.city)}
               sx={{ "& input": { background: "white", borderRadius: "4px" } }}
               helperText={errors?.city ? (errors.city.message as string) : null}
-            />
+            /> */}
 
             <Box>
               <TextareaAutosize
@@ -505,13 +556,13 @@ const PostAdvertPage = () => {
               />
             </Box>
 
-            <AttachFilesWhenCreate
+            <AttachFilesCreate
               selectedFiles={selectedFiles}
               setSelectedFiles={setSelectedFiles}
             />
             <Tooltip
-              title="Please fill in all fields."
-              disableHoverListener={isValid}
+              title="Please fill in all fields and add at least one photo."
+              disableHoverListener={isValid && selectedFiles.length > 0}
               disableInteractive
               arrow
             >
@@ -524,7 +575,7 @@ const PostAdvertPage = () => {
                   variant="contained"
                   color="secondary"
                 >
-                  Publish
+                  Publishl
                 </Button>
               </span>
             </Tooltip>

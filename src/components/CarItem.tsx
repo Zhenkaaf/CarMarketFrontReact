@@ -209,7 +209,7 @@ const CarItem = ({
             <Typography
               sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
             >
-              {car.city}
+              {car.region}
             </Typography>
           </Box>
 

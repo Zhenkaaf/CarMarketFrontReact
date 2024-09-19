@@ -111,7 +111,7 @@ const CabinetPage = () => {
                 variant="contained"
                 color="secondary"
               >
-                Delete Car
+                Delete
               </Button>
               <Link
                 to={`../edit-car/${car.carId}`}
@@ -122,7 +122,7 @@ const CabinetPage = () => {
                   variant="contained"
                   color="secondary"
                 >
-                  Edit Car
+                  Edit
                 </Button>
               </Link>
             </Box>

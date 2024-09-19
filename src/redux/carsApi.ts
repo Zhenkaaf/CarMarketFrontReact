@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getTokenFromLocalStorage } from "../helpers/localStorage.helper";
-import { GetMyCarsResponse, ICar } from "../types";
+import { ICar } from "../types";
 
 export const carsApi = createApi({
   reducerPath: "carsApi",
@@ -31,6 +31,11 @@ export const carsApi = createApi({
 
     getMyCars: builder.query<ICar[], string>({
       query: (userId) => `car/my-cars/${userId}`,
+      providesTags: ["Cars"],
+    }),
+
+    getFilteredCars: builder.query<ICar[], string>({
+      query: (searchParams) => `car/filtered-cars/?${searchParams}`,
       providesTags: ["Cars"],
     }),
 
@@ -89,6 +94,7 @@ export const {
   useGetCarsQuery,
   useGetCarQuery,
   useGetMyCarsQuery,
+  useGetFilteredCarsQuery,
   useAddCarMutation,
   useAddPhotosToCarMutation,
   useUpdateCarMutation,
@@ -110,7 +116,6 @@ export const {
 Обновление данных в кэше: Когда запросы выполняются повторно, RTK Query получает новые данные с сервера и обновляет кэш этими данными.
 
 Обновление компонентов: Все компоненты, которые используют данные, связанные с тегом Cars (например, через useGetCarsQuery()), автоматически обновятся с новыми данными, как только они будут получены.
-
 Пример
 Если у тебя на главной странице (HomePage) есть список автомобилей, который загружается через useGetCarsQuery(), этот запрос связан с тегом Cars. После того, как ты обновляешь автомобиль с помощью мутации updateCar, и RTK Query инвалидирует тег Cars, запрос useGetCarsQuery() будет выполнен снова, и список автомобилей на главной странице будет обновлен с учётом последних изменений.
 
