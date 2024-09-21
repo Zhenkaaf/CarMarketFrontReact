@@ -65,7 +65,6 @@ export interface IInitTxtFieldsValues {
   model: string;
   price: number;
   mileage: number;
-  region: string;
   desc: string;
 }
 

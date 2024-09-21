@@ -8,6 +8,7 @@ import PostAdvertPage from "../pages/postAdvertPage/PostAdvertPage";
 import CabinetPage from "../pages/cabinetPage/CabinetPage";
 import SingleAdvertPage from "../pages/singleAdvertPage/SingleAdvertPage";
 import EditPage from "../pages/editPage/EditPage";
+import SearchByParametersPage from "../pages/SearchByParametersPage/SearchByParametersPage";
 
 export const router = createBrowserRouter(
   [
@@ -31,6 +32,10 @@ export const router = createBrowserRouter(
         {
           path: "login",
           element: <LoginPage />,
+        },
+        {
+          path: "search",
+          element: <SearchByParametersPage />,
         },
         {
           path: "post-advert",

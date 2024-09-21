@@ -1,18 +1,26 @@
-import { Box, Button, Collapse, Skeleton, useMediaQuery } from "@mui/material";
+import {
+  Box,
+  Button,
+  Collapse,
+  Skeleton,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
 import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link } from "react-router-dom";
 import CarItem from "../../components/CarItem";
-import SearchParameters from "../../components/searchParameters/SearchParameters";
 import { useState } from "react";
+import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
-  const { data: allCars } = useGetCarsQuery();
+  const { data: allCars, isLoading } = useGetCarsQuery();
   console.log("все авто", allCars);
-
   const [isSearchParamOpen, setIsSearchParamOpen] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
 
-  /*   if (isLoading) return <h1>Loading...</h1>; */
+  if (isLoading) {
+    return <Spinner open={true} />;
+  }
 
   return (
     <Box
@@ -32,26 +40,30 @@ const HomePage = () => {
           },
         }}
       >
-        <Button
-          variant="contained"
-          color="secondary"
-          onClick={() => {
-            setIsSearchParamOpen(!isSearchParamOpen);
-          }}
-          sx={{
-            width: "100%",
-          }}
+        <Link
+          to="search"
+          style={{ textDecoration: "none", width: "100%" }}
         >
-          {isSearchParamOpen
-            ? "Close search parameters"
-            : "Open search parameters"}
-        </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => {
+              setIsSearchParamOpen(!isSearchParamOpen);
+            }}
+            sx={{
+              width: "100%",
+            }}
+          >
+            search by parameters{" "}
+          </Button>
+        </Link>
       </Box>
-      <Collapse in={isSearchParamOpen}>
-        <SearchParameters />
-      </Collapse>
+      {/*  <Collapse in={isSearchParamOpen}>
+        <SearchParameters setSearchParams={setSearchParams} />
+      </Collapse> */}
       {/*  {isSearchParamOpen ? (<SearchParameters />) : null} */}
-      {allCars ? (
+
+      {allCars &&
         allCars.map((car) => (
           <Link
             to={`single-car/${car.carId}`}
@@ -64,7 +76,10 @@ const HomePage = () => {
               applyHoverStyles={isLargeScreen}
             />
           </Link>
-        ))
+        ))}
+
+      {/* {carsToDisplay ? (
+        
       ) : (
         <Box sx={{ display: "flex", flexDirection: "column", gap: "20px" }}>
           {" "}
@@ -87,7 +102,7 @@ const HomePage = () => {
             height={250}
           />
         </Box>
-      )}
+      )} */}
     </Box>
   );
 };
