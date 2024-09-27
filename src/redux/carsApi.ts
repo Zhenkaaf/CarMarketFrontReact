@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { getTokenFromLocalStorage } from "../helpers/localStorage.helper";
-import { ICar } from "../types";
+import { ICar, ICarResponse } from "../types";
 
 export const carsApi = createApi({
   reducerPath: "carsApi",
@@ -19,8 +19,8 @@ export const carsApi = createApi({
   }),
 
   endpoints: (builder) => ({
-    getCars: builder.query<ICar[], void>({
-      query: () => "car/list",
+    getCars: builder.query<ICarResponse, number>({
+      query: (page) => `car/list?page=${page}`,
       providesTags: ["Cars"],
     }),
 
@@ -33,6 +33,11 @@ export const carsApi = createApi({
       query: (userId) => `car/my-cars/${userId}`,
       providesTags: ["Cars"],
     }),
+
+    /*     getTotalPages: builder.query<{ totalPages: number }, string>({
+      query: (limit) => `car/total-pages?limit=${limit}`,
+      providesTags: ["Cars"],
+    }), */
 
     getFilteredCars: builder.query<ICar[], string>({
       query: (searchParams) => `car/filtered-cars/?${searchParams}`,
@@ -80,13 +85,6 @@ export const carsApi = createApi({
       invalidatesTags: ["Cars"],
       /* invalidatesTags: ["Cars"] указывает на тэг или группу тэгов, которые должны быть инвалидированы (помечены как устаревшие) после успешного выполнения мутации. В контексте Redux Toolkit Query это означает, что после удаления машины из списка, связанного с тэгом "Cars", данный список будет автоматически обновлен, так как тэг "Cars" будет помечен как устаревший. Это позволяет автоматически обновлять данные, зависящие от удаленной машины, без необходимости явно вызывать методы обновления или перезагрузки данных. Когда тэг помечается как устаревший, любые компоненты, которые используют данные, связанные с этим тэгом, будут автоматически обновлены при следующем запросе на эти данные. */
     }),
-
-    /*  deletePhotos: builder.mutation({
-      query: (id) => ({
-        url: `car/delete-photos/${id}`,
-        method: "DELETE",
-      }),
-    }), */
   }),
 });
 
@@ -95,6 +93,7 @@ export const {
   useGetCarQuery,
   useGetMyCarsQuery,
   useGetFilteredCarsQuery,
+  useGetTotalPagesQuery,
   useAddCarMutation,
   useAddPhotosToCarMutation,
   useUpdateCarMutation,

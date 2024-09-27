@@ -41,6 +41,11 @@ export interface ICar {
   };
 }
 
+export interface ICarResponse {
+  data: ICar[];
+  totalPages: number;
+}
+
 interface INoCarsResponse {
   message: string;
   cars: ICar[];

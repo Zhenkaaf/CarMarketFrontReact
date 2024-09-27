@@ -2,21 +2,28 @@ import {
   Box,
   Button,
   Collapse,
+  Pagination,
   Skeleton,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { useGetCarsQuery } from "../../redux/carsApi";
+import { useGetCarsQuery, useGetTotalPagesQuery } from "../../redux/carsApi";
 import { Link } from "react-router-dom";
 import CarItem from "../../components/CarItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
-  const { data: allCars, isLoading } = useGetCarsQuery();
-  console.log("все авто", allCars);
-  const [isSearchParamOpen, setIsSearchParamOpen] = useState(false);
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
+  const [page, setPage] = useState(1);
+  const [isSearchParamOpen, setIsSearchParamOpen] = useState(false);
+  const { data: allCars, isLoading } = useGetCarsQuery(page);
+  console.log("все авто", allCars);
+
+  const [pageQty, setPageQty] = useState(0);
+
+  /*   const { data: totalPages } = useGetTotalPagesQuery("10");
+  console.log(totalPages); */
 
   if (isLoading) {
     return <Spinner open={true} />;
@@ -64,7 +71,7 @@ const HomePage = () => {
       {/*  {isSearchParamOpen ? (<SearchParameters />) : null} */}
 
       {allCars &&
-        allCars.map((car) => (
+        allCars.data.map((car) => (
           <Link
             to={`single-car/${car.carId}`}
             style={{ textDecoration: "none" }}
@@ -77,7 +84,25 @@ const HomePage = () => {
             />
           </Link>
         ))}
-
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        {allCars?.totalPages && (
+          <Pagination
+            count={allCars.totalPages}
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            color="secondary"
+            onChange={(_, num) => setPage(num)}
+          />
+        )}
+      </Box>
       {/* {carsToDisplay ? (
         
       ) : (

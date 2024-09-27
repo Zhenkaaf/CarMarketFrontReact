@@ -575,7 +575,7 @@ const PostAdvertPage = () => {
                   variant="contained"
                   color="secondary"
                 >
-                  Publishl
+                  Publish
                 </Button>
               </span>
             </Tooltip>
