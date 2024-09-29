@@ -42,7 +42,7 @@ export interface ICar {
 }
 
 export interface ICarResponse {
-  data: ICar[];
+  cars: ICar[];
   totalPages: number;
 }
 

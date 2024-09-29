@@ -5,29 +5,39 @@ import {
   FormControl,
   ListItemText,
   MenuItem,
+  Pagination,
+  PaginationItem,
   Select,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { CAR_MAKES, PRICES, REGIONS, YEARS } from "../../constants/constans";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetFilteredCarsQuery } from "../../redux/carsApi";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import CarItem from "../../components/CarItem";
 import Spinner from "../../components/Spinner";
 
 const SearchByParametersPage = () => {
+  const { search } = useLocation();
+  const navigate = useNavigate();
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
+  const [page, setPage] = useState(parseInt(search?.split("=")[1]) || 1);
   const [searchParams, setSearchParams] = useState<string>("");
   const [isQueryStringReady, setIsQueryStringReady] = useState(false);
-  const {
-    data: filteredCars,
-    isLoading,
-    isFetching,
-    isError,
-  } = useGetFilteredCarsQuery(searchParams, {
-    skip: !searchParams,
-  });
+  const { data, isLoading, isFetching, isError } = useGetFilteredCarsQuery(
+    { searchParams, page },
+    {
+      skip: !searchParams,
+    }
+  );
+  console.log(data);
+  useEffect(() => {
+    if (data && data?.totalPages < page) {
+      setPage(1);
+      navigate("/search", { replace: true });
+    }
+  }, [data, navigate, page]);
 
   const [region, setRegion] = useState("");
   const [carMakes, setCarMakes] = useState<string[]>([]);
@@ -45,6 +55,7 @@ const SearchByParametersPage = () => {
     if (priceFrom) params.append("priceFrom", priceFrom);
     if (priceTo) params.append("priceTo", priceTo);
     const queryString = params.toString();
+
     setSearchParams(queryString);
     setRegion("");
     setCarMakes([]);
@@ -55,7 +66,7 @@ const SearchByParametersPage = () => {
     setIsQueryStringReady(true);
   };
 
-  if (isLoading || isFetching) {
+  if (isLoading || isFetching || (data && data?.totalPages < page)) {
     return <Spinner open={true} />;
   }
 
@@ -285,10 +296,11 @@ const SearchByParametersPage = () => {
         </Button>
       </Box>
 
-      {filteredCars &&
-        filteredCars.map((car) => (
+      {data &&
+        data.cars?.map((car) => (
           <Link
-            to={`single-car/${car.carId}`}
+            //to={`single-car/${car.carId}`}
+            to={`/search/single-car/${car.carId}`}
             style={{ textDecoration: "none" }}
             key={car.carId}
           >
@@ -298,7 +310,7 @@ const SearchByParametersPage = () => {
             />
           </Link>
         ))}
-      {isQueryStringReady && !filteredCars?.length && (
+      {isQueryStringReady && !data?.cars?.length && (
         <Typography
           sx={{
             display: "flex",
@@ -309,6 +321,32 @@ const SearchByParametersPage = () => {
           Nothing found by your parameters. Try to change your request
         </Typography>
       )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "20px",
+          marginBottom: "20px",
+        }}
+      >
+        {data && data.totalPages > 0 && (
+          <Pagination
+            count={data.totalPages}
+            page={page}
+            variant="outlined"
+            shape="rounded"
+            color="secondary"
+            onChange={(_, num) => setPage(num)}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={`/search?page=${item.page}`}
+                {...item}
+              />
+            )}
+          />
+        )}
+      </Box>
     </Box>
   );
 };

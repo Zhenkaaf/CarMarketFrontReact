@@ -26,6 +26,10 @@ export const router = createBrowserRouter(
           element: <SingleAdvertPage />,
         },
         {
+          path: "search/single-car/:carId",
+          element: <SingleAdvertPage />,
+        },
+        {
           path: "registration",
           element: <RegistrationPage />,
         },

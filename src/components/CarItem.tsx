@@ -234,8 +234,16 @@ const CarItem = ({
         <Box>
           <Box
             sx={{
-              maxHeight: "62px",
+              /*  display: '-webkit-box',
+              -webkit-box-orient: 'vertical',
+              overflow: 'hidden',
+              -webkit-line-clamp: '3', */
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
               overflow: "hidden",
+              WebkitLineClamp: "3",
+              /*  maxHeight: "62px",
+              overflow: "hidden",*/
               [theme.breakpoints.down("sm")]: {
                 marginTop: "10px",
               },

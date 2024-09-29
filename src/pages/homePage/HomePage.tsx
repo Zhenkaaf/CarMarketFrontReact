@@ -1,31 +1,24 @@
 import {
   Box,
   Button,
-  Collapse,
   Pagination,
-  Skeleton,
-  Typography,
+  PaginationItem,
   useMediaQuery,
 } from "@mui/material";
-import { useGetCarsQuery, useGetTotalPagesQuery } from "../../redux/carsApi";
-import { Link } from "react-router-dom";
+import { useGetCarsQuery } from "../../redux/carsApi";
+import { Link, useLocation } from "react-router-dom";
 import CarItem from "../../components/CarItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
+  const { search } = useLocation();
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
-  const [page, setPage] = useState(1);
-  const [isSearchParamOpen, setIsSearchParamOpen] = useState(false);
-  const { data: allCars, isLoading } = useGetCarsQuery(page);
+  const [page, setPage] = useState(parseInt(search?.split("=")[1]) || 1);
+  const { data: allCars, isLoading, isFetching } = useGetCarsQuery(page);
   console.log("все авто", allCars);
 
-  const [pageQty, setPageQty] = useState(0);
-
-  /*   const { data: totalPages } = useGetTotalPagesQuery("10");
-  console.log(totalPages); */
-
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return <Spinner open={true} />;
   }
 
@@ -54,9 +47,6 @@ const HomePage = () => {
           <Button
             variant="contained"
             color="secondary"
-            onClick={() => {
-              setIsSearchParamOpen(!isSearchParamOpen);
-            }}
             sx={{
               width: "100%",
             }}
@@ -65,13 +55,9 @@ const HomePage = () => {
           </Button>
         </Link>
       </Box>
-      {/*  <Collapse in={isSearchParamOpen}>
-        <SearchParameters setSearchParams={setSearchParams} />
-      </Collapse> */}
-      {/*  {isSearchParamOpen ? (<SearchParameters />) : null} */}
 
       {allCars &&
-        allCars.data.map((car) => (
+        allCars.cars.map((car) => (
           <Link
             to={`single-car/${car.carId}`}
             style={{ textDecoration: "none" }}
@@ -79,7 +65,6 @@ const HomePage = () => {
           >
             <CarItem
               car={car}
-              //applyHoverStyles={true}
               applyHoverStyles={isLargeScreen}
             />
           </Link>
@@ -100,6 +85,13 @@ const HomePage = () => {
             shape="rounded"
             color="secondary"
             onChange={(_, num) => setPage(num)}
+            renderItem={(item) => (
+              <PaginationItem
+                component={Link}
+                to={`/?page=${item.page}`}
+                {...item}
+              />
+            )}
           />
         )}
       </Box>
