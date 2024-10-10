@@ -19,32 +19,34 @@ import CarItem from "../../components/CarItem";
 import Spinner from "../../components/Spinner";
 
 const SearchByParametersPage = () => {
+  console.log("rerender*******");
   const { search } = useLocation();
   const navigate = useNavigate();
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
-  const [page, setPage] = useState(parseInt(search?.split("=")[1]) || 1);
+  const [page, setPage] = useState(parseInt(search[search.length - 1]) || 1);
   const [searchParams, setSearchParams] = useState<string>("");
   const [isQueryStringReady, setIsQueryStringReady] = useState(false);
-  const { data, isLoading, isFetching, isError } = useGetFilteredCarsQuery(
-    { searchParams, page },
-    {
-      skip: !searchParams,
-    }
-  );
-  console.log(data);
-  useEffect(() => {
-    if (data && data?.totalPages < page) {
-      setPage(1);
-      navigate("/search", { replace: true });
-    }
-  }, [data, navigate, page]);
-
   const [region, setRegion] = useState("");
   const [carMakes, setCarMakes] = useState<string[]>([]);
   const [yearFrom, setYearFrom] = useState("");
   const [yearTo, setYearTo] = useState("");
   const [priceFrom, setPriceFrom] = useState("");
   const [priceTo, setPriceTo] = useState("");
+  const { data, isLoading, isFetching, isError } = useGetFilteredCarsQuery(
+    searchParams,
+    { skip: !searchParams }
+  );
+  console.log("data", data);
+
+  useEffect(() => {
+    console.log("useEFFECT*****************");
+    const params = new URLSearchParams(search);
+    const page = params.get("page");
+    if (page) {
+      setPage(parseInt(page));
+      setSearchParams(params.toString());
+    }
+  }, [search]);
 
   const handleSearch = () => {
     const params = new URLSearchParams();
@@ -54,8 +56,9 @@ const SearchByParametersPage = () => {
     if (yearTo) params.append("yearTo", yearTo);
     if (priceFrom) params.append("priceFrom", priceFrom);
     if (priceTo) params.append("priceTo", priceTo);
+    params.append("page", page.toString());
     const queryString = params.toString();
-
+    navigate(`/search?${queryString}`);
     setSearchParams(queryString);
     setRegion("");
     setCarMakes([]);
@@ -66,7 +69,7 @@ const SearchByParametersPage = () => {
     setIsQueryStringReady(true);
   };
 
-  if (isLoading || isFetching || (data && data?.totalPages < page)) {
+  if (isLoading || isFetching /* || (data && data?.totalPages < page) */) {
     return <Spinner open={true} />;
   }
 
@@ -337,13 +340,19 @@ const SearchByParametersPage = () => {
             shape="rounded"
             color="secondary"
             onChange={(_, num) => setPage(num)}
-            renderItem={(item) => (
-              <PaginationItem
-                component={Link}
-                to={`/search?page=${item.page}`}
-                {...item}
-              />
-            )}
+            renderItem={(item) => {
+              const params = new URLSearchParams(searchParams);
+              console.log(params.toString());
+              params.set("page", String(item.page));
+              return (
+                <PaginationItem
+                  component={Link}
+                  //to={`/search?${searchParams}&page=${item.page}`}
+                  to={`/search?${params}`}
+                  {...item}
+                />
+              );
+            }}
           />
         )}
       </Box>

@@ -8,15 +8,20 @@ import {
 import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link, useLocation } from "react-router-dom";
 import CarItem from "../../components/CarItem";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
   const { search } = useLocation();
+
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
   const [page, setPage] = useState(parseInt(search?.split("=")[1]) || 1);
   const { data: allCars, isLoading, isFetching } = useGetCarsQuery(page);
   console.log("все авто", allCars);
+
+  /*   useEffect(() => {
+    console.log("search changed!!!!!");
+  }, [search]); */
 
   if (isLoading || isFetching) {
     return <Spinner open={true} />;

@@ -39,12 +39,8 @@ export const carsApi = createApi({
       providesTags: ["Cars"],
     }), */
 
-    getFilteredCars: builder.query<
-      ICarResponse,
-      { searchParams: string; page: number }
-    >({
-      query: ({ searchParams, page }) =>
-        `car/filtered-cars/?${searchParams}&page=${page}`,
+    getFilteredCars: builder.query<ICarResponse, string>({
+      query: (searchParams) => `car/filtered-cars/?${searchParams}`,
       providesTags: ["Cars"],
     }),
 
