@@ -8,7 +8,7 @@ import {
 import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link, useLocation } from "react-router-dom";
 import CarItem from "../../components/CarItem";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
@@ -19,9 +19,6 @@ const HomePage = () => {
   const { data: allCars, isLoading, isFetching } = useGetCarsQuery(page);
   console.log("все авто", allCars);
 
-  /*   useEffect(() => {
-    console.log("search changed!!!!!");
-  }, [search]); */
 
   if (isLoading || isFetching) {
     return <Spinner open={true} />;

@@ -56,7 +56,7 @@ const SearchByParametersPage = () => {
     if (yearTo) params.append("yearTo", yearTo);
     if (priceFrom) params.append("priceFrom", priceFrom);
     if (priceTo) params.append("priceTo", priceTo);
-    params.append("page", page.toString());
+    params.append("page", '1');
     const queryString = params.toString();
     navigate(`/search?${queryString}`);
     setSearchParams(queryString);
@@ -302,7 +302,6 @@ const SearchByParametersPage = () => {
       {data &&
         data.cars?.map((car) => (
           <Link
-            //to={`single-car/${car.carId}`}
             to={`/search/single-car/${car.carId}`}
             style={{ textDecoration: "none" }}
             key={car.carId}
