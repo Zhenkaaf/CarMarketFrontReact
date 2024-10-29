@@ -1,5 +1,11 @@
-import { Box, Card, CardContent, CardMedia, Typography } from "@mui/material";
-import { theme } from "../theme";
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { timePassed } from "../helpers/formatDate.helper";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -8,6 +14,7 @@ import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import TodayIcon from "@mui/icons-material/Today";
 import { ICar } from "./../types";
+import { colors } from "../colors";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
 const CarItem = ({
@@ -17,13 +24,17 @@ const CarItem = ({
   car: ICar;
   applyHoverStyles?: boolean;
 }) => {
+  const theme = useTheme();
+
   return (
     <Card
       key={car.carId}
       sx={{
         height: "250px",
         display: "flex",
-        backgroundColor: "#e1bee7",
+        //backgroundColor: "#e1bee7",
+        backgroundColor: theme.palette.primary.main,
+        /*  color: colors.whiteGray, */
         padding: "20px",
         marginBottom: "15px",
         transition: applyHoverStyles ? "transform 0.3s ease" : "none",
@@ -98,12 +109,13 @@ const CarItem = ({
             fontWeight={700}
             sx={{
               paddingRight: "20px",
+
               [theme.breakpoints.down("sm")]: {
                 fontSize: "22px",
               },
             }}
           >
-            {car.carMake} {car.model}
+            {car.carMake} {car.model}{" "}
             {/* {car.model.length > 16 ? car.model.slice(0, 16) + ".." : car.model}{" "} */}
           </Typography>
           <Box>

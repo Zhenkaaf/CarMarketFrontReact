@@ -2,25 +2,33 @@ import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import { Link } from "react-router-dom";
 import { AccountBox, AddBox } from "@mui/icons-material";
 import { logOutAct } from "../../redux/user/userSlice";
 import { HEADER_HEIGHT } from "../../constants/constans";
+import CustomizedSwitch from "../muiSwitch";
+import { useTheme } from "@mui/material";
+import { toggleTheme } from "../../redux/theme/themeSlice";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userRed.user);
+  const theme = useTheme();
 
   return (
-    <Box sx={{ /* marginBottom: "20px", */ width: "100%" }}>
+    <Box
+      sx={{
+        /* marginBottom: "20px", */ width: "100%",
+      }}
+    >
       <AppBar position="static">
         <Toolbar
           sx={{
             display: "flex",
             justifyContent: "space-between",
             height: `${HEADER_HEIGHT}px`,
+            backgroundColor: "primary.main",
           }}
         >
           {/*  <IconButton
@@ -41,27 +49,39 @@ const Header = () => {
                 variant="h5"
                 color="secondary"
                 fontWeight={700}
+                sx={{
+                  transition: "all 0.3s ease",
+                  "&:hover": {
+                    color: theme.palette.secondary.light,
+                  },
+                }}
               >
                 CarMarket
               </Typography>
             </Link>
           </Box>
           <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+            <CustomizedSwitch onChange={() => dispatch(toggleTheme())} />
             {user ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <Link
                   to="/"
                   style={{ textDecoration: "none" }}
                 >
-                  <Button
+                  <Typography
                     onClick={() => dispatch(logOutAct())}
                     color="secondary"
                     sx={{
+                      textTransform: "uppercase",
                       fontWeight: "700",
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        color: theme.palette.secondary.light,
+                      },
                     }}
                   >
                     Logout
-                  </Button>
+                  </Typography>
                 </Link>
                 <Link
                   to="/post-advert"
@@ -71,6 +91,12 @@ const Header = () => {
                   <AddBox
                     color="secondary"
                     fontSize="large"
+                    sx={{
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        color: theme.palette.secondary.light,
+                      },
+                    }}
                   />
                 </Link>
                 <Link
@@ -81,6 +107,12 @@ const Header = () => {
                   <AccountBox
                     color="secondary"
                     fontSize="large"
+                    sx={{
+                      transition: "all 0.3s ease",
+                      "&:hover": {
+                        color: theme.palette.secondary.light,
+                      },
+                    }}
                   />
                 </Link>
               </Box>
@@ -89,7 +121,19 @@ const Header = () => {
                 to="/login"
                 style={{ textDecoration: "none" }}
               >
-                <Button color="secondary">Login</Button>
+                <Typography
+                  color="secondary"
+                  sx={{
+                    textTransform: "uppercase",
+                    fontWeight: "700",
+                    transition: "all 0.3s ease",
+                    "&:hover": {
+                      color: theme.palette.secondary.light,
+                    },
+                  }}
+                >
+                  Login
+                </Typography>
               </Link>
             )}
           </Box>

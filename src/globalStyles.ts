@@ -1,6 +1,6 @@
-import { theme } from "./theme";
+import { darkTheme } from "./theme";
 
 export const linkStyle = {
   textDecoration: "none",
-  color: theme.palette.secondary.main,
+  color: darkTheme.palette.secondary.main,
 };
