@@ -10,6 +10,7 @@ import {
   InputAdornment,
   IconButton,
   Box,
+  useTheme,
 } from "@mui/material";
 import { loginAct, resetLoginError } from "../../redux/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
@@ -18,6 +19,7 @@ import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 
 const LoginPage = () => {
+  const theme = useTheme();
   const dispatch = useAppDispatch();
   const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
   console.log("isUserAuth", isUserAuth);
@@ -76,11 +78,12 @@ const LoginPage = () => {
         borderRadius: "8px",
         padding: "20px",
         maxWidth: "400px",
-        marginTop: "20px",
+        marginTop: "50px",
+        backgroundColor: theme.palette.primary.main,
       }}
     >
       <Spinner open={isUserLoading} />
-      <div>
+      <Box>
         <Typography
           component="h1"
           variant="h5"
@@ -100,7 +103,7 @@ const LoginPage = () => {
                 message: "Invalid email address",
               },
             })}
-            sx={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px", backgroundColor: "gray" }}
             required
             fullWidth
             label="Email"
@@ -128,7 +131,7 @@ const LoginPage = () => {
                 message: "Spaces are not allowed",
               },
             })}
-            sx={{ marginBottom: "20px" }}
+            sx={{ marginBottom: "20px", backgroundColor: "red" }}
             required
             fullWidth
             label="Password"
@@ -154,12 +157,22 @@ const LoginPage = () => {
           />
 
           <Button
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
+            sx={{
+              marginTop: "10px",
+              marginBottom: "20px",
+              width: "100%",
+              "&:hover": {
+                backgroundColor: "#ff4500",
+              },
+              "&.Mui-disabled": {
+                backgroundColor: "#757575",
+              },
+            }}
             type="submit"
             disabled={!isValid}
             fullWidth
             variant="contained"
-            color="primary"
+            color="secondary"
           >
             Login
           </Button>
@@ -189,7 +202,7 @@ const LoginPage = () => {
             </Link>
           </Typography>
         </form>
-      </div>
+      </Box>
     </Box>
   );
 };

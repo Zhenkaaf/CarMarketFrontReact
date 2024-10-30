@@ -1,12 +1,13 @@
 import { Link } from "react-router-dom";
 import { useAppSelector } from "../../redux/redux-hooks";
 import CarItem from "../../components/CarItem";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Typography, useTheme } from "@mui/material";
 import { useDeleteCarMutation, useGetMyCarsQuery } from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 
 const CabinetPage = () => {
+  const theme = useTheme();
   const user = useAppSelector((state) => state.userRed.user);
   const userId = user?.id?.toString();
   const {
@@ -96,35 +97,51 @@ const CabinetPage = () => {
             </Link>
             <Box
               sx={{
-                marginTop: "-14px",
+                marginTop: "-35px",
                 marginBottom: "50px",
                 display: "flex",
-                gap: "5px",
-                padding: "5px",
-                borderBottom: "3px dashed #e1bee7",
-                borderLeft: "3px dashed #e1bee7",
-                borderRight: "3px dashed #e1bee7",
+                gap: "20px",
+                padding: "20px",
+                backgroundColor: theme.palette.primary.main,
+                borderRadius: "0px 0px 4px 4px",
               }}
             >
-              <Button
-                onClick={() => handleDeleteCar(car.carId, car.carMake)}
-                variant="contained"
-                color="secondary"
-              >
-                Delete
-              </Button>
-              <Link
-                to={`../edit-car/${car.carId}`}
-                style={{ textDecoration: "none" }}
-              >
+              <Box sx={{ flex: 1 }}>
+                <Link
+                  to={`../edit-car/${car.carId}`}
+                  style={{
+                    textDecoration: "none",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    sx={{
+                      width: "100%",
+                      "&:hover": {
+                        backgroundColor: "#ff4500",
+                      },
+                    }}
+                  >
+                    Edit
+                  </Button>
+                </Link>
+              </Box>
+              <Box sx={{ flex: 1 }}>
                 <Button
-                  /*   onClick={() => handleUpdateCar(car.carId, car.carMake)} */
+                  onClick={() => handleDeleteCar(car.carId, car.carMake)}
                   variant="contained"
                   color="secondary"
+                  sx={{
+                    width: "100%",
+                    "&:hover": {
+                      backgroundColor: "#ff4500",
+                    },
+                  }}
                 >
-                  Edit
+                  Delete
                 </Button>
-              </Link>
+              </Box>
             </Box>
           </Box>
         ))}

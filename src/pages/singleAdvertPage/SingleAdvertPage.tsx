@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetCarQuery } from "../../redux/carsApi";
-import { Box, CardContent, Typography } from "@mui/material";
+import { Box, CardContent, Typography, useTheme } from "@mui/material";
 import Spinner from "../../components/Spinner";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -12,9 +12,9 @@ import TodayIcon from "@mui/icons-material/Today";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { formattedDate } from "../../helpers/formatDate.helper";
 import { ImageSlider } from "../../components/slider/ImageSlider";
-import { theme } from "../../theme";
 
 const SingleAdvertPage = () => {
+  const theme = useTheme();
   const { carId } = useParams<{ carId: string }>();
   const { data: singleCar, isLoading, isError } = useGetCarQuery(carId || "");
   console.log(singleCar);

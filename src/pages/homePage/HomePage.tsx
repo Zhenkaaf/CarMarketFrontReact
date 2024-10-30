@@ -4,6 +4,7 @@ import {
   Pagination,
   PaginationItem,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { useGetCarsQuery } from "../../redux/carsApi";
 import { Link, useLocation } from "react-router-dom";
@@ -13,12 +14,11 @@ import Spinner from "../../components/Spinner";
 
 const HomePage = () => {
   const { search } = useLocation();
-
+  const theme = useTheme();
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
   const [page, setPage] = useState(parseInt(search?.split("=")[1]) || 1);
   const { data: allCars, isLoading, isFetching } = useGetCarsQuery(page);
   console.log("все авто", allCars);
-
 
   if (isLoading || isFetching) {
     return <Spinner open={true} />;
@@ -51,6 +51,9 @@ const HomePage = () => {
             color="secondary"
             sx={{
               width: "100%",
+              "&:hover": {
+                backgroundColor: "#ff4500",
+              },
             }}
           >
             search by parameters{" "}
@@ -86,9 +89,16 @@ const HomePage = () => {
             variant="outlined"
             shape="rounded"
             color="secondary"
+            //backgroundColor="red"
             onChange={(_, num) => setPage(num)}
             renderItem={(item) => (
               <PaginationItem
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  "&:hover": {
+                    backgroundColor: theme.palette.secondary.main,
+                  },
+                }}
                 component={Link}
                 to={`/?page=${item.page}`}
                 {...item}
