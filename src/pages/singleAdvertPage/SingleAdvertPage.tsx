@@ -90,7 +90,7 @@ const SingleAdvertPage = () => {
                 sx={{
                   display: "flex",
                   alignItems: "center",
-                  marginBottom: "9px",
+                  marginBottom: "12px",
                 }}
               >
                 <Typography variant="h5">
@@ -105,14 +105,18 @@ const SingleAdvertPage = () => {
                 sx={{
                   display: "flex",
                   flexDirection: "column",
-                  gap: "5px",
+                  marginBottom: "16px",
+                  //gap: "5px",
+                  backgroundColor: theme.palette.primary.main,
+                  border: `1px dashed ${theme.palette.secondary.main}`,
                 }}
               >
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   {" "}
@@ -137,7 +141,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <TimeToLeaveIcon
@@ -157,7 +162,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <LocalGasStationIcon
@@ -173,7 +179,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <TodayIcon
@@ -189,7 +196,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <SpeedIcon
@@ -209,7 +217,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <PlaceIcon
@@ -225,7 +234,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <PhoneInTalkIcon
@@ -241,7 +251,8 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: "#e1bee7",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
                   <AccountCircleIcon
@@ -253,28 +264,39 @@ const SingleAdvertPage = () => {
                   </Typography>
                 </Box>
               </Box>
-
               <Box
                 sx={{
-                  marginTop: "5px",
-                  height: "210px",
-                  overflow: "hidden",
-                  backgroundColor: "#e1bee7",
-                  overflowY: "auto",
-                  padding: "5px",
-                  [theme.breakpoints.down("md")]: {
-                    /*  height: "200px", */
-                    marginBottom: "10px",
-                  },
+                  border: `1px dashed ${theme.palette.secondary.main}`,
                 }}
               >
-                <Typography sx={{ lineHeight: 1.26 }}>
-                  {singleCar.desc ? singleCar.desc : "Description missing"}
-                </Typography>
+                <Box
+                  sx={{
+                    height: "210px",
+                    overflow: "hidden",
+                    backgroundColor: theme.palette.primary.main,
+                    border: `1px dashed ${theme.palette.secondary.main}`,
+                    overflowY: "auto",
+                    padding: "5px",
+                    [theme.breakpoints.down("md")]: {
+                      /*  height: "200px", */
+                      marginBottom: "10px",
+                    },
+                  }}
+                >
+                  <Typography sx={{ lineHeight: 1.26 }}>
+                    {singleCar.desc ? singleCar.desc : "Description missing"}
+                  </Typography>
+                </Box>
               </Box>
             </CardContent>
           </Box>
-          <Box sx={{ flex: 2, overflow: "hidden", backgroundColor: "#e1bee7" }}>
+          <Box
+            sx={{
+              flex: 2,
+              overflow: "hidden",
+              backgroundColor: theme.palette.primary.main,
+            }}
+          >
             <Box
               sx={{
                 maxWidth: "1023px",
