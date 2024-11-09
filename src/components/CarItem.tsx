@@ -14,7 +14,6 @@ import TimeToLeaveIcon from "@mui/icons-material/TimeToLeave";
 import QueryBuilderIcon from "@mui/icons-material/QueryBuilder";
 import TodayIcon from "@mui/icons-material/Today";
 import { ICar } from "./../types";
-import { colors } from "../colors";
 
 /* const CarItem: React.FC<{ car: ICar }> = ({ car }) => { */
 const CarItem = ({
@@ -32,9 +31,7 @@ const CarItem = ({
       sx={{
         height: "250px",
         display: "flex",
-        //backgroundColor: "#e1bee7",
         backgroundColor: theme.palette.primary.main,
-        /*  color: colors.whiteGray, */
         padding: "20px",
         marginBottom: "15px",
         transition: applyHoverStyles ? "transform 0.3s ease" : "none",
@@ -134,7 +131,276 @@ const CarItem = ({
           </Box>
         </Box>
 
-        <Box>
+        <Box
+          sx={{
+            display: "grid",
+            width: "fit-content",
+            border: `1px dashed ${theme.palette.secondary.main}`,
+            gridTemplateColumns: "repeat(3, minmax(0px, 200px))",
+            [theme.breakpoints.down("sm")]: {
+              width: "100%",
+              gridTemplateColumns: "repeat(2, auto)",
+            },
+            [theme.breakpoints.down("xs")]: {
+              width: "fit-content",
+              gridTemplateColumns: "repeat(2, minmax(0px, 220px))",
+            },
+          }}
+        >
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <TodayIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.year}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <PlaceIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.region}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            {" "}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <QueryBuilderIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {timePassed(car.createdAt)} ago
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <LocalGasStationIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.fuelType}
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            {" "}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <SpeedIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  whiteSpace: "nowrap",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.mileage} thds.km.
+              </Typography>
+            </Box>
+          </Box>
+
+          <Box
+            sx={{
+              padding: "5px",
+              border: `1px dashed ${theme.palette.secondary.main}`,
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <TimeToLeaveIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.bodyType}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        {/*  <Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              flexWrap: "wrap",
+              marginBottom: "5px",
+            }}
+          >
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <TodayIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.year}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                marginRight: "20px",
+              }}
+            >
+              <PlaceIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.region}
+              </Typography>
+            </Box>
+
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <QueryBuilderIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                Posted {timePassed(car.createdAt)} ago
+              </Typography>
+            </Box>
+          </Box>
           <Box
             sx={{
               display: "flex",
@@ -149,39 +415,20 @@ const CarItem = ({
                 marginRight: "20px",
               }}
             >
-              <TimeToLeaveIcon
-                fontSize="small"
-                color="secondary"
-              />
-              <Typography sx={{ marginLeft: "5px" }}>{car.bodyType}</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "20px",
-              }}
-            >
               <LocalGasStationIcon
                 fontSize="small"
                 color="secondary"
               />
-              <Typography sx={{ marginLeft: "5px" }}>{car.fuelType}</Typography>
-            </Box>
-
-            <Box
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                marginRight: "20px",
-              }}
-            >
-              <TodayIcon
-                fontSize="small"
-                color="secondary"
-              />
-              <Typography sx={{ marginLeft: "5px" }}>{car.year}</Typography>
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.fuelType}
+              </Typography>
             </Box>
 
             <Box
@@ -199,49 +446,38 @@ const CarItem = ({
                 sx={{
                   marginLeft: "5px",
                   whiteSpace: "nowrap",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
                 }}
               >
                 {car.mileage} thds.km.
               </Typography>
             </Box>
-          </Box>
 
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              marginTop: "7px",
-              marginBottom: "3px",
-            }}
-          >
-            <PlaceIcon
-              fontSize="small"
-              color="secondary"
-            />
-            <Typography
-              sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
             >
-              {car.region}
-            </Typography>
+              <TimeToLeaveIcon
+                fontSize="small"
+                color="secondary"
+              />
+              <Typography
+                sx={{
+                  marginLeft: "5px",
+                  [theme.breakpoints.down("xs")]: {
+                    fontSize: "14px",
+                  },
+                }}
+              >
+                {car.bodyType}
+              </Typography>
+            </Box>
           </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
-            <QueryBuilderIcon
-              fontSize="small"
-              color="secondary"
-            />
-            <Typography
-              sx={{ marginLeft: "5px", fontSize: "12px", marginTop: "2px" }}
-            >
-              Posted {timePassed(car.createdAt)} ago
-            </Typography>
-          </Box>
-        </Box>
+        </Box> */}
 
         <Box>
           <Box
@@ -261,7 +497,7 @@ const CarItem = ({
               },
             }}
           >
-            <Typography sx={{ lineHeight: 1.3 }}>
+            <Typography sx={{ lineHeight: 1.5 }}>
               {car.desc ? car.desc : "No description"}
             </Typography>
           </Box>
