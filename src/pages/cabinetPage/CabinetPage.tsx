@@ -6,6 +6,7 @@ import { useDeleteCarMutation, useGetMyCarsQuery } from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 
+
 const CabinetPage = () => {
   const theme = useTheme();
   const user = useAppSelector((state) => state.userRed.user);
@@ -36,6 +37,7 @@ const CabinetPage = () => {
     }
   };
 
+
   if (
     isGetMyCarsLoading ||
     isGetMyCarsFetching ||
@@ -48,7 +50,7 @@ const CabinetPage = () => {
     console.log(getMyCarsError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to fetch your cars.
+        Something went wrong, unable to fetch your listings.
       </Box>
     );
   }
@@ -57,16 +59,36 @@ const CabinetPage = () => {
     console.log(deleteCarError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to delete your car.
+        Something went wrong, unable to delete your listing.
       </Box>
     );
   }
 
   if (myCars?.length === 0) {
     return (
-      <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        You don't have any cars yet
-      </Box>
+      <>
+        <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px", marginBottom: "20px" }}>
+          You don't have any listings yet.
+        </Box>
+
+        <Link
+          to="/post-advert"
+          style={{ textDecoration: "none" }}
+        >
+          <Button
+            variant="contained"
+            color="secondary"
+            sx={{
+              "&:hover": {
+                backgroundColor: "#ff4500",
+              },
+            }}
+          >
+            Add Listing
+          </Button>
+        </Link>
+      </>
+
     );
   }
 
@@ -84,7 +106,7 @@ const CabinetPage = () => {
         fontSize={24}
       >
         {" "}
-        My advertisements
+        My listings
       </Typography>
       {myCars &&
         myCars.map((car) => (

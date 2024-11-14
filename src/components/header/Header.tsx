@@ -10,6 +10,7 @@ import { HEADER_HEIGHT } from "../../constants/constans";
 import CustomizedSwitch from "../muiSwitch";
 import { useTheme } from "@mui/material";
 import { toggleTheme } from "../../redux/theme/themeSlice";
+import { setWelcomeToastShown } from "../../redux/toast/toastSlice";
 
 const Header = () => {
   const dispatch = useAppDispatch();
@@ -69,7 +70,11 @@ const Header = () => {
                   style={{ textDecoration: "none" }}
                 >
                   <Typography
-                    onClick={() => dispatch(logOutAct())}
+                    onClick={() => {
+                      dispatch(logOutAct());
+                      dispatch(setWelcomeToastShown(false));
+                    }
+                    }
                     color="secondary"
                     sx={{
                       textTransform: "uppercase",

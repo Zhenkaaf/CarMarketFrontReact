@@ -2,9 +2,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import { carsApi } from "./carsApi";
 import userReducer from "./user/userSlice";
 import themeReducer from "./theme/themeSlice";
+import toastReducer from "./toast/toastSlice";
 
 export const store = configureStore({
   reducer: {
+    toastRed: toastReducer,
     themeRed: themeReducer,
     userRed: userReducer,
     [carsApi.reducerPath]: carsApi.reducer,

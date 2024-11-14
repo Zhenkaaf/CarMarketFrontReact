@@ -20,6 +20,7 @@ import { IRegisterUserData } from "../../types";
 import { toast } from "react-toastify";
 import Spinner from "../../components/Spinner";
 import { phoneNumberValidation } from "../../helpers/phoneNumberValidation.helper";
+import { setWelcomeToastShown } from "../../redux/toast/toastSlice";
 
 const RegistrationPage = () => {
   const navigate = useNavigate();
@@ -30,6 +31,9 @@ const RegistrationPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const [phoneNumber, setPhoneNumber] = useState<string>("+380");
+  const welcomeToastShown = useAppSelector(
+    (state) => state.toastRed.welcomeToastShown
+  );
   const {
     register,
     formState: { errors, isValid },
@@ -45,15 +49,18 @@ const RegistrationPage = () => {
 
   useEffect(() => {
     if (isUserAuth) {
-      toast.success("Account has been created");
       reset();
       setPhoneNumber("+380");
       navigate("/cabinet");
+      if (!welcomeToastShown) {
+        toast.success("Account has been created");
+        dispatch(setWelcomeToastShown(true));
+      }
     }
     if (registerError) {
       toast.error(registerError);
     }
-  }, [isUserAuth, navigate, reset, registerError]);
+  }, [isUserAuth, navigate, reset, registerError, welcomeToastShown, dispatch]);
 
   const onSubmit = (registerData: FieldValues) => {
     const userData: IRegisterUserData = {
@@ -84,210 +91,217 @@ const RegistrationPage = () => {
     setPhoneNumber(validatedPhoneNumber);
   };
 
+  if (isUserLoading) {
+    return <Spinner open={isUserLoading} />
+  }
+
   return (
-    <Box
-      sx={{
-        boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
-        borderRadius: "8px",
-        padding: "20px",
-        maxWidth: "400px",
-        marginTop: "20px",
-      }}
-    >
-      <Box>
-        <Spinner open={isUserLoading} />
-        <Typography
-          component="h1"
-          variant="h5"
-          align="center"
+    <>
+      {!isUserAuth && (
+        <Box
           sx={{
-            paddingBottom: "20px",
+            boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+            borderRadius: "8px",
+            padding: "20px",
+            maxWidth: "400px",
+            marginTop: "20px",
           }}
         >
-          REGISTRATION
-        </Typography>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextField
-            {...register("name", {
-              required: "Name is required",
-              minLength: {
-                value: 2,
-                message: "Minimum 2 characters",
-              },
-              maxLength: {
-                value: 32,
-                message: "Maximum 32 characters",
-              },
-              pattern: {
-                value: /^[a-zA-Zа-яА-Я0-9_-]+$/,
-                message:
-                  "Only letters, numbers, hyphens, and underscores are allowed",
-              },
-            })}
-            sx={{ marginBottom: "20px" }}
-            fullWidth
-            required
-            label="Name"
-            name="name"
-            error={Boolean(errors?.name)}
-            helperText={
-              errors?.name && <p>{errors?.name?.message as string}</p>
-            }
-          />
-          <TextField
-            {...register("email", {
-              required: "Email is required",
-              pattern: {
-                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
-                message: "Invalid email address",
-              },
-            })}
-            sx={{ marginBottom: "20px" }}
-            required
-            fullWidth
-            label="Email"
-            name="email"
-            type="email"
-            onInput={excludeSpaces}
-            error={Boolean(errors?.email)}
-            helperText={
-              errors?.email && <p>{errors?.email?.message as string}</p>
-            }
-          />
-          <TextField
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 6,
-                message: "Minimum 6 characters",
-              },
-              maxLength: {
-                value: 16,
-                message: "Maximum 16 characters",
-              },
-              pattern: {
-                value: /^[^\s]+$/,
-                message: "Spaces are not allowed",
-              },
-            })}
-            sx={{ marginBottom: "20px" }}
-            required
-            fullWidth
-            label="Password"
-            name="password"
-            type={showPassword ? "text" : "password"}
-            onInput={excludeSpaces}
-            error={Boolean(errors.password)}
-            helperText={
-              errors?.password && <p>{errors?.password?.message as string}</p>
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => togglePasswordsVisible("password")}
-                    edge="end"
-                  >
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            {...register("confirmPassword", {
-              required: "Please confirm your password",
-              pattern: {
-                value: /^[^\s]+$/,
-                message: "Spaces are not allowed",
-              },
-              validate: (value) =>
-                value === watchPassword || "Passwords do not match",
-            })}
-            sx={{ marginBottom: "20px" }}
-            required
-            fullWidth
-            label="Confirm Password"
-            name="confirmPassword"
-            type={showConfirmPass ? "text" : "password"}
-            onInput={excludeSpaces}
-            error={Boolean(errors.confirmPassword)}
-            helperText={
-              errors?.confirmPassword && (
-                <p>{errors?.confirmPassword?.message as string}</p>
-              )
-            }
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => togglePasswordsVisible("confirmPassword")}
-                    edge="end"
-                  >
-                    {showConfirmPass ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-          />
-          <TextField
-            {...register("phoneNumber", {
-              required: "Phone Number is required",
-              minLength: {
-                value: 13,
-                message: "Must be 13 characters",
-              },
-            })}
-            sx={{ marginBottom: "20px" }}
-            fullWidth
-            label="Phone Number"
-            name="phoneNumber"
-            value={phoneNumber}
-            required
-            error={Boolean(errors.phoneNumber)}
-            helperText={
-              errors?.phoneNumber && (
-                <p>{errors?.phoneNumber?.message as string}</p>
-              )
-            }
-            onInput={phoneNumberInput}
-          />
-          <Button
-            sx={{ marginTop: "10px", marginBottom: "20px" }}
-            type="submit"
-            disabled={!isValid}
-            fullWidth
-            variant="contained"
-            color="primary"
-          >
-            Registration
-          </Button>
           <Box>
-            {registerError && (
-              <Typography
-                align="center"
-                color="error"
-                sx={{ marginBottom: "10px" }}
-                component="div"
-              >
-                {registerError}
-              </Typography>
-            )}
-          </Box>
-          <Typography align="center">
-            Already have an account?
-            <Link
-              to="/login"
-              style={linkStyle}
-              onClick={() => dispatch(resetRegisterError())}
+            <Typography
+              component="h1"
+              variant="h5"
+              align="center"
+              sx={{
+                paddingBottom: "20px",
+              }}
             >
-              {" "}
-              Log In
-            </Link>
-          </Typography>
-        </form>
-      </Box>
-    </Box>
+              REGISTRATION
+            </Typography>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              <TextField
+                {...register("name", {
+                  required: "Name is required",
+                  minLength: {
+                    value: 2,
+                    message: "Minimum 2 characters",
+                  },
+                  maxLength: {
+                    value: 32,
+                    message: "Maximum 32 characters",
+                  },
+                  pattern: {
+                    value: /^[a-zA-Zа-яА-Я0-9_-]+$/,
+                    message:
+                      "Only letters, numbers, hyphens, and underscores are allowed",
+                  },
+                })}
+                sx={{ marginBottom: "20px" }}
+                fullWidth
+                required
+                label="Name"
+                name="name"
+                error={Boolean(errors?.name)}
+                helperText={
+                  errors?.name && <p>{errors?.name?.message as string}</p>
+                }
+              />
+              <TextField
+                {...register("email", {
+                  required: "Email is required",
+                  pattern: {
+                    value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+                    message: "Invalid email address",
+                  },
+                })}
+                sx={{ marginBottom: "20px" }}
+                required
+                fullWidth
+                label="Email"
+                name="email"
+                type="email"
+                onInput={excludeSpaces}
+                error={Boolean(errors?.email)}
+                helperText={
+                  errors?.email && <p>{errors?.email?.message as string}</p>
+                }
+              />
+              <TextField
+                {...register("password", {
+                  required: "Password is required",
+                  minLength: {
+                    value: 6,
+                    message: "Minimum 6 characters",
+                  },
+                  maxLength: {
+                    value: 16,
+                    message: "Maximum 16 characters",
+                  },
+                  pattern: {
+                    value: /^[^\s]+$/,
+                    message: "Spaces are not allowed",
+                  },
+                })}
+                sx={{ marginBottom: "20px" }}
+                required
+                fullWidth
+                label="Password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                onInput={excludeSpaces}
+                error={Boolean(errors.password)}
+                helperText={
+                  errors?.password && <p>{errors?.password?.message as string}</p>
+                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => togglePasswordsVisible("password")}
+                        edge="end"
+                      >
+                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                {...register("confirmPassword", {
+                  required: "Please confirm your password",
+                  pattern: {
+                    value: /^[^\s]+$/,
+                    message: "Spaces are not allowed",
+                  },
+                  validate: (value) =>
+                    value === watchPassword || "Passwords do not match",
+                })}
+                sx={{ marginBottom: "20px" }}
+                required
+                fullWidth
+                label="Confirm Password"
+                name="confirmPassword"
+                type={showConfirmPass ? "text" : "password"}
+                onInput={excludeSpaces}
+                error={Boolean(errors.confirmPassword)}
+                helperText={
+                  errors?.confirmPassword && (
+                    <p>{errors?.confirmPassword?.message as string}</p>
+                  )
+                }
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => togglePasswordsVisible("confirmPassword")}
+                        edge="end"
+                      >
+                        {showConfirmPass ? <Visibility /> : <VisibilityOff />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+              />
+              <TextField
+                {...register("phoneNumber", {
+                  required: "Phone Number is required",
+                  minLength: {
+                    value: 13,
+                    message: "Must be 13 characters",
+                  },
+                })}
+                sx={{ marginBottom: "20px" }}
+                fullWidth
+                label="Phone Number"
+                name="phoneNumber"
+                value={phoneNumber}
+                required
+                error={Boolean(errors.phoneNumber)}
+                helperText={
+                  errors?.phoneNumber && (
+                    <p>{errors?.phoneNumber?.message as string}</p>
+                  )
+                }
+                onInput={phoneNumberInput}
+              />
+              <Button
+                sx={{ marginTop: "10px", marginBottom: "20px" }}
+                type="submit"
+                disabled={!isValid}
+                fullWidth
+                variant="contained"
+                color="primary"
+              >
+                Registration
+              </Button>
+              <Box>
+                {registerError && (
+                  <Typography
+                    align="center"
+                    color="error"
+                    sx={{ marginBottom: "10px" }}
+                    component="div"
+                  >
+                    {registerError}
+                  </Typography>
+                )}
+              </Box>
+              <Typography align="center">
+                Already have an account?
+                <Link
+                  to="/login"
+                  style={linkStyle}
+                  onClick={() => dispatch(resetRegisterError())}
+                >
+                  {" "}
+                  Log In
+                </Link>
+              </Typography>
+            </form>
+          </Box>
+        </Box>
+      )}
+    </>
   );
 };
 
