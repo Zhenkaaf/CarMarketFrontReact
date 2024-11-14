@@ -29,7 +29,7 @@ const Header = () => {
             display: "flex",
             justifyContent: "space-between",
             height: `${HEADER_HEIGHT}px`,
-            backgroundColor: "primary.main",
+            backgroundColor: theme.palette.background.paper,
           }}
         >
           {/*  <IconButton

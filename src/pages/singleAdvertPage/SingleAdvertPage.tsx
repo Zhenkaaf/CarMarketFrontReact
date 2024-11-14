@@ -107,7 +107,7 @@ const SingleAdvertPage = () => {
                   flexDirection: "column",
                   marginBottom: "16px",
                   //gap: "5px",
-                  backgroundColor: theme.palette.primary.main,
+                  backgroundColor: theme.palette.background.paper,
                   border: `1px dashed ${theme.palette.secondary.main}`,
                 }}
               >
@@ -115,7 +115,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.background.paper,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -141,7 +141,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.background.paper,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -162,7 +162,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -179,7 +179,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -196,7 +196,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -217,7 +217,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -234,7 +234,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -251,7 +251,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    backgroundColor: theme.palette.primary.main,
+                    //backgroundColor: theme.palette.primary.main,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                   }}
                 >
@@ -273,7 +273,7 @@ const SingleAdvertPage = () => {
                   sx={{
                     height: "210px",
                     overflow: "hidden",
-                    backgroundColor: theme.palette.primary.main,
+                    backgroundColor: theme.palette.background.paper,
                     border: `1px dashed ${theme.palette.secondary.main}`,
                     overflowY: "auto",
                     padding: "5px",
@@ -294,7 +294,7 @@ const SingleAdvertPage = () => {
             sx={{
               flex: 2,
               overflow: "hidden",
-              backgroundColor: theme.palette.primary.main,
+              backgroundColor: theme.palette.background.paper,
             }}
           >
             <Box

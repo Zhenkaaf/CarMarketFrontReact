@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
-import { linkStyle } from "../../globalStyles";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
@@ -11,6 +10,7 @@ import {
   IconButton,
   Box,
   useTheme,
+  Link,
 } from "@mui/material";
 import { loginAct, resetLoginError } from "../../redux/user/userSlice";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
@@ -31,7 +31,6 @@ const LoginPage = () => {
   const welcomeToastShown = useAppSelector(
     (state) => state.toastRed.welcomeToastShown
   );
-  console.log('welcomeToastShown', welcomeToastShown)
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPass, setShowConfirmPass] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -79,7 +78,7 @@ const LoginPage = () => {
   };
 
   if (isUserLoading) {
-    return <Spinner open={isUserLoading} />
+    return <Spinner open={true} />;
   }
 
   return (
@@ -91,11 +90,10 @@ const LoginPage = () => {
             borderRadius: "8px",
             padding: "20px",
             maxWidth: "400px",
-            marginTop: "50px",
-            backgroundColor: theme.palette.primary.main,
+            marginTop: "40px",
+            backgroundColor: theme.palette.background.paper,
           }}
         >
-
           <Box>
             <Typography
               component="h1"
@@ -107,6 +105,7 @@ const LoginPage = () => {
             >
               LOGIN
             </Typography>
+
             <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
                 {...register("email", {
@@ -116,18 +115,23 @@ const LoginPage = () => {
                     message: "Invalid email address",
                   },
                 })}
-                sx={{ marginBottom: "20px", backgroundColor: "gray" }}
+                sx={{
+                  marginBottom: "20px",
+                }}
+                autoComplete="off"
                 required
                 fullWidth
+                color="info"
                 label="Email"
                 name="email"
                 type="email"
                 onInput={excludeSpaces}
                 error={Boolean(errors?.email)}
                 helperText={
-                  errors?.email && <p>{errors?.email?.message as string}</p>
+                  errors?.email ? (errors.email.message as string) : null
                 }
               />
+
               <TextField
                 {...register("password", {
                   required: "Password is required",
@@ -144,7 +148,10 @@ const LoginPage = () => {
                     message: "Spaces are not allowed",
                   },
                 })}
-                sx={{ marginBottom: "20px", backgroundColor: "red" }}
+                sx={{
+                  marginBottom: "20px",
+                }}
+                color="info"
                 required
                 fullWidth
                 label="Password"
@@ -153,7 +160,7 @@ const LoginPage = () => {
                 onInput={excludeSpaces}
                 error={Boolean(errors.password)}
                 helperText={
-                  errors?.password && <p>{errors?.password?.message as string}</p>
+                  errors?.password ? (errors.password.message as string) : null
                 }
                 InputProps={{
                   endAdornment: (
@@ -175,10 +182,10 @@ const LoginPage = () => {
                   marginBottom: "20px",
                   width: "100%",
                   "&:hover": {
-                    backgroundColor: "#ff4500",
+                    backgroundColor: `${theme.palette.secondary.light}`,
                   },
                   "&.Mui-disabled": {
-                    backgroundColor: "#757575",
+                    backgroundColor: `${theme.palette.background.default}`,
                   },
                 }}
                 type="submit"
@@ -204,8 +211,16 @@ const LoginPage = () => {
               <Typography align="center">
                 Do not have an account?
                 <Link
+                  component={RouterLink}
+                  sx={{
+                    textDecoration: "none",
+                    color: theme.palette.secondary.main,
+                    "&:hover": {
+                      color: theme.palette.secondary.light,
+                      textDecoration: "underline",
+                    },
+                  }}
                   to="/registration"
-                  style={linkStyle}
                   onClick={() => {
                     dispatch(resetLoginError());
                   }}

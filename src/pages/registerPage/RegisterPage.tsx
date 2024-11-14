@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, FieldValues } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import {
   Button,
@@ -9,8 +9,9 @@ import {
   InputAdornment,
   IconButton,
   Box,
+  useTheme,
+  Link,
 } from "@mui/material";
-import { linkStyle } from "../../globalStyles";
 import { useAppDispatch, useAppSelector } from "../../redux/redux-hooks";
 import {
   registrationAct,
@@ -23,6 +24,7 @@ import { phoneNumberValidation } from "../../helpers/phoneNumberValidation.helpe
 import { setWelcomeToastShown } from "../../redux/toast/toastSlice";
 
 const RegistrationPage = () => {
+  const theme = useTheme();
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const isUserAuth = useAppSelector((state) => state.userRed.isUserAuth);
@@ -90,9 +92,12 @@ const RegistrationPage = () => {
     const validatedPhoneNumber = phoneNumberValidation(event);
     setPhoneNumber(validatedPhoneNumber);
   };
+  if (isUserLoading) {
+    return <Spinner open={true} />;
+  }
 
   if (isUserLoading) {
-    return <Spinner open={isUserLoading} />
+    return <Spinner open={isUserLoading} />;
   }
 
   return (
@@ -104,7 +109,8 @@ const RegistrationPage = () => {
             borderRadius: "8px",
             padding: "20px",
             maxWidth: "400px",
-            marginTop: "20px",
+            marginTop: "40px",
+            backgroundColor: theme.palette.background.paper,
           }}
         >
           <Box>
@@ -139,11 +145,13 @@ const RegistrationPage = () => {
                 sx={{ marginBottom: "20px" }}
                 fullWidth
                 required
+                autoComplete="off"
+                color="info"
                 label="Name"
                 name="name"
                 error={Boolean(errors?.name)}
                 helperText={
-                  errors?.name && <p>{errors?.name?.message as string}</p>
+                  errors?.name ? (errors.name.message as string) : null
                 }
               />
               <TextField
@@ -157,13 +165,15 @@ const RegistrationPage = () => {
                 sx={{ marginBottom: "20px" }}
                 required
                 fullWidth
+                autoComplete="off"
+                color="info"
                 label="Email"
                 name="email"
                 type="email"
                 onInput={excludeSpaces}
                 error={Boolean(errors?.email)}
                 helperText={
-                  errors?.email && <p>{errors?.email?.message as string}</p>
+                  errors?.email ? (errors.email.message as string) : null
                 }
               />
               <TextField
@@ -185,13 +195,14 @@ const RegistrationPage = () => {
                 sx={{ marginBottom: "20px" }}
                 required
                 fullWidth
+                color="info"
                 label="Password"
                 name="password"
                 type={showPassword ? "text" : "password"}
                 onInput={excludeSpaces}
                 error={Boolean(errors.password)}
                 helperText={
-                  errors?.password && <p>{errors?.password?.message as string}</p>
+                  errors?.password ? (errors.password.message as string) : null
                 }
                 InputProps={{
                   endAdornment: (
@@ -219,21 +230,24 @@ const RegistrationPage = () => {
                 sx={{ marginBottom: "20px" }}
                 required
                 fullWidth
+                color="info"
                 label="Confirm Password"
                 name="confirmPassword"
                 type={showConfirmPass ? "text" : "password"}
                 onInput={excludeSpaces}
                 error={Boolean(errors.confirmPassword)}
                 helperText={
-                  errors?.confirmPassword && (
-                    <p>{errors?.confirmPassword?.message as string}</p>
-                  )
+                  errors?.confirmPassword
+                    ? (errors.confirmPassword.message as string)
+                    : null
                 }
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
                       <IconButton
-                        onClick={() => togglePasswordsVisible("confirmPassword")}
+                        onClick={() =>
+                          togglePasswordsVisible("confirmPassword")
+                        }
                         edge="end"
                       >
                         {showConfirmPass ? <Visibility /> : <VisibilityOff />}
@@ -256,21 +270,32 @@ const RegistrationPage = () => {
                 name="phoneNumber"
                 value={phoneNumber}
                 required
+                autoComplete="off"
+                color="info"
                 error={Boolean(errors.phoneNumber)}
                 helperText={
-                  errors?.phoneNumber && (
-                    <p>{errors?.phoneNumber?.message as string}</p>
-                  )
+                  errors?.phoneNumber
+                    ? (errors.phoneNumber.message as string)
+                    : null
                 }
                 onInput={phoneNumberInput}
               />
               <Button
-                sx={{ marginTop: "10px", marginBottom: "20px" }}
+                sx={{
+                  marginTop: "10px",
+                  marginBottom: "20px",
+                  "&:hover": {
+                    backgroundColor: `${theme.palette.secondary.light}`,
+                  },
+                  "&.Mui-disabled": {
+                    backgroundColor: `${theme.palette.background.default}`,
+                  },
+                }}
                 type="submit"
                 disabled={!isValid}
                 fullWidth
                 variant="contained"
-                color="primary"
+                color="secondary"
               >
                 Registration
               </Button>
@@ -289,8 +314,16 @@ const RegistrationPage = () => {
               <Typography align="center">
                 Already have an account?
                 <Link
+                  component={RouterLink}
+                  sx={{
+                    textDecoration: "none",
+                    color: theme.palette.secondary.main,
+                    "&:hover": {
+                      color: theme.palette.secondary.light,
+                      textDecoration: "underline",
+                    },
+                  }}
                   to="/login"
-                  style={linkStyle}
                   onClick={() => dispatch(resetRegisterError())}
                 >
                   {" "}
