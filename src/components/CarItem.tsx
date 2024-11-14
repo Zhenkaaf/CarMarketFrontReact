@@ -31,7 +31,7 @@ const CarItem = ({
       sx={{
         height: "250px",
         display: "flex",
-        backgroundColor: theme.palette.primary.main,
+        backgroundColor: theme.palette.background.paper,
         padding: "20px",
         marginBottom: "15px",
         transition: applyHoverStyles ? "transform 0.3s ease" : "none",
@@ -139,11 +139,7 @@ const CarItem = ({
             gridTemplateColumns: "repeat(3, minmax(0px, 200px))",
             [theme.breakpoints.down("sm")]: {
               width: "100%",
-              gridTemplateColumns: "repeat(2, auto)",
-            },
-            [theme.breakpoints.down("xs")]: {
-              width: "fit-content",
-              gridTemplateColumns: "repeat(2, minmax(0px, 220px))",
+              gridTemplateColumns: "repeat(2, 1fr)",
             },
           }}
         >

@@ -124,7 +124,9 @@ const CabinetPage = () => {
                 display: "flex",
                 gap: "20px",
                 padding: "20px",
-                backgroundColor: theme.palette.primary.main,
+                backgroundColor: theme.palette.background.paper,
+                backgroundImage:
+                  "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
                 borderRadius: "0px 0px 4px 4px",
               }}
             >

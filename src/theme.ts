@@ -38,20 +38,26 @@ export const darkTheme = createTheme({
   },
   palette: {
     mode: "dark",
-    primary: {
+    /*  primary: {
       main: "#000",
-    },
+      light: "#dcdcdc",
+    }, */
     secondary: {
       main: "#da3b00",
       light: "#ff4500",
     },
+    info: {
+      main: "#dcdcdc",
+      /*  light: "#63a4ff",
+      dark: "#004ba0", */
+    },
     background: {
-      default: "rgba(26, 26, 26, 0.75)",
-      paper: "#111",
+      default: "#515151",
+      paper: "#000",
     },
     text: {
       primary: "#dcdcdc",
-      secondary: "#848484",
+      //secondary: "#848484",
     },
   },
   breakpoints: {
