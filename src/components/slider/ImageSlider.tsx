@@ -47,7 +47,7 @@ export function ImageSlider({ images }: ImageSliderProps) {
       <div
         style={{
           width: "100%",
-          /*   height: "615px", */
+          /* height: "615px", */
           height: "100%",
           display: "flex",
           overflow: "hidden",

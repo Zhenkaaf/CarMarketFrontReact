@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetCarQuery } from "../../redux/carsApi";
-import { Box, CardContent, Typography, useTheme } from "@mui/material";
+import { Box, TextField, Typography, useTheme } from "@mui/material";
 import Spinner from "../../components/Spinner";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -31,285 +31,329 @@ const SingleAdvertPage = () => {
   }
 
   return (
-    <>
+    <Box
+      sx={{
+        maxWidth: "1140px",
+        width: "100%",
+        margin: "auto",
+        marginTop: "20px",
+        backgroundColor: "#000",
+      }}
+    >
       {singleCar && (
-        <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            [theme.breakpoints.down("md")]: {
-              flexDirection: "column-reverse",
-            },
-            /*  height: "100%", */
-            /*  height: `calc(100vh - ${HEADER_HEIGHT}px)`, */
-            /*  backgroundColor: "grey", */
-          }}
-        >
-          <Box sx={{ flex: 1 }}>
-            <CardContent
-              sx={{
-                "&:last-child": {
-                  paddingBottom: "0px",
-                },
-              }}
-            >
+        <>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              [theme.breakpoints.down("md")]: {
+                flexDirection: "column-reverse",
+              },
+            }}
+          >
+            <Box sx={{ flex: 1 }}>
               <Box
                 sx={{
-                  display: "flex",
-                  minWidth: "300px",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Box>
-                  <Typography
-                    variant="h5"
-                    fontWeight={600}
-                  >
-                    {singleCar.carMake}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    marginTop: "-5px",
-                  }}
-                >
-                  <Typography
-                    sx={{ marginLeft: "5px" }}
-                    color="grey"
-                    fontSize="14px"
-                  >
-                    {formattedDate(singleCar.createdAt)}
-                  </Typography>
-                </Box>
-              </Box>
-
-              <Box
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  marginBottom: "12px",
-                }}
-              >
-                <Typography variant="h5">
-                  {/*   {singleCar.model} */}
-                  {singleCar.model.length > 24
-                    ? singleCar.model.slice(0, 24)
-                    : singleCar.model}
-                </Typography>
-              </Box>
-
-              <Box
-                sx={{
+                  paddingRight: "15px",
                   display: "flex",
                   flexDirection: "column",
-                  marginBottom: "16px",
-                  //gap: "5px",
-                  backgroundColor: theme.palette.background.paper,
-                  border: `1px dashed ${theme.palette.secondary.main}`,
+                  height: "100%",
+                  //backgroundColor: "#000",
+                  /* "&:last-child": {
+                    paddingBottom: "16px",
+                  }, */
                 }}
               >
                 <Box
                   sx={{
                     display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.background.paper,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
+                    justifyContent: "space-between",
                   }}
                 >
-                  {" "}
-                  <MonetizationOnIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography
-                    variant="h4"
-                    color="green"
-                    fontWeight={700}
+                  <Box>
+                    <Typography
+                      variant="h5"
+                      fontWeight={600}
+                      sx={{
+                        paddingLeft: "10px",
+                        paddingTop: "5px",
+                      }}
+                    >
+                      {singleCar.carMake}
+                    </Typography>
+                  </Box>
+
+                  <Box
                     sx={{
-                      marginTop: "3px",
-                      fontSize: "20px",
-                      padding: "5px 5px",
+                      display: "flex",
+                      alignItems: "center",
+                      marginTop: "-5px",
                     }}
                   >
-                    {singleCar.price}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.background.paper,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <TimeToLeaveIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography
-                    sx={{
-                      padding: "5px 5px",
-                    }}
-                  >
-                    {singleCar.bodyType}
-                  </Typography>
+                    <Typography
+                      sx={{ marginLeft: "5px" }}
+                      fontSize="14px"
+                    >
+                      {formattedDate(singleCar.createdAt)}
+                    </Typography>
+                  </Box>
                 </Box>
 
                 <Box
                   sx={{
                     display: "flex",
                     alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
+                    marginBottom: "10px",
+                    paddingLeft: "10px",
                   }}
                 >
-                  <LocalGasStationIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.fuelType}
+                  <Typography variant="h5">
+                    {/*   {singleCar.model} */}
+                    {singleCar.model.length > 24
+                      ? singleCar.model.slice(0, 24)
+                      : singleCar.model}
                   </Typography>
                 </Box>
 
                 <Box
                   sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <TodayIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.year}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <SpeedIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography
-                    sx={{
-                      padding: "5px 5px",
-                    }}
-                  >
-                    {singleCar.mileage} thds.km.
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <PlaceIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.region}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <PhoneInTalkIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.user?.phoneNumber}
-                  </Typography>
-                </Box>
-
-                <Box
-                  sx={{
-                    display: "flex",
-                    alignItems: "center",
-                    //backgroundColor: theme.palette.primary.main,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                  }}
-                >
-                  <AccountCircleIcon
-                    sx={{ marginLeft: "5px" }}
-                    color="secondary"
-                  />
-                  <Typography sx={{ padding: "5px 5px" }}>
-                    {singleCar.user?.name}
-                  </Typography>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  border: `1px dashed ${theme.palette.secondary.main}`,
-                }}
-              >
-                <Box
-                  sx={{
-                    height: "210px",
-                    overflow: "hidden",
                     backgroundColor: theme.palette.background.paper,
-                    border: `1px dashed ${theme.palette.secondary.main}`,
-                    overflowY: "auto",
-                    padding: "5px",
+                    flex: "1 1 auto",
+                    display: "flex",
+                    flexDirection: "column",
+                    borderTop: `1px dashed ${theme.palette.secondary.main}`,
                     [theme.breakpoints.down("md")]: {
-                      /*  height: "200px", */
-                      marginBottom: "10px",
+                      marginRight: "-15px",
                     },
                   }}
                 >
-                  <Typography sx={{ lineHeight: 1.26 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.background.paper,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    {" "}
+                    <MonetizationOnIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography
+                      variant="h4"
+                      color="green"
+                      fontWeight={700}
+                      sx={{
+                        fontSize: "20px",
+                        padding: "5px 5px",
+                      }}
+                    >
+                      {singleCar.price}
+                    </Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.background.paper,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <TimeToLeaveIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography
+                      sx={{
+                        padding: "5px 5px",
+                      }}
+                    >
+                      {singleCar.bodyType}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <LocalGasStationIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography sx={{ padding: "5px 5px" }}>
+                      {singleCar.fuelType}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <TodayIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography sx={{ padding: "5px 5px" }}>
+                      {singleCar.year}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <SpeedIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography
+                      sx={{
+                        padding: "5px 5px",
+                      }}
+                    >
+                      {singleCar.mileage} thds.km.
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <PlaceIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography sx={{ padding: "5px 5px" }}>
+                      {singleCar.region}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <PhoneInTalkIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography sx={{ padding: "5px 5px" }}>
+                      {singleCar.user?.phoneNumber}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      //backgroundColor: theme.palette.primary.main,
+                      border: `1px dashed ${theme.palette.secondary.main}`,
+                    }}
+                  >
+                    <AccountCircleIcon
+                      sx={{ marginLeft: "5px" }}
+                      color="secondary"
+                    />
+                    <Typography sx={{ padding: "5px 5px" }}>
+                      {singleCar.user?.name}
+                    </Typography>
+                  </Box>
+
+                  <Box
+                    sx={{
+                      //maxHeight: "295px",
+                      maxHeight: "250px",
+                      lineHeight: 1.26,
+                      paddingLeft: "10px",
+                      paddingTop: "5px",
+                      paddingBottom: "5px",
+                      paddingRight: "15px",
+                      overflow: "hidden",
+                      scrollbarWidth: "thin",
+                      borderTop: `1px dashed ${theme.palette.secondary.main}`,
+                      overflowY: "auto",
+                      [theme.breakpoints.down("md")]: {
+                        maxHeight: "100%",
+                      },
+                    }}
+                  >
                     {singleCar.desc ? singleCar.desc : "Description missing"}
-                  </Typography>
+                  </Box>
+
+                  {/* <TextField
+                    InputProps={{
+                      readOnly: true,
+                      disableUnderline: true,
+                    }}
+                    multiline
+                    maxRows={12}
+                    variant="standard"
+                    value={
+                      singleCar.desc ? singleCar.desc : "Description missing"
+                    }
+                    sx={{
+                      lineHeight: 1.26,
+                      paddingLeft: "15px",
+                      paddingTop: "4px",
+                      //paddingRight: "10px",
+                      overflow: "hidden",
+                      scrollbarWidth: "thin",
+                      borderTop: `1px dashed ${theme.palette.secondary.main}`,
+                      //maxHeight: "260px",
+                      overflowY: "auto",
+                    }}
+                  >
+                    {singleCar.desc ? singleCar.desc : "Description missing"}
+                  </TextField> */}
                 </Box>
               </Box>
-            </CardContent>
-          </Box>
-          <Box
-            sx={{
-              flex: 2,
-              overflow: "hidden",
-              backgroundColor: theme.palette.background.paper,
-            }}
-          >
+            </Box>
             <Box
               sx={{
-                maxWidth: "1023px",
-                aspectRatio: "10 / 6",
-                margin: "0 auto",
+                flex: 3,
+                //overflow: "hidden",
+                //backgroundColor: theme.palette.background.paper,
               }}
             >
-              <ImageSlider images={singleCar.photos} />
+              <Box
+                sx={{
+                  /*  maxWidth: "1023px",
+                  aspectRatio: "10 / 6",
+                  margin: "0 auto", */
+                  //maxWidth: "1200px",
+                  aspectRatio: "9 / 6.52",
+                  [theme.breakpoints.down("md")]: {
+                    aspectRatio: "9 / 6",
+                  },
+                }}
+              >
+                <ImageSlider images={singleCar.photos} />
+              </Box>
             </Box>
           </Box>
-        </Box>
+        </>
       )}
-    </>
+    </Box>
   );
 };
 

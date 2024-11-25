@@ -20,16 +20,27 @@ const Header = () => {
   return (
     <Box
       sx={{
-        /* marginBottom: "20px", */ width: "100%",
+        width: "100%",
       }}
     >
-      <AppBar position="static">
+      <AppBar
+        position="static"
+        sx={{
+          padding: "0px 20px",
+          backgroundColor: theme.palette.background.paper,
+          backgroundImage:
+            "linear-gradient(rgba(255, 255, 255, 0.00), rgba(255, 255, 255, 0.00))",
+        }}
+      >
         <Toolbar
           sx={{
-            display: "flex",
-            justifyContent: "space-between",
             height: `${HEADER_HEIGHT}px`,
             backgroundColor: theme.palette.background.paper,
+            maxWidth: "1140px",
+            margin: "auto",
+            display: "flex",
+            justifyContent: "space-between",
+            width: "100%",
           }}
         >
           {/*  <IconButton
@@ -51,17 +62,31 @@ const Header = () => {
                 color="secondary"
                 fontWeight={700}
                 sx={{
+                  marginLeft: "-24px",
                   transition: "all 0.3s ease",
                   "&:hover": {
                     color: theme.palette.secondary.light,
                   },
+                  /*   "@media (min-width: 1180px)": {
+                    marginLeft: "-24px",
+                  }, */
                 }}
               >
                 CarMarket
               </Typography>
             </Link>
           </Box>
-          <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: "10px",
+              marginRight: "-24px",
+              /*  "@media (min-width: 1180px)": {
+                marginRight: "-28px",
+              }, */
+            }}
+          >
             <CustomizedSwitch onChange={() => dispatch(toggleTheme())} />
             {user ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
@@ -73,8 +98,7 @@ const Header = () => {
                     onClick={() => {
                       dispatch(logOutAct());
                       dispatch(setWelcomeToastShown(false));
-                    }
-                    }
+                    }}
                     color="secondary"
                     sx={{
                       textTransform: "uppercase",
@@ -97,6 +121,8 @@ const Header = () => {
                     color="secondary"
                     fontSize="large"
                     sx={{
+                      marginBottom: "-5px",
+
                       transition: "all 0.3s ease",
                       "&:hover": {
                         color: theme.palette.secondary.light,
@@ -113,6 +139,8 @@ const Header = () => {
                     color="secondary"
                     fontSize="large"
                     sx={{
+                      marginBottom: "-5px",
+                      marginRight: "-5px",
                       transition: "all 0.3s ease",
                       "&:hover": {
                         color: theme.palette.secondary.light,

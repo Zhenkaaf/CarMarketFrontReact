@@ -37,7 +37,7 @@
   background-color: rgb(0, 0, 0, 0.2);
 }
 
-.imgSliderBtn>* {
+.imgSliderBtn > * {
   stroke: #ff4500;
   fill: black;
   width: 2rem;
@@ -64,7 +64,7 @@
   scale: 1.2;
 }
 
-.imgSliderDotBtn>* {
+.imgSliderDotBtn > * {
   stroke: #ff4500;
   fill: black;
   height: 100%;
@@ -107,8 +107,8 @@
     transition: translate 300ms ease-in-out;
   }
 
-  .imgSliderBtn:hover>*,
-  .imgSliderBtn:focus-visible>* {
+  .imgSliderBtn:hover > *,
+  .imgSliderBtn:focus-visible > * {
     animation: squish 200ms ease-in-out;
   }
 }
@@ -119,8 +119,8 @@
   }
 }
 
-@media screen and (min-width: 1240px) {
+/* @media screen and (min-width: 1240px) {
   .sectionContainer {
-    width: 827px;
+    width: 800px;
   }
-}
+} */

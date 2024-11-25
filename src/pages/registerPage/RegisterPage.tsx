@@ -118,6 +118,7 @@ const RegistrationPage = () => {
               component="h1"
               variant="h5"
               align="center"
+              textTransform="uppercase"
               sx={{
                 paddingBottom: "20px",
               }}
@@ -286,9 +287,6 @@ const RegistrationPage = () => {
                   marginBottom: "20px",
                   "&:hover": {
                     backgroundColor: `${theme.palette.secondary.light}`,
-                  },
-                  "&.Mui-disabled": {
-                    backgroundColor: `${theme.palette.background.default}`,
                   },
                 }}
                 type="submit"

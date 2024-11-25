@@ -37,9 +37,9 @@ const HomePage = () => {
         sx={{
           display: "flex",
           marginBottom: "20px",
-          "@media (max-width: 1140px)": {
+          /* "@media (max-width: 1140px)": {
             padding: "0px 20px",
-          },
+          }, */
         }}
       >
         <Link
@@ -52,7 +52,7 @@ const HomePage = () => {
             sx={{
               width: "100%",
               "&:hover": {
-                backgroundColor: "#ff4500",
+                backgroundColor: theme.palette.secondary.light,
               },
             }}
           >
@@ -89,14 +89,13 @@ const HomePage = () => {
             variant="outlined"
             shape="rounded"
             color="secondary"
-            //backgroundColor="red"
             onChange={(_, num) => setPage(num)}
             renderItem={(item) => (
               <PaginationItem
                 sx={{
-                  backgroundColor: theme.palette.primary.main,
+                  backgroundColor: theme.palette.background.paper,
                   "&:hover": {
-                    backgroundColor: theme.palette.secondary.main,
+                    backgroundColor: theme.palette.secondary.light,
                   },
                 }}
                 component={Link}

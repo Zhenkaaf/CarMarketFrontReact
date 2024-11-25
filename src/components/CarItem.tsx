@@ -33,14 +33,17 @@ const CarItem = ({
         display: "flex",
         backgroundColor: theme.palette.background.paper,
         padding: "20px",
-        marginBottom: "15px",
-        transition: applyHoverStyles ? "transform 0.3s ease" : "none",
-        "&:hover": applyHoverStyles ? { transform: "scale(1.05)" } : {},
-        [theme.breakpoints.down("lg")]: {
-          "&:hover": {
-            transform: "none",
-          },
-        },
+        marginBottom: "20px",
+        backgroundImage:
+          "linear-gradient(rgba(255, 255, 255, 0.00), rgba(255, 255, 255, 0.00))",
+        [theme.breakpoints.up("md")]: applyHoverStyles
+          ? {
+              "&:hover": {
+                boxShadow: `0px 0px 20px ${theme.palette.secondary.light}`,
+                transition: "box-shadow 0.3s ease",
+              },
+            }
+          : {},
         [theme.breakpoints.down("sm")]: {
           flexDirection: "column",
           height: "auto",
