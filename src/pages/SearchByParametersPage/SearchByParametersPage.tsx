@@ -10,6 +10,7 @@ import {
   Select,
   Typography,
   useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import { CAR_MAKES, PRICES, REGIONS, YEARS } from "../../constants/constans";
 import { useEffect, useState } from "react";
@@ -22,6 +23,7 @@ const SearchByParametersPage = () => {
   console.log("rerender*******");
   const { search } = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
   const isLargeScreen = useMediaQuery("(min-width:1280px)");
   const [page, setPage] = useState(parseInt(search[search.length - 1]) || 1);
   const [searchParams, setSearchParams] = useState<string>("");
@@ -56,7 +58,7 @@ const SearchByParametersPage = () => {
     if (yearTo) params.append("yearTo", yearTo);
     if (priceFrom) params.append("priceFrom", priceFrom);
     if (priceTo) params.append("priceTo", priceTo);
-    params.append("page", '1');
+    params.append("page", "1");
     const queryString = params.toString();
     navigate(`/search?${queryString}`);
     setSearchParams(queryString);
@@ -82,247 +84,277 @@ const SearchByParametersPage = () => {
   }
 
   return (
-    <Box
-      sx={{
-        maxWidth: "1140px",
-        width: "100%",
-        margin: "auto",
-        marginTop: "20px",
-      }}
-    >
+    <>
       <Box
         sx={{
-          marginBottom: "20px",
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "20px",
-          "@media (max-width: 1140px)": {
-            padding: "0px 20px",
-          },
+          maxWidth: "1140px",
+          width: "100%",
+          margin: "auto",
+          marginTop: "20px",
+          borderRadius: "8px",
+          padding: "20px",
+          backgroundColor: theme.palette.background.paper,
         }}
       >
-        <Link
-          to="/"
-          style={{ textDecoration: "none", width: "100%" }}
+        <Box
+          sx={{
+            display: "flex",
+            flexWrap: "wrap",
+            gap: "20px",
+          }}
         >
+          <Link
+            to="/"
+            style={{ textDecoration: "none", width: "100%" }}
+          >
+            <Button
+              variant="contained"
+              color="secondary"
+              sx={{
+                width: "100%",
+                "&:hover": {
+                  backgroundColor: theme.palette.secondary.light,
+                },
+              }}
+            >
+              back to all cars
+            </Button>
+          </Link>
+
+          <FormControl
+            sx={{
+              width: "calc(50% - 10px)",
+            }}
+          >
+            <Select
+              displayEmpty
+              color="info"
+              value={region}
+              onChange={(event) => {
+                setRegion(event.target.value);
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Region
+              </MenuItem>
+              {REGIONS.map((region) => (
+                <MenuItem
+                  key={region}
+                  value={region}
+                >
+                  {region}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: "calc(50% - 10px)" }}>
+            <Select
+              multiple
+              color="info"
+              value={carMakes}
+              onChange={(event) => {
+                setCarMakes(
+                  typeof event.target.value === "string"
+                    ? event.target.value.split(",")
+                    : event.target.value
+                );
+              }}
+              displayEmpty
+              fullWidth
+              renderValue={(selected) => {
+                if (selected.length === 0) {
+                  return <>Car make</>;
+                }
+                if (selected.length === 1) {
+                  return `${selected.length} car make selected`;
+                }
+                return `${selected.length} car makes selected`;
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Car make
+              </MenuItem>
+              {CAR_MAKES.map((carMake) => (
+                <MenuItem
+                  key={carMake}
+                  value={carMake}
+                >
+                  <Checkbox checked={carMakes.includes(carMake)} />
+                  <ListItemText primary={carMake} />
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: "calc(50% - 10px)" }}>
+            <Select
+              displayEmpty
+              color="info"
+              value={yearFrom}
+              onChange={(event) => {
+                setYearFrom(event.target.value);
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Year from
+              </MenuItem>
+              {YEARS.map((year) => (
+                <MenuItem
+                  key={year}
+                  value={year}
+                >
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl
+            sx={{
+              width: "calc(50% - 10px)",
+            }}
+          >
+            <Select
+              displayEmpty
+              color="info"
+              value={yearTo}
+              onChange={(event) => {
+                setYearTo(event.target.value);
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Year to
+              </MenuItem>
+              {YEARS.map((year) => (
+                <MenuItem
+                  key={year}
+                  value={year}
+                >
+                  {year}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: "calc(50% - 10px)" }}>
+            <Select
+              displayEmpty
+              color="info"
+              value={priceFrom}
+              onChange={(event) => {
+                setPriceFrom(event.target.value);
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Price from
+              </MenuItem>
+              {PRICES.map((price) => (
+                <MenuItem
+                  key={price}
+                  value={price}
+                >
+                  $ {price}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl sx={{ width: "calc(50% - 10px)" }}>
+            <Select
+              displayEmpty
+              color="info"
+              value={priceTo}
+              onChange={(event) => {
+                setPriceTo(event.target.value);
+              }}
+            >
+              <MenuItem
+                value=""
+                disabled
+              >
+                Price to
+              </MenuItem>
+              {PRICES.map((price) => (
+                <MenuItem
+                  key={price}
+                  value={price}
+                >
+                  $ {price}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Button
+            onClick={handleSearch}
+            sx={{
+              width: "100%",
+              "&:hover": {
+                backgroundColor: theme.palette.secondary.light,
+              },
+            }}
             variant="contained"
             color="secondary"
+            disabled={
+              !(
+                region ||
+                carMakes.length ||
+                yearFrom ||
+                yearTo ||
+                priceFrom ||
+                priceTo
+              )
+            }
+          >
+            Search
+          </Button>
+        </Box>
+      </Box>
+
+      <Box
+        sx={{
+          maxWidth: "1140px",
+          width: "100%",
+          margin: "auto",
+          marginTop: "20px",
+        }}
+      >
+        {data &&
+          data.cars?.map((car) => (
+            <Link
+              to={`/search/single-car/${car.carId}`}
+              style={{ textDecoration: "none" }}
+              key={car.carId}
+            >
+              <CarItem
+                car={car}
+                applyHoverStyles={isLargeScreen}
+              />
+            </Link>
+          ))}
+        {isQueryStringReady && !data?.cars?.length && (
+          <Typography
             sx={{
+              display: "flex",
+              justifyContent: "center",
               width: "100%",
             }}
           >
-            back to all advertisements
-          </Button>
-        </Link>
-
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            displayEmpty
-            value={region}
-            onChange={(event) => {
-              setRegion(event.target.value);
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Region
-            </MenuItem>
-            {REGIONS.map((region) => (
-              <MenuItem
-                key={region}
-                value={region}
-              >
-                {region}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            multiple
-            value={carMakes}
-            onChange={(event) => {
-              setCarMakes(
-                typeof event.target.value === "string"
-                  ? event.target.value.split(",")
-                  : event.target.value
-              );
-            }}
-            displayEmpty
-            fullWidth
-            renderValue={(selected) => {
-              if (selected.length === 0) {
-                return <>Car make</>;
-              }
-              if (selected.length === 1) {
-                return `${selected.length} car make selected`;
-              }
-              return `${selected.length} car makes selected`;
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Car make
-            </MenuItem>
-            {CAR_MAKES.map((carMake) => (
-              <MenuItem
-                key={carMake}
-                value={carMake}
-              >
-                <Checkbox checked={carMakes.includes(carMake)} />
-                <ListItemText primary={carMake} />
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            displayEmpty
-            value={yearFrom}
-            onChange={(event) => {
-              setYearFrom(event.target.value);
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Year from
-            </MenuItem>
-            {YEARS.map((year) => (
-              <MenuItem
-                key={year}
-                value={year}
-              >
-                {year}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            displayEmpty
-            value={yearTo}
-            onChange={(event) => {
-              setYearTo(event.target.value);
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Year to
-            </MenuItem>
-            {YEARS.map((year) => (
-              <MenuItem
-                key={year}
-                value={year}
-              >
-                {year}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            displayEmpty
-            value={priceFrom}
-            onChange={(event) => {
-              setPriceFrom(event.target.value);
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Price from
-            </MenuItem>
-            {PRICES.map((price) => (
-              <MenuItem
-                key={price}
-                value={price}
-              >
-                $ {price}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-        <FormControl sx={{ width: "calc(50% - 10px)" }}>
-          <Select
-            displayEmpty
-            value={priceTo}
-            onChange={(event) => {
-              setPriceTo(event.target.value);
-            }}
-          >
-            <MenuItem
-              value=""
-              disabled
-            >
-              Price to
-            </MenuItem>
-            {PRICES.map((price) => (
-              <MenuItem
-                key={price}
-                value={price}
-              >
-                $ {price}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Button
-          onClick={handleSearch}
-          sx={{
-            width: "100%",
-          }}
-          variant="contained"
-          color="secondary"
-          disabled={
-            !(
-              region ||
-              carMakes.length ||
-              yearFrom ||
-              yearTo ||
-              priceFrom ||
-              priceTo
-            )
-          }
-        >
-          Search
-        </Button>
+            Nothing found by your parameters. Try to change your request
+          </Typography>
+        )}
       </Box>
-
-      {data &&
-        data.cars?.map((car) => (
-          <Link
-            to={`/search/single-car/${car.carId}`}
-            style={{ textDecoration: "none" }}
-            key={car.carId}
-          >
-            <CarItem
-              car={car}
-              applyHoverStyles={isLargeScreen}
-            />
-          </Link>
-        ))}
-      {isQueryStringReady && !data?.cars?.length && (
-        <Typography
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          Nothing found by your parameters. Try to change your request
-        </Typography>
-      )}
       <Box
         sx={{
           display: "flex",
@@ -341,10 +373,15 @@ const SearchByParametersPage = () => {
             onChange={(_, num) => setPage(num)}
             renderItem={(item) => {
               const params = new URLSearchParams(searchParams);
-              console.log(params.toString());
               params.set("page", String(item.page));
               return (
                 <PaginationItem
+                  sx={{
+                    backgroundColor: theme.palette.background.paper,
+                    "&:hover": {
+                      backgroundColor: theme.palette.secondary.light,
+                    },
+                  }}
                   component={Link}
                   //to={`/search?${searchParams}&page=${item.page}`}
                   to={`/search?${params}`}
@@ -355,7 +392,7 @@ const SearchByParametersPage = () => {
           />
         )}
       </Box>
-    </Box>
+    </>
   );
 };
 

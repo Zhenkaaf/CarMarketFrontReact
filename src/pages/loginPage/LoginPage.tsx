@@ -99,6 +99,7 @@ const LoginPage = () => {
               component="h1"
               variant="h5"
               align="center"
+              textTransform="uppercase"
               sx={{
                 paddingBottom: "20px",
               }}
@@ -183,9 +184,6 @@ const LoginPage = () => {
                   width: "100%",
                   "&:hover": {
                     backgroundColor: `${theme.palette.secondary.light}`,
-                  },
-                  "&.Mui-disabled": {
-                    backgroundColor: `${theme.palette.background.default}`,
                   },
                 }}
                 type="submit"

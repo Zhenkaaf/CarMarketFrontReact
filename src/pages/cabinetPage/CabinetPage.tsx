@@ -6,7 +6,6 @@ import { useDeleteCarMutation, useGetMyCarsQuery } from "../../redux/carsApi";
 import Spinner from "../../components/Spinner";
 import { toast } from "react-toastify";
 
-
 const CabinetPage = () => {
   const theme = useTheme();
   const user = useAppSelector((state) => state.userRed.user);
@@ -37,7 +36,6 @@ const CabinetPage = () => {
     }
   };
 
-
   if (
     isGetMyCarsLoading ||
     isGetMyCarsFetching ||
@@ -50,7 +48,7 @@ const CabinetPage = () => {
     console.log(getMyCarsError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to fetch your listings.
+        Something went wrong, unable to fetch your cars.
       </Box>
     );
   }
@@ -59,7 +57,7 @@ const CabinetPage = () => {
     console.log(deleteCarError);
     return (
       <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px" }}>
-        Something went wrong, unable to delete your listing.
+        Something went wrong, unable to delete your car.
       </Box>
     );
   }
@@ -67,8 +65,15 @@ const CabinetPage = () => {
   if (myCars?.length === 0) {
     return (
       <>
-        <Box sx={{ fontSize: "24px", fontWeight: "bold", marginTop: "50px", marginBottom: "20px" }}>
-          You don't have any listings yet.
+        <Box
+          sx={{
+            fontSize: "24px",
+            fontWeight: "bold",
+            marginTop: "50px",
+            marginBottom: "20px",
+          }}
+        >
+          You don't have any cars yet.
         </Box>
 
         <Link
@@ -80,15 +85,14 @@ const CabinetPage = () => {
             color="secondary"
             sx={{
               "&:hover": {
-                backgroundColor: "#ff4500",
+                backgroundColor: theme.palette.secondary.light,
               },
             }}
           >
-            Add Listing
+            Add car
           </Button>
         </Link>
       </>
-
     );
   }
 
@@ -102,11 +106,16 @@ const CabinetPage = () => {
       }}
     >
       <Typography
+        variant="h5"
+        textTransform="uppercase"
+        fontWeight={700}
         textAlign="center"
-        fontSize={24}
+        sx={{
+          marginBottom: "20px",
+        }}
       >
         {" "}
-        My listings
+        My cars:
       </Typography>
       {myCars &&
         myCars.map((car) => (
@@ -120,13 +129,13 @@ const CabinetPage = () => {
             <Box
               sx={{
                 marginTop: "-35px",
-                marginBottom: "50px",
+                marginBottom: "20px",
                 display: "flex",
                 gap: "20px",
                 padding: "20px",
                 backgroundColor: theme.palette.background.paper,
                 backgroundImage:
-                  "linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05))",
+                  "linear-gradient(rgba(255, 255, 255, 0.00), rgba(255, 255, 255, 0.00))",
                 borderRadius: "0px 0px 4px 4px",
               }}
             >
@@ -143,7 +152,7 @@ const CabinetPage = () => {
                     sx={{
                       width: "100%",
                       "&:hover": {
-                        backgroundColor: "#ff4500",
+                        backgroundColor: theme.palette.secondary.light,
                       },
                     }}
                   >
@@ -159,7 +168,7 @@ const CabinetPage = () => {
                   sx={{
                     width: "100%",
                     "&:hover": {
-                      backgroundColor: "#ff4500",
+                      backgroundColor: theme.palette.secondary.light,
                     },
                   }}
                 >

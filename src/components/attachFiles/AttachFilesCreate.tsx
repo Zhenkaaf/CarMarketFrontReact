@@ -6,6 +6,7 @@ import {
   ImageListItem,
   ImageListItemBar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useRef } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -27,6 +28,7 @@ const AttachFilesCreate = ({
   setSelectedFiles,
 }: IAttachFilesWhenCreateProps) => {
   const filePickerRef = useRef<HTMLInputElement>(null);
+  const theme = useTheme();
   console.log("selectedFiles", selectedFiles);
   const openFileFolder = (
     event: React.MouseEvent<HTMLButtonElement, globalThis.MouseEvent>
@@ -77,7 +79,16 @@ const AttachFilesCreate = ({
   return (
     <Box>
       <Button
-        sx={{ marginTop: "5px" }}
+        sx={{
+          //marginTop: "5px",
+          width: "100%",
+          "&:hover": {
+            backgroundColor: `${theme.palette.secondary.light}`,
+          },
+          "&.Mui-disabled": {
+            backgroundColor: `${theme.palette.background.default}`,
+          },
+        }}
         variant="contained"
         onClick={(event) => openFileFolder(event)}
         startIcon={<DriveFolderUploadIcon sx={{ marginTop: "-2px" }} />}
