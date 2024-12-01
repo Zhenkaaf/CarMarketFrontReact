@@ -11,14 +11,17 @@ export const lightTheme = createTheme({
     },
     secondary: {
       main: "#da3b00",
+      light: "#ff4500",
+    },
+    info: {
+      main: "#8e8d8a",
     },
     background: {
-      default: "#ffffff",
-      paper: "#f5f5f5",
+      default: "#eae7dc",
+      paper: "#d8c3a5",
     },
     text: {
       primary: "#000000",
-      secondary: "#333333",
     },
   },
   breakpoints: {
@@ -48,8 +51,6 @@ export const darkTheme = createTheme({
     },
     info: {
       main: "#dcdcdc",
-      /*  light: "#63a4ff",
-      dark: "#004ba0", */
     },
     background: {
       default: "#515151",
@@ -57,7 +58,6 @@ export const darkTheme = createTheme({
     },
     text: {
       primary: "#dcdcdc",
-      //secondary: "#848484",
     },
   },
   breakpoints: {

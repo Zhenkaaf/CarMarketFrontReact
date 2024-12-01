@@ -99,7 +99,7 @@ const AttachFilesCreate = ({
       <Typography
         sx={{
           fontSize: "12px",
-          color: "grey",
+          color: theme.palette.text.primary,
           marginTop: "3px",
           marginLeft: "5px",
         }}
@@ -126,16 +126,11 @@ const AttachFilesCreate = ({
 
       <ImageList
         sx={{
-          width: "500px",
-          "@media (max-width: 540px)": {
-            width: "400px",
-          },
-          "@media (max-width: 440px)": {
-            width: "320px",
-          },
+          maxWidth: "500px",
+          width: "100%",
         }}
         rowHeight={164}
-        gap={8}
+        gap={20}
       >
         {selectedFiles.map((fileWithId, index) => (
           <ImageListItem
@@ -162,7 +157,8 @@ const AttachFilesCreate = ({
                 title="Main photo"
                 sx={{
                   "& .MuiImageListItemBar-title": {
-                    color: "#ff4500",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
                   },
                 }}
                 actionIcon={
@@ -194,7 +190,7 @@ const AttachFilesCreate = ({
                 key={`bar-${fileWithId.id}`}
                 subtitle="Click to photo to set as main"
                 sx={{
-                  "@media (max-width: 540px)": {
+                  "@media (max-width: 490px)": {
                     "& .MuiImageListItemBar-subtitle": {
                       fontSize: "10px",
                     },

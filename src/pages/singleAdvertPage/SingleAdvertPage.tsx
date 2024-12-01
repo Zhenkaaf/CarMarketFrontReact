@@ -1,6 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useGetCarQuery } from "../../redux/carsApi";
-import { Box, TextField, Typography, useTheme } from "@mui/material";
+import { Box, Typography, useTheme } from "@mui/material";
 import Spinner from "../../components/Spinner";
 import PlaceIcon from "@mui/icons-material/Place";
 import SpeedIcon from "@mui/icons-material/Speed";
@@ -37,7 +37,7 @@ const SingleAdvertPage = () => {
         width: "100%",
         margin: "auto",
         marginTop: "20px",
-        backgroundColor: "#000",
+        backgroundColor: theme.palette.background.paper,
       }}
     >
       {singleCar && (
@@ -58,10 +58,6 @@ const SingleAdvertPage = () => {
                   display: "flex",
                   flexDirection: "column",
                   height: "100%",
-                  //backgroundColor: "#000",
-                  /* "&:last-child": {
-                    paddingBottom: "16px",
-                  }, */
                 }}
               >
                 <Box
@@ -121,7 +117,7 @@ const SingleAdvertPage = () => {
                     flex: "1 1 auto",
                     display: "flex",
                     flexDirection: "column",
-                    borderTop: `1px dashed ${theme.palette.secondary.main}`,
+                    borderTop: `1px solid ${theme.palette.secondary.main}`,
                     [theme.breakpoints.down("md")]: {
                       marginRight: "-15px",
                     },
@@ -132,7 +128,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.background.paper,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     {" "}
@@ -157,7 +153,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.background.paper,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <TimeToLeaveIcon
@@ -178,7 +174,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <LocalGasStationIcon
@@ -195,7 +191,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <TodayIcon
@@ -212,7 +208,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <SpeedIcon
@@ -233,7 +229,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <PlaceIcon
@@ -250,7 +246,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <PhoneInTalkIcon
@@ -267,7 +263,7 @@ const SingleAdvertPage = () => {
                       display: "flex",
                       alignItems: "center",
                       //backgroundColor: theme.palette.primary.main,
-                      border: `1px dashed ${theme.palette.secondary.main}`,
+                      border: `1px solid ${theme.palette.secondary.main}`,
                     }}
                   >
                     <AccountCircleIcon
@@ -290,10 +286,12 @@ const SingleAdvertPage = () => {
                       paddingRight: "15px",
                       overflow: "hidden",
                       scrollbarWidth: "thin",
-                      borderTop: `1px dashed ${theme.palette.secondary.main}`,
+                      borderTop: `1px solid ${theme.palette.secondary.main}`,
                       overflowY: "auto",
                       [theme.breakpoints.down("md")]: {
                         maxHeight: "100%",
+                        paddingTop: "15px",
+                        marginBottom: "50px",
                       },
                     }}
                   >
@@ -318,7 +316,7 @@ const SingleAdvertPage = () => {
                       //paddingRight: "10px",
                       overflow: "hidden",
                       scrollbarWidth: "thin",
-                      borderTop: `1px dashed ${theme.palette.secondary.main}`,
+                      borderTop: `1px solid ${theme.palette.secondary.main}`,
                       //maxHeight: "260px",
                       overflowY: "auto",
                     }}

@@ -34,11 +34,6 @@ export const carsApi = createApi({
       providesTags: ["Cars"],
     }),
 
-    /*     getTotalPages: builder.query<{ totalPages: number }, string>({
-      query: (limit) => `car/total-pages?limit=${limit}`,
-      providesTags: ["Cars"],
-    }), */
-
     getFilteredCars: builder.query<ICarResponse, string>({
       query: (searchParams) => `car/filtered-cars/?${searchParams}`,
       providesTags: ["Cars"],
@@ -93,7 +88,6 @@ export const {
   useGetCarQuery,
   useGetMyCarsQuery,
   useGetFilteredCarsQuery,
-  useGetTotalPagesQuery,
   useAddCarMutation,
   useAddPhotosToCarMutation,
   useUpdateCarMutation,

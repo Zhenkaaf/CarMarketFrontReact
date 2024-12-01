@@ -9,7 +9,7 @@ import { useAppSelector } from "./redux/redux-hooks";
 
 const ThemeWrapper = () => {
   const theme = useAppSelector((state: RootState) =>
-    state.themeRed.isDarkMode ? darkTheme : lightTheme
+    state.themeRed.isDarkTheme ? darkTheme : lightTheme
   );
 
   return (

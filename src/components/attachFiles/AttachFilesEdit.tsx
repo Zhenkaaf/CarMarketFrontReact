@@ -6,6 +6,7 @@ import {
   ImageListItem,
   ImageListItemBar,
   Typography,
+  useTheme,
 } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
@@ -32,6 +33,7 @@ const AttachFilesEdit = ({
   filesToDelete,
 }: IAttachFilesProps) => {
   console.log("uploadedFiles", existingPhotos);
+  const theme = useTheme();
   const filePickerRef = useRef<HTMLInputElement>(null);
   const [existingAndSelectedPhotos, setExistingAndSelectedPhotos] = useState<
     { id: string; file?: File; url: string }[]
@@ -115,7 +117,12 @@ const AttachFilesEdit = ({
   return (
     <Box>
       <Button
-        sx={{ marginTop: "5px" }}
+        sx={{
+          marginTop: "5px",
+          "&:hover": {
+            backgroundColor: theme.palette.secondary.light
+          },
+        }}
         variant="contained"
         onClick={(event) => openFileFolder(event)}
         startIcon={<DriveFolderUploadIcon sx={{ marginTop: "-2px" }} />}
@@ -126,7 +133,7 @@ const AttachFilesEdit = ({
       <Typography
         sx={{
           fontSize: "12px",
-          color: "grey",
+          color: theme.palette.text.primary,
           marginTop: "3px",
           marginLeft: "5px",
         }}
@@ -153,16 +160,11 @@ const AttachFilesEdit = ({
 
       <ImageList
         sx={{
-          width: "500px",
-          "@media (max-width: 540px)": {
-            width: "400px",
-          },
-          "@media (max-width: 440px)": {
-            width: "320px",
-          },
+          maxWidth: "500px",
+          width: "100%",
         }}
         rowHeight={164}
-        gap={8}
+        gap={20}
       >
         {existingAndSelectedPhotos.map((photo, index) => (
           <ImageListItem
@@ -189,7 +191,8 @@ const AttachFilesEdit = ({
                 title="Main photo"
                 sx={{
                   "& .MuiImageListItemBar-title": {
-                    color: "#ff4500",
+                    fontWeight: "bold",
+                    textTransform: "uppercase",
                   },
                 }}
                 actionIcon={
@@ -221,7 +224,7 @@ const AttachFilesEdit = ({
                 key={`bar-${photo.id}`}
                 subtitle="Click to photo to set as main"
                 sx={{
-                  "@media (max-width: 540px)": {
+                  "@media (max-width: 490px)": {
                     "& .MuiImageListItemBar-subtitle": {
                       fontSize: "10px",
                     },

@@ -14,6 +14,7 @@ import {
   TextareaAutosize,
   Typography,
   Tooltip,
+  useTheme,
 } from "@mui/material";
 import { useDisableNumberInputWheel } from "../../helpers/useDisableNumberInputWheel";
 import { excludeSpacesAndZero } from "../../helpers/excludeSpacesAndZero";
@@ -58,6 +59,7 @@ const EditPage = () => {
   });
 
   const navigate = useNavigate();
+  const theme = useTheme();
   const [bodyType, setBodyType] = useState("");
   const [bodyTypeError, setBodyTypeError] = useState<string>("");
   const [carMake, setCarMake] = useState("");
@@ -227,423 +229,404 @@ const EditPage = () => {
   return (
     <Box
       sx={{
-        marginTop: "20px",
+        marginTop: "40px",
         marginBottom: "20px",
+        maxWidth: "540px",
+        width: "100%",
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: "8px",
+        boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
+        padding: "20px",
       }}
     >
-      <Typography
-        variant="h5"
-        textTransform={"uppercase"}
-        fontWeight={700}
-        textAlign={"center"}
-      >
-        Edit page
-      </Typography>
       <Box
         sx={{
-          boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.1)",
-          borderRadius: "8px",
-          padding: "20px",
-          maxWidth: "540px",
-          display: "flex",
           width: "100%",
-          marginTop: "20px",
-          backgroundColor: "#e1bee7",
         }}
       >
-        <Box
+        <Typography
+          component="h1"
+          variant="h5"
+          align="center"
+          textTransform="uppercase"
           sx={{
-            width: "100%",
+            paddingBottom: "20px",
           }}
         >
-          <form
-            onSubmit={handleSubmit(handleUpdateCar)}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "10px",
-            }}
+          Edit car data
+        </Typography>
+        <form
+          onSubmit={handleSubmit(handleUpdateCar)}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          <Select
+            value={bodyType}
+            color="info"
+            onChange={(event) => handleChangeSelects(event, "bodyType")}
+            displayEmpty
+            fullWidth
+            error={Boolean(bodyTypeError)}
+
           >
-            <Select
-              value={bodyType}
-              onChange={(event) => handleChangeSelects(event, "bodyType")}
-              displayEmpty
-              fullWidth
-              error={Boolean(bodyTypeError)}
-              sx={{ background: "white" }}
+            <MenuItem
+              value=""
+              disabled
             >
-              <MenuItem
-                value=""
-                disabled
-              >
-                Select car body type
-              </MenuItem>
-              <MenuItem value={"Sedan"}>Sedan</MenuItem>
-              <MenuItem value={"Wagon"}>Wagon</MenuItem>
-              <MenuItem value={"Hatchback"}>Hatchback</MenuItem>
-              <MenuItem value={"Suv"}>Suv</MenuItem>
-              <MenuItem value={"Van"}>Van</MenuItem>
-            </Select>
-            {bodyTypeError && (
-              <FormHelperText
-                error
-                sx={{ marginLeft: "15px", marginTop: "-7px" }}
-              >
-                {bodyTypeError}
-              </FormHelperText>
-            )}
+              Select car body type
+            </MenuItem>
+            <MenuItem value={"Sedan"}>Sedan</MenuItem>
+            <MenuItem value={"Wagon"}>Wagon</MenuItem>
+            <MenuItem value={"Hatchback"}>Hatchback</MenuItem>
+            <MenuItem value={"Suv"}>Suv</MenuItem>
+            <MenuItem value={"Van"}>Van</MenuItem>
+          </Select>
+          {bodyTypeError && (
+            <FormHelperText
+              error
+              sx={{ marginLeft: "15px", marginTop: "-7px" }}
+            >
+              {bodyTypeError}
+            </FormHelperText>
+          )}
 
-            <Select
-              value={carMake}
-              onChange={(event) => handleChangeSelects(event, "carMake")}
-              displayEmpty
-              fullWidth
-              error={Boolean(carMakeError)}
-              sx={{ background: "white" }}
+          <Select
+            value={carMake}
+            color="info"
+            onChange={(event) => handleChangeSelects(event, "carMake")}
+            displayEmpty
+            fullWidth
+            error={Boolean(carMakeError)}
+          >
+            <MenuItem
+              value=""
+              disabled
             >
+              Select car make
+            </MenuItem>
+            {CAR_MAKES.map((carMake) => (
               <MenuItem
-                value=""
-                disabled
+                key={carMake}
+                value={carMake}
               >
-                Select car make
+                {carMake}
               </MenuItem>
-              {CAR_MAKES.map((carMake) => (
-                <MenuItem
-                  key={carMake}
-                  value={carMake}
+            ))}
+          </Select>
+          {carMakeError && (
+            <FormHelperText
+              error
+              sx={{ marginLeft: "15px", marginTop: "-7px" }}
+            >
+              {carMakeError}
+            </FormHelperText>
+          )}
+
+          <TextField
+            {...register("model", {
+              required: "Model is required.",
+              minLength: {
+                value: 2,
+                message: "Minimum 2 characters.",
+              },
+              maxLength: {
+                value: 16,
+                message: "Maximum 16 characters.",
+              },
+              pattern: {
+                value: /^[a-zA-Zа-яА-Я0-9_-]+$/,
+                message: "Only letters, numbers, hyphens, and underscores.",
+              },
+            })}
+            fullWidth
+            required
+            autoComplete="off"
+            color="info"
+            placeholder="Model"
+            name="model"
+            error={Boolean(errors?.model)}
+            helperText={
+              errors?.model ? (errors.model.message as string) : null
+            }
+          />
+
+          <Select
+            value={year}
+            color="info"
+            onChange={(event) => handleChangeSelects(event, "year")}
+            displayEmpty
+            fullWidth
+            error={Boolean(yearError)}
+
+          >
+            <MenuItem
+              value=""
+              disabled
+            >
+              Select year
+            </MenuItem>
+            {YEARS.map((year) => (
+              <MenuItem
+                key={year}
+                value={year}
+              >
+                {year}
+              </MenuItem>
+            ))}
+          </Select>
+          {yearError && (
+            <FormHelperText
+              error
+              sx={{ marginLeft: "15px", marginTop: "-7px" }}
+            >
+              {yearError}
+            </FormHelperText>
+          )}
+
+          <TextField
+            {...register("price", {
+              required: "Price is required.",
+            })}
+            fullWidth
+            color="info"
+            required
+            name="price"
+            type="number"
+            inputMode="numeric"
+            //onInput={excludeSpacesAndZero}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              excludeSpacesAndZero(event, setValue)
+            }
+            autoComplete="off"
+            sx={{
+              "& input": {
+                //background: "white",
+                borderTopLeftRadius: "0px",
+                borderBottomLeftRadius: "0px",
+                borderTopRightRadius: "4px",
+                borderBottomRightRadius: "4px",
+              },
+            }}
+            placeholder="Price"
+            InputProps={{
+              startAdornment: (
+                <InputAdornment
+                  position="start"
+                  sx={{
+                    marginLeft: "-14px",
+                    marginRight: "0px",
+                    /*  backgroundColor: "white", */
+                    borderTop: `28px dashed ${theme.palette.background.paper}`,
+                    borderBottom: `28px dashed ${theme.palette.background.paper}`,
+                    borderLeft: `14px dashed ${theme.palette.background.paper}`,
+                    borderRight: `12px dashed ${theme.palette.background.paper}`,
+                    borderTopLeftRadius: "4px",
+                    borderBottomLeftRadius: "4px",
+                    borderTopRightRadius: "0px",
+                    borderBottomRightRadius: "0px",
+                  }}
                 >
-                  {carMake}
-                </MenuItem>
-              ))}
-            </Select>
-            {carMakeError && (
-              <FormHelperText
-                error
-                sx={{ marginLeft: "15px", marginTop: "-7px" }}
-              >
-                {carMakeError}
-              </FormHelperText>
-            )}
+                  $
+                </InputAdornment>
+              ),
+            }}
+            error={Boolean(errors?.price)}
+            helperText={
+              errors?.price ? (errors.price.message as string) : null
+            }
+          />
 
-            <TextField
-              {...register("model", {
-                required: "Model is required.",
-                minLength: {
-                  value: 2,
-                  message: "Minimum 2 characters.",
-                },
-                maxLength: {
-                  value: 16,
-                  message: "Maximum 16 characters.",
-                },
-                pattern: {
-                  value: /^[a-zA-Zа-яА-Я0-9_-]+$/,
-                  message: "Only letters, numbers, hyphens, and underscores.",
-                },
-              })}
-              fullWidth
-              required
-              placeholder="Model"
-              name="model"
-              error={Boolean(errors?.model)}
-              sx={{ "& input": { background: "white", borderRadius: "4px" } }}
-              helperText={
-                errors?.model ? (errors.model.message as string) : null
-              }
-            />
+          <TextField
+            {...register("mileage", {
+              required: "Mileage is required",
+            })}
+            color="info"
+            fullWidth
+            required
+            name="mileage"
+            type="number"
+            inputMode="numeric"
+            //onInput={excludeSpacesAndZero}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              excludeSpacesAndZero(event, setValue)
+            }
+            sx={{
+              "& input": {
 
-            <Select
-              value={year}
-              onChange={(event) => handleChangeSelects(event, "year")}
-              displayEmpty
-              fullWidth
-              error={Boolean(yearError)}
-              sx={{ background: "white" }}
-            >
-              <MenuItem
-                value=""
-                disabled
-              >
-                Select year
-              </MenuItem>
-              {YEARS.map((year) => (
-                <MenuItem
-                  key={year}
-                  value={year}
+                borderTopLeftRadius: "4px",
+                borderBottomLeftRadius: "4px",
+                borderTopRightRadius: "0px",
+                borderBottomRightRadius: "0px",
+              },
+            }}
+            placeholder="Mileage"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment
+                  position="end"
+                  sx={{
+                    marginRight: "-14px",
+                    marginLeft: "0px",
+                    /* backgroundColor: "white", */
+                    borderTop: `28px dashed ${theme.palette.background.paper}`,
+                    borderBottom: `28px dashed ${theme.palette.background.paper}`,
+                    borderLeft: `14px dashed ${theme.palette.background.paper}`,
+                    borderRight: `12px dashed ${theme.palette.background.paper}`,
+                    borderTopLeftRadius: "0px",
+                    borderBottomLeftRadius: "0px",
+                    borderTopRightRadius: "4px",
+                    borderBottomRightRadius: "4px",
+                  }}
                 >
-                  {year}
-                </MenuItem>
-              ))}
-            </Select>
-            {yearError && (
-              <FormHelperText
-                error
-                sx={{ marginLeft: "15px", marginTop: "-7px" }}
-              >
-                {yearError}
-              </FormHelperText>
-            )}
+                  Thds.km.
+                </InputAdornment>
+              ),
+            }}
+            error={Boolean(errors?.mileage)}
+            helperText={
+              errors?.mileage ? (errors.mileage.message as string) : null
+            }
+          />
 
-            <TextField
-              {...register("price", {
-                required: "Price is required.",
-              })}
-              fullWidth
-              required
-              name="price"
-              type="number"
-              inputMode="numeric"
-              //onInput={excludeSpacesAndZero}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                excludeSpacesAndZero(event, setValue)
-              }
-              autoComplete="off"
-              sx={{
-                "& input": {
-                  background: "white",
-                  borderTopLeftRadius: "0px",
-                  borderBottomLeftRadius: "0px",
-                  borderTopRightRadius: "4px",
-                  borderBottomRightRadius: "4px",
-                },
-              }}
-              placeholder="Price"
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment
-                    position="start"
-                    sx={{
-                      marginLeft: "-14px",
-                      marginRight: "0px",
-                      backgroundColor: "white",
-                      borderTop: "28px dashed white",
-                      borderBottom: "28px dashed white",
-                      borderLeft: "14px dashed white",
-                      borderRight: "12px dashed white",
-                      borderTopLeftRadius: "4px",
-                      borderBottomLeftRadius: "4px",
-                      borderTopRightRadius: "0px",
-                      borderBottomRightRadius: "0px",
-                    }}
-                  >
-                    $
-                  </InputAdornment>
-                ),
-              }}
-              error={Boolean(errors?.price)}
-              helperText={
-                errors?.price ? (errors.price.message as string) : null
-              }
-            />
-
-            <TextField
-              {...register("mileage", {
-                required: "Mileage is required",
-              })}
-              fullWidth
-              required
-              name="mileage"
-              type="number"
-              inputMode="numeric"
-              //onInput={excludeSpacesAndZero}
-              onChange={(event: ChangeEvent<HTMLInputElement>) =>
-                excludeSpacesAndZero(event, setValue)
-              }
-              sx={{
-                "& input": {
-                  background: "white",
-                  borderTopLeftRadius: "4px",
-                  borderBottomLeftRadius: "4px",
-                  borderTopRightRadius: "0px",
-                  borderBottomRightRadius: "0px",
-                },
-              }}
-              placeholder="Mileage"
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment
-                    position="end"
-                    sx={{
-                      marginRight: "-14px",
-                      marginLeft: "0px",
-                      backgroundColor: "white",
-                      borderTop: "28px dashed white",
-                      borderBottom: "28px dashed white",
-                      borderLeft: "14px dashed white",
-                      borderRight: "12px dashed white",
-                      borderTopLeftRadius: "0px",
-                      borderBottomLeftRadius: "0px",
-                      borderTopRightRadius: "4px",
-                      borderBottomRightRadius: "4px",
-                    }}
-                  >
-                    Thds.km.
-                  </InputAdornment>
-                ),
-              }}
-              error={Boolean(errors?.mileage)}
-              helperText={
-                errors?.mileage ? (errors.mileage.message as string) : null
-              }
-            />
-
-            <Select
-              value={fuelType}
-              onChange={(event) => handleChangeSelects(event, "fuelType")}
-              displayEmpty
-              fullWidth
-              error={Boolean(fuelTypeError)}
-              sx={{ background: "white" }}
+          <Select
+            value={fuelType}
+            onChange={(event) => handleChangeSelects(event, "fuelType")}
+            displayEmpty
+            color="info"
+            fullWidth
+            error={Boolean(fuelTypeError)}
+          >
+            <MenuItem
+              value=""
+              disabled
             >
-              <MenuItem
-                value=""
-                disabled
-              >
-                Select car fuel type
-              </MenuItem>
-              <MenuItem value={"Petrol"}>Petrol</MenuItem>
-              <MenuItem value={"Diesel"}>Diesel</MenuItem>
-              <MenuItem value={"LPG"}>LPG</MenuItem>
-              <MenuItem value={"LPG/Petrol"}>LPG/Petrol</MenuItem>
-              <MenuItem value={"E-fuel"}>E-fuel</MenuItem>
-              <MenuItem value={"Hybrid"}>Hybrid</MenuItem>
-            </Select>
-            {fuelTypeError && (
-              <FormHelperText
-                error
-                sx={{ marginLeft: "15px", marginTop: "-7px" }}
-              >
-                {fuelTypeError}
-              </FormHelperText>
-            )}
-
-            <Select
-              value={region}
-              onChange={(event) => {
-                setRegion(event.target.value);
-                setRegionError("");
-              }}
-              displayEmpty
-              fullWidth
-              error={Boolean(regionError)}
-              sx={{ background: "white" }}
+              Select car fuel type
+            </MenuItem>
+            <MenuItem value={"Petrol"}>Petrol</MenuItem>
+            <MenuItem value={"Diesel"}>Diesel</MenuItem>
+            <MenuItem value={"LPG"}>LPG</MenuItem>
+            <MenuItem value={"LPG/Petrol"}>LPG/Petrol</MenuItem>
+            <MenuItem value={"E-fuel"}>E-fuel</MenuItem>
+            <MenuItem value={"Hybrid"}>Hybrid</MenuItem>
+          </Select>
+          {fuelTypeError && (
+            <FormHelperText
+              error
+              sx={{ marginLeft: "15px", marginTop: "-7px" }}
             >
-              <MenuItem
-                value=""
-                disabled
-              >
-                Region
-              </MenuItem>
-              <MenuItem value={"Cherkasy"}>Cherkasy</MenuItem>
-              <MenuItem value={"Chernihiv"}>Chernihiv</MenuItem>
-              <MenuItem value={"Chernivtsi"}>Chernivtsi</MenuItem>
-              <MenuItem value={"Dnipropetrovsk"}>Dnipropetrovsk</MenuItem>
-              <MenuItem value={"Donetsk"}>Donetsk</MenuItem>
-              <MenuItem value={"Ivano-Frankivsk"}>Ivano-Frankivsk</MenuItem>
-              <MenuItem value={"Kharkiv"}>Kharkiv</MenuItem>
-              <MenuItem value={"Kherson"}>Kherson</MenuItem>
-              <MenuItem value={"Khmelnytskyi"}>Khmelnytskyi</MenuItem>
-              <MenuItem value={"Kiev"}>Kiev</MenuItem>
-              <MenuItem value={"Kirovohrad"}>Kirovohrad</MenuItem>
-              <MenuItem value={"Luhansk"}>Luhansk</MenuItem>
-              <MenuItem value={"Lviv"}>Lviv</MenuItem>
-              <MenuItem value={"Mykolaiv"}>Mykolaiv</MenuItem>
-              <MenuItem value={"Odessa"}>Odessa</MenuItem>
-              <MenuItem value={"Poltava"}>Poltava</MenuItem>
-              <MenuItem value={"Rivne"}>Rivne</MenuItem>
-              <MenuItem value={"Sumy"}>Sumy</MenuItem>
-              <MenuItem value={"Ternopil"}>Ternopil</MenuItem>
-              <MenuItem value={"Vinnytsia"}>Vinnytsia</MenuItem>
-              <MenuItem value={"Volyn"}>Volyn</MenuItem>
-              <MenuItem value={"Zakarpattia"}>Zakarpattia</MenuItem>
-              <MenuItem value={"Zaporizhia"}>Zaporizhia</MenuItem>
-              <MenuItem value={"Zhytomyr"}>Zhytomyr</MenuItem>
-            </Select>
-            {regionError && (
-              <FormHelperText
-                error
-                sx={{ marginLeft: "15px", marginTop: "-7px" }}
-              >
-                {regionError}
-              </FormHelperText>
-            )}
+              {fuelTypeError}
+            </FormHelperText>
+          )}
 
-            {/* <TextField
-              {...register("city", {
-                required: "City is required",
-                minLength: {
-                  value: 2,
-                  message: "Minimum 2 characters",
-                },
-                maxLength: {
-                  value: 32,
-                  message: "Maximum 32 characters",
-                },
-                pattern: {
-                  value: /^[a-zA-Zа-яА-Я0-9_-]+$/,
-                  message:
-                    "Only letters, numbers, hyphens, and underscores are allowed",
-                },
-              })}
-              fullWidth
-              required
-              placeholder="City"
-              name="city"
-              error={Boolean(errors?.city)}
-              sx={{ "& input": { background: "white", borderRadius: "4px" } }}
-              helperText={errors?.city ? (errors.city.message as string) : null}
-            /> */}
+          <Select
+            value={region}
+            onChange={(event) => {
+              setRegion(event.target.value);
+              setRegionError("");
+            }}
+            displayEmpty
+            color="info"
+            fullWidth
+            error={Boolean(regionError)}
+          >
+            <MenuItem
+              value=""
+              disabled
+            >
+              Region
+            </MenuItem>
+            <MenuItem value={"Cherkasy"}>Cherkasy</MenuItem>
+            <MenuItem value={"Chernihiv"}>Chernihiv</MenuItem>
+            <MenuItem value={"Chernivtsi"}>Chernivtsi</MenuItem>
+            <MenuItem value={"Dnipropetrovsk"}>Dnipropetrovsk</MenuItem>
+            <MenuItem value={"Donetsk"}>Donetsk</MenuItem>
+            <MenuItem value={"Ivano-Frankivsk"}>Ivano-Frankivsk</MenuItem>
+            <MenuItem value={"Kharkiv"}>Kharkiv</MenuItem>
+            <MenuItem value={"Kherson"}>Kherson</MenuItem>
+            <MenuItem value={"Khmelnytskyi"}>Khmelnytskyi</MenuItem>
+            <MenuItem value={"Kiev"}>Kiev</MenuItem>
+            <MenuItem value={"Kirovohrad"}>Kirovohrad</MenuItem>
+            <MenuItem value={"Luhansk"}>Luhansk</MenuItem>
+            <MenuItem value={"Lviv"}>Lviv</MenuItem>
+            <MenuItem value={"Mykolaiv"}>Mykolaiv</MenuItem>
+            <MenuItem value={"Odessa"}>Odessa</MenuItem>
+            <MenuItem value={"Poltava"}>Poltava</MenuItem>
+            <MenuItem value={"Rivne"}>Rivne</MenuItem>
+            <MenuItem value={"Sumy"}>Sumy</MenuItem>
+            <MenuItem value={"Ternopil"}>Ternopil</MenuItem>
+            <MenuItem value={"Vinnytsia"}>Vinnytsia</MenuItem>
+            <MenuItem value={"Volyn"}>Volyn</MenuItem>
+            <MenuItem value={"Zakarpattia"}>Zakarpattia</MenuItem>
+            <MenuItem value={"Zaporizhia"}>Zaporizhia</MenuItem>
+            <MenuItem value={"Zhytomyr"}>Zhytomyr</MenuItem>
+          </Select>
+          {regionError && (
+            <FormHelperText
+              error
+              sx={{ marginLeft: "15px", marginTop: "-7px" }}
+            >
+              {regionError}
+            </FormHelperText>
+          )}
 
-            <Box>
-              <TextareaAutosize
-                {...register("desc")}
-                style={{
-                  width: "100%",
-                  minHeight: "80px",
-                  padding: "10px",
+
+          <Box>
+            <TextareaAutosize
+              {...register("desc")}
+              className="custom-textarea"
+              style={{
+                backgroundColor: theme.palette.background.paper,
+                color: theme.palette.text.primary,
+              }}
+              name="desc"
+              placeholder="Description"
+            />
+          </Box>
+
+
+          <AttachFilesEdit
+            existingPhotos={existingPhotos}
+            setNewFilesToUpload={setNewFilesToUpload}
+            filesToDelete={filesToDelete}
+            setFilesToDelete={setFilesToDelete}
+            setMainPhotoId={setMainPhotoId}
+          />
+          <Tooltip
+            title="Please make at least one change."
+            disableHoverListener={isValid && isFormChanged}
+            disableInteractive
+            arrow
+          >
+            <span>
+              <Button
+                sx={{
+                  marginTop: "10px", "&:hover": {
+                    backgroundColor: theme.palette.secondary.light,
+                  },
                 }}
-                name="desc"
-                placeholder="Description"
-              />
-            </Box>
-
-            <AttachFilesEdit
-              existingPhotos={existingPhotos}
-              setNewFilesToUpload={setNewFilesToUpload}
-              filesToDelete={filesToDelete}
-              setFilesToDelete={setFilesToDelete}
-              setMainPhotoId={setMainPhotoId}
-            />
-            <Tooltip
-              title="Please make at least one change."
-              disableHoverListener={isValid && isFormChanged}
-              disableInteractive
-              arrow
-            >
-              <span>
-                <Button
-                  sx={{ marginTop: "10px" }}
-                  type="submit"
-                  //будет активна, если одно из условий истинно.
-                  disabled={
-                    !(
-                      (isValid && isFormChanged) ||
-                      filesToDelete.length ||
-                      newFilesToUpload.length ||
-                      (initialMainPhotoIdRef.current &&
-                        mainPhotoId !== initialMainPhotoIdRef.current)
-                    )
-                  }
-                  fullWidth
-                  variant="contained"
-                  color="secondary"
-                >
-                  Update
-                </Button>
-              </span>
-            </Tooltip>
-          </form>
-        </Box>
+                type="submit"
+                //будет активна, если одно из условий истинно.
+                disabled={
+                  !(
+                    (isValid && isFormChanged) ||
+                    filesToDelete.length ||
+                    newFilesToUpload.length ||
+                    (initialMainPhotoIdRef.current &&
+                      mainPhotoId !== initialMainPhotoIdRef.current)
+                  )
+                }
+                fullWidth
+                variant="contained"
+                color="secondary"
+              >
+                Update
+              </Button>
+            </span>
+          </Tooltip>
+        </form>
       </Box>
     </Box>
   );

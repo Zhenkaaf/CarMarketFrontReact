@@ -38,11 +38,11 @@ const CarItem = ({
           "linear-gradient(rgba(255, 255, 255, 0.00), rgba(255, 255, 255, 0.00))",
         [theme.breakpoints.up("md")]: applyHoverStyles
           ? {
-              "&:hover": {
-                boxShadow: `0px 0px 20px ${theme.palette.secondary.light}`,
-                transition: "box-shadow 0.3s ease",
-              },
-            }
+            "&:hover": {
+              boxShadow: `0px 0px 20px ${theme.palette.secondary.light}`,
+              transition: "box-shadow 0.3s ease",
+            },
+          }
           : {},
         [theme.breakpoints.down("sm")]: {
           flexDirection: "column",
@@ -138,7 +138,7 @@ const CarItem = ({
           sx={{
             display: "grid",
             width: "fit-content",
-            border: `1px dashed ${theme.palette.secondary.main}`,
+            border: `1px solid ${theme.palette.secondary.main}`,
             gridTemplateColumns: "repeat(3, minmax(0px, 200px))",
             [theme.breakpoints.down("sm")]: {
               width: "100%",
@@ -149,7 +149,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             <Box
@@ -178,7 +178,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             <Box
@@ -207,7 +207,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             {" "}
@@ -237,7 +237,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             <Box
@@ -266,7 +266,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             {" "}
@@ -297,7 +297,7 @@ const CarItem = ({
           <Box
             sx={{
               padding: "5px",
-              border: `1px dashed ${theme.palette.secondary.main}`,
+              border: `1px solid ${theme.palette.secondary.main}`,
             }}
           >
             <Box

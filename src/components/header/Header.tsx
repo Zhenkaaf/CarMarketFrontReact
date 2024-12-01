@@ -7,15 +7,18 @@ import { Link } from "react-router-dom";
 import { AccountBox, AddBox } from "@mui/icons-material";
 import { logOutAct } from "../../redux/user/userSlice";
 import { HEADER_HEIGHT } from "../../constants/constans";
-import CustomizedSwitch from "../muiSwitch";
 import { useTheme } from "@mui/material";
 import { toggleTheme } from "../../redux/theme/themeSlice";
 import { setWelcomeToastShown } from "../../redux/toast/toastSlice";
+import light from "./../../assets/light.png";
+import lightGreen from "./../../assets/lightGreen.png";
 
 const Header = () => {
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.userRed.user);
   const theme = useTheme();
+  const isDarkTheme = useAppSelector((state) => state.themeRed.isDarkTheme);
+
 
   return (
     <Box
@@ -74,6 +77,8 @@ const Header = () => {
               >
                 CarMarket
               </Typography>
+
+
             </Link>
           </Box>
           <Box
@@ -87,7 +92,37 @@ const Header = () => {
               }, */
             }}
           >
-            <CustomizedSwitch onChange={() => dispatch(toggleTheme())} />
+
+            <Box
+              onClick={() => { dispatch(toggleTheme()) }}
+              sx={{
+                width: "26px",
+                height: "26px",
+                margin: "-2px 5px 0px 10px",
+                cursor: "pointer",
+                backgroundColor: theme.palette.secondary.main,
+                borderRadius: "2px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                padding: "1.5px",
+                "&:hover": {
+                  backgroundColor: theme.palette.secondary.light,
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  backgroundImage: `url(${isDarkTheme ? light : lightGreen})`,
+                  backgroundSize: "contain",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
+                }}
+              />
+            </Box>
+
             {user ? (
               <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
                 <Link
@@ -130,11 +165,28 @@ const Header = () => {
                     }}
                   />
                 </Link>
+                {/*  <Box onClick={() => { handleClick(); dispatch(toggleTheme()) }} sx={{
+                  width: "26px", height: "26px", marginTop: "-2px", cursor: "pointer", "&:hover": {
+                    backgroundColor: theme.palette.secondary.light,
+                  },
+                }}>
+                  <img src={isWhiteBg ? lightGr : lightImg} alt="" style={{
+                    padding: "1px",
+                    borderRadius: "2px",
+                    backgroundColor: "#da3b00",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "contain",
+                  }} />
+                </Box> */}
+
+
                 <Link
                   to="/cabinet"
                   style={{ textDecoration: "none" }}
                 >
                   {" "}
+
                   <AccountBox
                     color="secondary"
                     fontSize="large"

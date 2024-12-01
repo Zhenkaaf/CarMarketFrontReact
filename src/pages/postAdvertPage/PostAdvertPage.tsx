@@ -556,13 +556,10 @@ const PostAdvertPage = () => {
           <Box>
             <TextareaAutosize
               {...register("desc")}
+              className="custom-textarea"
               style={{
-                width: "100%",
-                minHeight: "80px",
-                padding: "10px",
                 backgroundColor: theme.palette.background.paper,
                 color: theme.palette.text.primary,
-                fontSize: "16px",
               }}
               name="desc"
               placeholder="Description"
@@ -584,7 +581,7 @@ const PostAdvertPage = () => {
                 sx={{
                   width: "100%",
                   "&:hover": {
-                    backgroundColor: `${theme.palette.secondary.light}`,
+                    backgroundColor: theme.palette.secondary.light,
                   },
                 }}
                 type="submit"
